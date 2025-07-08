@@ -60,9 +60,14 @@
         <div class="col-sm-3">
             <div class="col-md-7">
                 <p class="form-control-static h5" id="supplier">{{$supplier->name}}</p>
+                 <input type="hidden" name="supplier_id" id="supplier_id" value="{{$supplier->id}}">
             </div>
         </div>
 
+        <label class="col-sm-2 control-label">Warehouse <span class="text-danger">*</span></label>
+        <div class="col-sm-3">
+                 {!! Form::select ('location',$location, null,['placeholder' => 'Choose Location...','class'=>'chosen-select','required'=>true ,'id'=>'location'])!!}
+        </div>
     </div>
 
     <div class="form-group">
@@ -71,12 +76,12 @@
         <div class="col-sm-3">
             <div class="input-group date">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                {!! Form::text('dr_date',null, ['class'=>'form-control', 'id'=>'dr_date']) !!}
+                {!! Form::text('dr_date',null, ['class'=>'form-control','required'=>true , 'id'=>'dr_date']) !!}
             </div>
         </div>
       <label class="col-sm-2 control-label">DR Number <span class="text-danger">*</span></label>
         <div class="col-sm-3">
-           {!! Form::text('dr_number',null, ['class'=>'form-control dr_number' ,'id'=>'dr_number']) !!}
+           {!! Form::text('dr_number',null, ['class'=>'form-control dr_number','required'=>true  ,'id'=>'dr_number']) !!}
         </div>
 
     </div>
@@ -97,29 +102,13 @@
 
     </div>
 
-
     <div class="hr-line-dashed"></div>
-
-        <div class="form-group">
-
-        <label class="col-sm-2 control-label">Discount :</label>
+    <div class="form-group">
         <div class="col-sm-3">
-            <div class="col-md-7"><p class="form-control-static h4" id="discount">{{$incomings->discount}}</p></div>
-            <input type="hidden" id="discount_input" name="discount_input" value="{{$incomings->discount}}" />
+            <a class='btn btn-primary btn-xs btn-show-item' id="btn-show-item"><i class='fa fa-plus'></i> Item</a>
         </div>
-
-        <label class="col-sm-2 control-label">Total Amount :</label>
-        <div class="col-sm-3">
-            <div class="col-md-7"><p class="form-control-static h4" id="total_amount">{{number_format($incomings->total_amount,2)}}</p></div>
-            <input type="hidden" id="total_amount_input" name="total_amount_input" value="{{$incomings->total_amount}}"/>
-        </div>
-
     </div>
-
-    <div class="hr-line-dashed"></div>
-
-
-                                
+          
     <div class="table-responsive">
                                  
         <table class="table table-bordered" id="dTable-receive-item-table">                  
@@ -129,12 +118,15 @@
                 <tr>
                     
                     <th class="text-center">Item No.</th>
-                    <th class="text-center">Item Code</th>
                     <th>Description</th>
                     <th>Unit</th>
-                    <th>Unit Cost</th>
-                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Order Qty</th>
                     <th class="text-center">Rec'd Qty</th>
+                    @if (!can('item.unit_cost'))
+                    <th class="text-center">Unit Cost</th>
+                    @endif 
+                    <th class="text-center">Total Amout</th>
+
                 </tr>
 
             </thead>
@@ -146,18 +138,24 @@
                     <td>
                         <input type='input' name='item_id[]' class='form-control input-sm text-center item_id' size='2' value="{{$incoming_item->id}}" readonly>
                     </td>
-                    <td>{{$incoming_item->name}}</td>
-                    <td>{{$incoming_item->description}}</td>
+                    <td>{{$incoming_item->description}} @if($incoming_item->free == 1)<label class='label label-danger'>FREE</label> @endif</td>
                     <td>{{$incoming_item->units}}</td>
-                     <td class='text-center'>
-                         <input type='text' name='unit_cost[]' class='form-control input-sm text-center unit_cost' size='4'  value ="{{$incoming_item->unit_cost}}" id ='unit_cost'>
-                     </td>
+
                     <td class='text-center'>
                          <input type='text' name='item_quantity[]' class='form-control input-sm text-center item_quantity' size='4'  value ="{{$incoming_item->quantity}}" id ='item_quantity' readonly='true'>
                      </td>
                     <td>
-                        <input type='text' name='received_qty[]' class='form-control input-sm text-center received_qty' size='4'  placeholder='0.00'  id ='received_qty' value ="{{$incoming_item->received_quantity}}">
+                        <input type='text' name='received_qty[]' class='form-control input-sm text-center _received_qty' size='4'  placeholder='0.00'  id ='_received_qty' value ="{{$incoming_item->received_quantity}}">
                     </td>
+                    @if (!can('item.unit_cost'))
+                    <td class='text-center'>
+                         <input type='text' name='item_unit_cost[]' class='form-control input-sm text-right _item_unit_cost' size='4'  value ="{{$incoming_item->unit_cost}}" id ='_item_unit_cost'>
+                     </td>
+                    @endif 
+                    </td>
+                        <td class='text-center'>
+                        <input type='text' name='total_amount[]' class='form-control input-sm text-right _total_amount' size='4' readonly='true'  placeholder='0.00' value ="{{$incoming_item->unit_total_cost}}"  id ='_total_amount'>
+                     </td>
                 </tr>         
                 @endforeach
                                                                       
@@ -167,7 +165,25 @@
         
         <hr>
     </div>
-    
+      <div class="row">
+            <div class="col-md-8 form-horizontal"></div>
+                                
+           <div class="col-md-4 form-horizontal">
+                                   
+                <div class="form-group">
+                    <label class="col-md-6 control-label"> Amount Discount</label>
+                        <div class="col-md-6">
+                            {!! Form::text('discount_input',$incomings->discount, array('placeholder' => '0.00','class' => 'form-control text-right _discount_input','id'=>'_discount_input')) !!}
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6 control-label">Total Amount</label>
+                        <div class="col-md-6">
+                            {!! Form::text('grand_total_amount',$incomings->total_amount, array('placeholder' => '0.00','class' => 'form-control text-right _grand_total_amount','id'=>'_grand_total_amount', 'readonly' => 'true' )) !!}
+                        </div>
+                </div>
+            </div>  
+    </div> 
                                
     <div class="hr-line-dashed"></div>
     <div class="row">

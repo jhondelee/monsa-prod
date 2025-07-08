@@ -76,8 +76,6 @@ class EndingController extends Controller
 
             $val_item_id            = $request->get('item_id');
 
-            $val_item_unit_qty      = $request->get('item_unit_qty');
-
             $val_onhand_quantity    = $request->get('onhand_quantity');
 
         
@@ -89,9 +87,11 @@ class EndingController extends Controller
 
                     $endingitems->ending_inventory_id   = $ending_inventory_id;
 
+                    $endingitems->inventory_id          = $val_id[$i];
+
                     $endingitems->item_id               = $val_item_id[$i];
 
-                    $endingitems->unit_quantity         = $val_item_unit_qty[$i];
+                    $endingitems->unit_quantity         = $val_onhand_quantity[$i];
 
                     $endingitems->onhand_quantity       = $val_onhand_quantity[$i];
 
@@ -123,6 +123,65 @@ class EndingController extends Controller
             return view('pages.warehouse.ending.edit',compact('endinginventory','items','prepared_by'));
     }
 
+
+    public function update(Request $request)
+    {
+
+        $this->validate($request, [
+            'ending_date' => 'required',
+            'prepared_by'   => 'required'
+        ]);
+ 
+        $endinginventory = EndingInventory::where('ending_date',$request->ending_date)->first();
+
+        $endingItems = EndingInventoryItem::where('ending_inventory_id', $endinginventory->id)->get();
+
+        foreach ($endingItems as $key => $item) {
+
+            $deleteitem = EndingInventoryItem::findorfail($item->id);
+
+            $deleteitem ->delete(); 
+
+        }
+  
+            $val_id                 = $request->get('id');
+
+            $val_item_id            = $request->get('item_id');
+
+            $val_onhand_quantity    = $request->get('onhand_quantity');
+
+        
+            for ( $i=0 ; $i < count($val_id) ; $i++ ){
+
+                $inventory = Inventory::findorfail($val_id[$i]);
+
+                    $endingitems = New EndingInventoryItem;
+
+                    $endingitems->ending_inventory_id   = $endinginventory->id;
+
+                     $endingitems->inventory_id         = $val_id[$i];
+
+                    $endingitems->item_id               = $val_item_id[$i];
+
+                    $endingitems->unit_quantity         = $val_onhand_quantity[$i];
+
+                    $endingitems->onhand_quantity       = $val_onhand_quantity[$i];
+
+                    $endingitems->unit_cost             = $inventory->unit_cost;
+
+                    $endingitems->received_date         = $inventory->received_date;
+
+                    $endingitems->location              = $inventory->location;
+
+                    $endingitems->save();
+            }    
+
+
+        return redirect()->route('ending.index')
+
+            ->with('success','Ending invetory item has been created successfully.');
+
+    }
 
     public function post($id)
     {

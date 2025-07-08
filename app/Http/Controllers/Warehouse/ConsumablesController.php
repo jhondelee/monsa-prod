@@ -14,7 +14,8 @@ use App\Incoming;
 use App\Inventory;
 use App\InventoryMovement;
 use App\WarehouseLocation;
-    use Carbon\Carbon;
+use App\ItemRequest;
+use Carbon\Carbon;
 use Fpdf;
 use DB;
 
@@ -49,7 +50,10 @@ class ConsumablesController extends Controller
 
         $created_by = $this->user->getemplist()->where('id',$id)->pluck('emp_name','id');
 
-        return view('pages.warehouse.consumables.index',compact('location','consumables','inventoryItem','created_by'));
+
+        $requestlist = $this->inventory->requestlist();
+
+        return view('pages.warehouse.consumables.index',compact('location','consumables','inventoryItem','created_by','requestlist'));
                
     }
 
@@ -86,6 +90,126 @@ class ConsumablesController extends Controller
             ->with('success','Consumable Item has been successfully added.');
 
     }
+
+
+    public function show($id)
+    {
+        $showItems = $this->inventory->showItem($id)->first();
+
+        $showItemsLocations = $this->inventory->showlocations($id);
+
+        return view('pages.warehouse.consumables.item_details',compact('showItems','showItemsLocations'));
+    }
+
+    public function add_request(Request $request)
+    {
+       $saveonly = $request->btnSD;
+
+       $valitem = Inventory::findorfail($request->inven_id);
+          
+            $itemSaveOnly = New ItemRequest;
+
+            $itemSaveOnly->inventory_id     = $request->inven_id;
+
+            $itemSaveOnly->reference_no     = $request->reference_no;
+
+            $itemSaveOnly->item_id          = $valitem->item_id; 
+
+            $itemSaveOnly->request_qty      = $request->quantity;
+
+            $itemSaveOnly->posted           = 0;
+
+            $itemSaveOnly->created_by       =   auth()->user()->id;
+
+            $itemSaveOnly->save();
+
+
+
+        if( $saveonly > 0 ){
+
+            $getitem = Item::findorfail($valitem->item_id);
+
+            $onHandQty = ($getitem->unit_quantity) * ($request->quantity);
+
+            $valitem->unit_quantity = $valitem->unit_quantity - $request->quantity;
+
+            $valitem->onhand_quantity = $valitem->onhand_quantity - $onHandQty;
+
+            $valitem->save();
+
+            $itemSaveOnly->posted  = 1;
+
+            $itemSaveOnly->save();
+
+        }
+
+        
+        return redirect()->route('consumables.index')
+
+            ->with('success','Item Request has been successfully added.');
+
+    }
+
+
+    public function update_request(Request $request)
+    {
+        $itemSaveOnly =  ItemRequest::findorfail($request->request_id);
+
+            $itemSaveOnly->reference_no     = $request->reference_no;
+
+            $itemSaveOnly->request_qty      = $request->req_quantity;
+
+            $itemSaveOnly->created_by       = auth()->user()->id;
+
+            $itemSaveOnly->save();
+
+        return redirect()->route('consumables.index')
+
+            ->with('success','Item Request has been successfully updated.');
+    }
+
+
+    public function post_request($id)
+    {
+        
+        $itemSaveOnly =  ItemRequest::findorfail($id);
+
+        $itemSaveOnly->posted = 1;
+
+        $itemSaveOnly->save();
+
+
+            $valitem = Inventory::findorfail($itemSaveOnly->inventory_id);
+        
+                $getitem = Item::findorfail($valitem->item_id);
+
+                $onHandQty = ($getitem->unit_quantity) * ($itemSaveOnly->request_qty);
+
+            $valitem->unit_quantity = $valitem->unit_quantity - $itemSaveOnly->request_qty;
+
+            $valitem->onhand_quantity = $valitem->onhand_quantity - $onHandQty;
+
+            $valitem->save();
+
+
+        return redirect()->route('consumables.index')
+
+            ->with('success','Item Request has been successfully posted.');
+    }
+
+    public function delete_request($id)
+    {
+
+        $itemSaveOnly =  ItemRequest::findorfail($id);
+
+        $itemSaveOnly->delete();
+        
+
+        return redirect()->route('consumables.index')
+
+            ->with('success','Item Request has been successfully deleted.');
+    }
+
 
 
      public function print(Request $request) 

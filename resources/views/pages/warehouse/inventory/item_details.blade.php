@@ -79,6 +79,12 @@
                                 <label class="col-sm-4 control-label"><h4>{{$showItems->units}}</h4></label>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><h5>Supplier:</h5></label>
+                                <label class="col-sm-4 control-label"><h3>{{$showItems->supplier_name}}</h3></label>
+                            </div>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -113,7 +119,7 @@
                                                     <td>{{$showItemsLocation->location}}</td>
                                                     <td>{{$showItemsLocation->code}}</td>
                                                     <td>{{$showItemsLocation->units}}</td>
-                                                    <td>{{$showItemsLocation->onhand_quantity}}</td>
+                                                    <td>{{$showItemsLocation->unit_quantity}}</td>
                                                     <td>{{$showItemsLocation->received_date}}</td>
                                                 </tr>
                                             @endforeach 

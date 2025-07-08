@@ -8,4 +8,5 @@ interface SetInterface {
     
      public function getPONo();
      
+     public function orderToSupplier($id);
 }

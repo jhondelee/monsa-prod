@@ -40,6 +40,7 @@
                 </div>
             </div>
 
+            <!--
             <div class="form-group">
                 <label class="col-sm-3 control-label">Date Received <span class="text-danger">*</span></label>
                 <div  class="col-sm-4 ">
@@ -49,7 +50,7 @@
                     </div>
                 </div>
             </div>
-
+            -->
 
                 <div class="form-group">    
                     <div class="col-sm-4">

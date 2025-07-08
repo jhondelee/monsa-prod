@@ -83,6 +83,7 @@
         $(document).on('click', '#add-item-modal', function() {
             var _source = $( '.source' ).val();
             var _destination = $( '.destination' ).val();
+            var _warehouse = $( '.source :selected' ).text();
 
             if ( !_source ) {
 
@@ -101,7 +102,7 @@
             }
             if ( _source !=  _destination ){
   
-                $('.modal-title').text('Add Item');
+                $('.modal-title').text('Add Item - FROM: ' + _warehouse);
                 $('#AddItemModal').modal('show');
 
                 $(function() {
@@ -118,16 +119,16 @@
                             destroy: true,
                             pageLength: 10,
                             responsive: true,
+                            fixedColumns: true,
                             data: results,
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [],
                             columns: [
                                     {data: 'inventory_id', name: 'inventory_id'},
-                                    {data: 'location', name: 'location'},
-                                    {data: 'item_code', name: 'item_code'},
                                     {data: 'name', name: 'name'},
+                                    {data: 'units', name: 'units'},
                                     {data: 'onhand_quantity', name: 'onhand_quantity'},
-                                    {data: undefined, defaultContent: '{!! Form::text('onhand_quantity',null, array('id'=> 'onhand_quantity','placeholder' => '0', 'size' => '4','class'=>'text-center')) !!}'},
+                                    {data: undefined, defaultContent: '{!! Form::text('req_quantity',null, array('id'=> 'req_quantity','placeholder' => '0', 'size' => '4','class'=>'text-center')) !!}'},
                                     {data: 'action', orderable: false, searchable: true},
                                 ],
                             columnDefs: [{
@@ -143,7 +144,7 @@
             }               
 
         });  
-        
+        //get functionbutton
         btnAction = function(id) {
             return '<div class="text-center">\
             <a class="btn btn-xs btn-info add-item" id="add_button" ><i class="fa fa-plus"></i></button></div>';
@@ -153,7 +154,7 @@
             event.preventDefault();
             var cellIndexMapping = { 0: true, 1:true, 2: true, 3: true, 4: true, 5: true};
             var data = [];
-            var qty_value = parseFloat($(this).closest('tr').find('#onhand_quantity').val());
+            var qty_value = parseFloat($(this).closest('tr').find('#req_quantity').val());
             var tableData = $(this).parents('tr').map(function () 
                 { 
                     $(this).find("td").each(function(cellIndex) 
@@ -165,9 +166,9 @@
                 }).get();
 
             item_id = data[0];  
-            source = data[1];
-            item_name = data[3]; 
-            onhand = data[4];
+            item_name = data[1]; 
+            units = data[2]; 
+            onhand = data[3];
             var int_quantity = parseFloat(qty_value);
             var int_onhand = parseFloat(onhand);
            
@@ -176,7 +177,7 @@
                 return false;
             }
 
-            var destination = $( '.destination' ).val();
+            var destination = $( '.destination :selected' ).text();
             
              //   table_data = createTableData (item_id,item_name,destination,qty_value)
 
@@ -191,9 +192,9 @@
                 });
 
                 $('#create_transfer_order tbody').append("<tr>\
-                    <td>"+ item_id +"<input type='hidden'  name='item_id[]' id='item_id' value="+ item_id +" readonly></td><td>"+ item_name +"</td><td>"+ destination +"</td>\
-                    <td><input type='text'  name='qty_value[]' class='text-center' size='8' value="+ qty_value.toFixed(2) +" readonly></td>\
-                    <td><a class='btn btn-xs btn-danger' id='delete_line'><i class='fa fa-minus'></i></td></tr>");
+                    <td>"+ item_id +"<input type='hidden'  name='item_id[]' id='item_id' value="+ item_id +" readonly></td><td>"+ destination +"</td><td>"+ item_name +"</td><td class='text-center'>"+ units +"</td>\
+                    <td class='text-center'><input type='text'  name='qty_value[]' class='text-center' size='8' value="+ qty_value.toFixed(2) +" readonly></td>\
+                    <td class='text-center'><a class='btn btn-xs btn-danger' id='delete_line'><i class='fa fa-minus'></i></td></tr>");
                     toastr.warning(item_name + ' Added ' + qty_value,'Warning');
                     var qty_value = $(this).closest('tr').find('#qty_value').val('0');
 

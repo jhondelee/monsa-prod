@@ -37,6 +37,7 @@
           
                                  @if (!can('item.create'))
                                 <div class="ibox-tools"> 
+
                                     <a href="{{route('item.create')}}" class="btn btn-primary btn-sm add-modal">
                                         <i class="fa fa-plus">&nbsp;</i>Item
                                     </a> 
@@ -46,52 +47,21 @@
                             </div>
 
                             <div class="ibox-content">
-                              
-                                <div class="table-responsive">
                                     
-                                    <table class="table table-striped table-hover dataTables-items"data-toggle="dataTable" data-form="deleteForm" >
+                                <div class="table-responsive">
+                                    <div class="col-sm-4">
+                                        <form action="..." method="GET">
+                                            @csrf 
+                                            {!! Form::select ('item_name',$item_name,$val,['placeholder' => 'Select Name...','class'=>'chosen-select item_name','required'=>true,'id'=>'item_name'])!!}
+                                        </form>
+                                    </div>
+                                    <table class="table table-striped table-hover dataTables-items"data-toggle="dataTable" data-form="deleteForm" id="dTable-ItemList-table">
                                         <thead>
-                                        <tr>
-
-                                            
-                                            <th>Id</th>
-                                            <th>Code</th>
-                                            <th>Name</th>
-                                            <th>Description</th>
-                                            <th>UOM</th>
-                                            <th class="text-center">Action</th>
-                                           
-                                        </tr>
+       
                                         </thead>
                                         <tbody>
 
-                                            @foreach($items as $item)
-
-                                                <tr>
-
-                                                    
-                                                    <td>{{$item->id}}</td>
-                                                    <td>{{$item->code}}</td>
-                                                    <td>{{$item->name}}</td>
-                                                    <td>{{$item->description}}</td>
-                                                    <td>{{$item->units}}</td>
-                                                    <td class="text-center">
-                                                        @if (!can('item.edit'))
-                                                        <div class="btn-group">
-                                                            <a href="{{route('item.edit',$item->id)}}" class="btn-primary btn btn-xs"><i class="fa fa-pencil"></i></a>
-                                                        </div>
-                                                        @endif
-                                                        @if (!can('item.delete'))
-                                                        <div class="btn-group">
-                                                          <a class="btn-primary btn btn-xs delete" onclick="confirmDelete('{{$item->id}}'); return false;"><i class="fa fa-trash"></i></a>
-                                                        </div>
-                                                        @endif
-                                                    </td>
-
-                                                </tr>
-
-                                            @endforeach
-                                                                               
+                                                                
                                         </tbody>
 
                                     </table>
@@ -108,44 +78,75 @@
             </div>
 
             
-          
+          @include('pages.item_management.items.price')
+
 @endsection
 
 
 @section('scripts')
 
 <script src="/js/plugins/footable/footable.all.min.js"></script>
-
+<script src="/js/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
-    
 
 
-        $(document).ready(function(){
-              $('.dataTables-items').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    //{ extend: 'copy'},
-                    //{extend: 'csv'},
-                    //{extend: 'excel', title: 'Item List'},
-                    {extend: 'pdf', title: 'Item'},
 
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
+$(document).ready(function(){
+    var valueSelected = $('.item_name').val();
+    $.ajax({
+        url:  '{{ url('item/datatable') }}',
+        type: 'POST',
+        dataType: 'json',
+        data: { _token: "{{ csrf_token() }}",
+        value: valueSelected},  
+        success:function(results){
+                        //
+           $('#dTable-ItemList-table').DataTable({
+                                destroy: true,
+                                pageLength: 100,
+                                responsive: true, 
+                                data: results,
+                                dom: '<"html5buttons"B>lTfgitp',
+                                buttons: [],
+                                fixedColumns: true,
+                                columns: [
+                                    {data: 'id', title: 'Id'}, 
+                                    {data: 'code', title: 'Code'},  
+                                    {data: 'name', title: 'Name'},    
+                                    {data: 'description', title: 'Item Description'},
+                                    {data: 'unit_code', title: 'Units'},
+                                    {data: 'free', title: 'Availability',
+                                        render: function(data, type, row){
+                                            if(row.free=='1'){
+                                                return '<label class="label label-danger" >Free</label>  '
+                                            }else{
+                                                return '<label class="label label-warning" ></label>';
+                                            }   
+                                        }
+                                    },
+                                    {data: 'activated', title: 'Status',
+                                        render: function(data, type, row){
+                                            if(row.activated=='1'){
+                                                return '<label class="label label-success" >Active</label>  '
+                                            }else{
+                                                return '<label class="label label-warning" >Inctive</label>';
+                                            }   
+                                        }
+                                    },
+                                    {data: null, title: 'Action',
+                                        render: function(data, type, row){
+                                                return '@if (!can('item.edit'))<a class="btn-danger btn btn-xs edit-modal" data-id="'+ row.id +'" data-descript="'+ row.description +'" data-srp="'+ row.srp +'"  data-unit_cost="'+ row.unit_cost +'"><i class="fa fa-money"></i></a>&nbsp;<a href="item/edit/'+row.id+'" class="btn-primary btn btn-xs"><i class="fa fa-pencil"></i></a>@endif&nbsp;@if (!can('item.delete'))<a class="btn-primary btn btn-xs delete" onclick="confirmDelete('+row.id+'); return false;"><i class="fa fa-trash"></i></a>@endif';
+                                        }
+                                    },
+                         
+                                ],
+                            })
 
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
+        }
+    }); 
 
-            });
+});
 
-        });
 
         function confirmDelete(data,model) {   
          $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
@@ -155,7 +156,82 @@
             });
         }
 
-           
+
+        $(document).on('click', '.add-modal', function() {
+            $('.modal-title').text('Add Area');
+            $('#myModal').modal('show');
+        });
+
+        // Edit a post
+        $(document).on('click', '.edit-modal', function() {
+            $('.modal-title').text('Update Cost/Srp');
+            $('#id_edit').val($(this).data('id'));
+            $('#descript_edit').val($(this).data('descript'));
+            $('#srp_edit').val($(this).data('srp'));
+            $('#unit_cost_edit').val($(this).data('unit_cost'));
+            $('#editModal').modal('show');
+        });
+
+
+        $('.item_name').on('change', function (e) {
+            var valueSelected = this.value;
+             $.ajax({
+                url:  '{{ url('item/getname') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: { _token: "{{ csrf_token() }}",
+                value: valueSelected},  
+                success:function(results){
+                                //
+                   $('#dTable-ItemList-table').DataTable({
+                                        destroy: true,
+                                        pageLength: 100,
+                                        responsive: true,
+                                        data: results,
+                                        autoWidth: true,
+                                        dom: '<"html5buttons"B>lTfgitp',
+                                        buttons: [],
+                                        fixedColumns: true,
+                                        columns: [
+                                            {data: 'id', title: 'Id'}, 
+                                            {data: 'code', title: 'Code'},  
+                                            {data: 'name', title: 'Name'},    
+                                            {data: 'description', title: 'Item Description'},
+                                            {data: 'unit_code', title: 'Units'},
+                                            {data: 'free', title: 'Availability',
+                                                render: function(data, type, row){
+                                                    if(row.free=='1'){
+                                                        return '<label class="label label-success" >Free</label>  '
+                                                    }else{
+                                                        return '<label class="label label-warning" ></label>';
+                                                    }   
+                                                }
+                                            },
+                                            {data: 'activated', title: 'Status',
+                                                render: function(data, type, row){
+                                                    if(row.activated=='1'){
+                                                        return '<label class="label label-success" >Active</label>  '
+                                                    }else{
+                                                        return '<label class="label label-warning" >Inctive</label>';
+                                                    }   
+                                                }
+                                            },
+                                            {data: null, title: '  Action  ',
+                                                render: function(data, type, row){
+                                                        return '@if (!can('item.edit'))<a class="btn-danger btn btn-xs edit-modal" data-id="'+ row.id +'" data-descript="'+ row.description +'" data-srp="'+ row.srp +'"  data-unit_cost="'+ row.unit_cost +'"><i class="fa fa-money"></i></a>&nbsp;<a href="item/edit/'+row.id+'" class="btn-primary btn btn-xs"><i class="fa fa-pencil"></i></a>@endif&nbsp;@if (!can('item.delete'))<a class="btn-primary btn btn-xs delete" onclick="confirmDelete('+row.id+'); return false;"><i class="fa fa-trash"></i></a>@endif';
+                                                }
+                                            },
+                                 
+                                        ],
+                                    })
+
+                }
+            }); 
+
+        });
+
+        
+
     
     
 </script>

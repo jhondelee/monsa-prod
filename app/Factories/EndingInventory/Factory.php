@@ -60,11 +60,12 @@ class Factory implements SetInterface
      $results = DB::select("
             SELECT i.id,
                 e.id AS item_id,
+                i.inventory_id,
                 e.code,
                 e.name,
                 e.description,
                 u.code AS units,
-                CONCAT('(',i.unit_quantity,') ',u.code) AS qty_units_code,
+                u.code AS qty_units_code,
                 i.unit_quantity,
                 i.onhand_quantity,
                 i.unit_cost,

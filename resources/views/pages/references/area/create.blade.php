@@ -25,7 +25,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Add Cost <span class="text-danger">*</span></label>
                     <div class="col-sm-7">
-                        {!! Form::text('add_cost',null, ['class'=>'form-control','placeholder'=>'0.00']) !!}
+                        {!! Form::text('add_cost',null, ['class'=>'form-control','placeholder'=>'0.00','required'=> true]) !!}
                     </div>
                 </div>
 
@@ -34,7 +34,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Add Percentage <span class="text-danger">*</span></label>
                     <div class="col-sm-7">
-                        {!! Form::text('add_percentage',null, ['class'=>'form-control','placeholder'=>'0.00']) !!}
+                        {!! Form::text('add_percentage',null, ['class'=>'form-control','placeholder'=>'0.00','required'=> true]) !!}
                     </div>
                 </div>
 

@@ -13,4 +13,14 @@ interface SetInterface {
      public function getconsumables();
 
       public function getinventory();
+
+     public function InventoryStatusUpdate($inventory_id,$status);
+
+     public function getItemStockLevel($id,$unitQty);
+
+     public function getreturnindex();
+
+      public function showstatus($status);
+
+
 }

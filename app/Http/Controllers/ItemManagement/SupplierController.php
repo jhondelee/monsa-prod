@@ -9,6 +9,8 @@ use App\Factories\Item\Factory as ItemFactory;
 use App\Supplier;
 use App\SupplierItems;
 use App\User as Users;
+use Fpdf;
+
 
 class SupplierController extends Controller
 {
@@ -205,5 +207,120 @@ class SupplierController extends Controller
 
         return response()->json($results);       
         
+    }
+
+
+
+    public function print($id)
+    {
+
+        $suppliers = Supplier::find($id);       
+        
+        $pdf = new Fpdf('P');
+        $pdf::AddPage('P','A4');
+        //$pdf::Image('/home/u648374046/domains/monsais.net/public_html/public/img/monsa-logo-header.jpg',10, 5, 30.00);
+        $pdf::Image('img/temporary-logo.jpg',5, 5, 40.00);
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetY(20);     
+
+
+        // Header
+        //$pdf::Image('img/monsa-logo-header.jpg',90, 5, 25.00);
+        //$pdf::Image('img/qplc_logo.jpg',5, 5, 40.00);
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetY(20);  
+
+        $pdf::Ln(2);
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(185,1,"Supplier Items",0,"","C");
+
+        $pdf::Ln(18);
+        $pdf::SetFont('Arial','B',9);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(30,6,"Supplier Name:",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(50,6,': '.$suppliers->name,0,"","L");
+        $pdf::SetFont('Arial','B',9);
+        $pdf::Ln(6);
+        $pdf::cell(30,6,"Address:",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(50,6,': '.$suppliers->address,0,"","L");
+        
+
+        $pdf::Ln(6);
+        $pdf::SetFont('Arial','B',9);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(30,6,"Contact Person:",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(40,6,': '.$suppliers->contact_person,0,"","L");
+
+        $pdf::Ln(6);
+        $pdf::SetFont('Arial','B',9);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(30,6,"Contact Number:",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(40,6,': '.$suppliers->contact_number,0,"","L");
+
+        $pdf::Ln(8);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+
+        //Column Name
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(30,6,"Item No.",0,"","C");
+            $pdf::cell(50,6,"Item Name",0,"","L");
+            $pdf::cell(75,6,"Description",0,"","L");
+            $pdf::cell(20,6,"Unit",0,"","C");
+ 
+        $pdf::Ln(1);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+
+        $supplier_items = $this->items->showSupplierItems($id);;
+
+        foreach ($supplier_items as $key => $value) {
+
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(30,6,$value->id,0,"","C");
+            $pdf::cell(50,6,$value->item_name,0,"","L");
+            $pdf::cell(75,6,$value->description,0,"","L");
+            $pdf::cell(20,6,$value->units,0,"","C");
+        }
+
+        $pdf::Ln(5);
+            $pdf::SetFont('Arial','I',8);
+            $pdf::cell(185,6,"--Nothing Follows--",0,"","C");
+
+        $pdf::Ln(3);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+
+        $pdf::Ln(5);
+        $pdf::SetFont('Arial','B',10);
+        $pdf::cell(35,6,"TOTAL COUNT:",0,"","L");
+        $pdf::SetFont('Arial','B',10);
+        $pdf::cell(5,6,$this->items->showSupplierItems($id)->count(),0,"","R");
+
+        $preparedby = $this->user->getCreatedbyAttribute(auth()->user()->id);
+             
+        $pdf::Ln(10);
+        $pdf::SetFont('Arial','B',9);
+        $pdf::cell(260,6,"      ".$preparedby."      ",0,"","C");
+
+        $pdf::ln(0);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(260,6,"_________________________",0,"","C");
+
+        $pdf::Ln(4);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(260,6,"Prepared by",0,"","C");    
+
+        $pdf::Ln();
+        $pdf::Output();
+        exit;
+
     }
 }

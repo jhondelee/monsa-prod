@@ -58,27 +58,23 @@
 
     <div class="form-group">
         <div class="col-sm-3">
-            <a class='btn btn-warning btn-sm btn-show-item' id="btn-show-item"><i class='fa fa-plus'></i> Item</a>
+            <a class='btn btn-primary btn-xs btn-show-item' id="btn-show-item"><i class='fa fa-plus'></i> Item</a>
         </div>
     </div>
                                 
     <div class="table-responsive">
                                  
-        <table class="table table-bordered" id="dTable-selected-item-table">                  
+        <table class="table table-bordered dTable-selected-item-table" id="dTable-selected-item-table">                  
 
             <thead> 
-                
                 <tr>
-                    
+
                     <th class="text-center">Id</th>
-                    <th class="text-center">Item Name</th>
                     <th>Description</th>
-                    <th>Unit</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-center">Unit Cost</th>
-                    <th class="text-center">Amount</th>
+                    <th>Qty/Unit</th>
+                    <th class="text-center">Order Qty</th>
                     <th class="text-center">Remove <a class='btn btn-danger btn-xs btn-remove pull-right'><i class='fa fa-minus'></i></a>
-                </tr>
+                </tr>   
             </thead>
 
             <tbody>
@@ -97,15 +93,15 @@
                                 <div class="col-md-4 form-horizontal">
                                    
                                     <div class="form-group">
-                                        <label class="col-md-6 control-label"> Discount</label>
+                                        <!--<label class="col-md-6 control-label"> Discount</label>-->
                                         <div class="col-md-6">
-                                            {!! Form::text('discount',null, array('placeholder' => '0.00','class' => 'form-control text-right','id'=>'discount')) !!}
+                                            {!! Form::hidden('discount',null, array('placeholder' => '0.00','class' => 'form-control text-right','id'=>'discount')) !!}
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-6 control-label">Total Amount</label>
+                                        <!--<label class="col-md-6 control-label">Total Amount</label>-->
                                         <div class="col-md-6">
-                                            {!! Form::text('grand_total',null, array('placeholder' => '0.00','class' => 'form-control text-right grand_total','id'=>'grand_total', 'readonly' => 'true' )) !!}
+                                            {!! Form::hidden('grand_total',null, array('placeholder' => '0.00','class' => 'form-control text-right grand_total','id'=>'grand_total', 'readonly' => 'true' )) !!}
                                         </div>
                                     </div>
                                 </div> 

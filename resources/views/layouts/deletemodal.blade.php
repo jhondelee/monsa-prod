@@ -88,3 +88,25 @@
         </div>
      </div>
  </div>
+
+  <div id="confirmDeduct" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title">Deduct Confirmation</h3>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure, you want to Deduct?</h3>
+                This will be deducted to your Inventory!
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-danger" id="deduct-btn">&nbsp;Yes&nbsp;</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp;No&nbsp;</button>
+                
+            </div>
+            
+        </div>
+     </div>
+ </div>

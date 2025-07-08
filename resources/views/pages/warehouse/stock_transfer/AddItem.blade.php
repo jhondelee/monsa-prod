@@ -17,11 +17,10 @@
                                     <tr>
                                         
                                         <th class="text-center">ID</th>
-                                        <th class="text-center">Source</th>
-                                        <th class="text-center">Code</th>
                                         <th class="text-center">Item Description</th>
+                                        <th class="text-center">Units</th>
                                         <th class="text-center">On Hand</th>
-                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Req Qty</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>

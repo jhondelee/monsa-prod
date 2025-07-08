@@ -22,7 +22,7 @@ class CreateInventoryTable extends Migration
             $table->date('expiration_date')->nullable();
             $table->date('received_date')->nullable();
             $table->integer('location')->required();
-            $table->enum('status', array('In Stock','Reorder','Critical','Out of Stock'));
+            $table->enum('status', array('In Stock','Reorder','Critical','Out of Stock','Return'));
             $table->integer('consumable');
             $table->integer('created_by')->required();
             $table->softDeletes();

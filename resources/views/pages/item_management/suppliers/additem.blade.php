@@ -12,7 +12,7 @@
                      
                         <div class="table-responsive">
                             <div class="scroll_content" style="width:100%; height:350px; margin: 0;padding: 0;overflow-y: scroll">
-                            <table class="table table-bordered dataTables-add-items" id="dTable-ItemList-table">
+                            <table class="table table-bordered dataTables-add-items" id="dTable-ItemList-table" style="width:100%">
                                 <thead> 
                                     <tr>
                                         
@@ -30,7 +30,13 @@
                                                 <tr>
                                                     <td>{{$item->id}}</td>
                                                     <td>{{$item->name}}</td>
-                                                    <td>{{$item->description}}</td>
+                                                    <td>
+                                                        @if($item->free == 1)
+                                                        {{$item->description}} &nbsp; <label class="label label-danger" >FREE</label>
+                                                        @else
+                                                         {{$item->description}}
+                                                        @endif
+                                                    </td>
                                                     <td>{{$item->units}}</td>
                                                     <td class="text-center">
                                                         <div class="btn-group">
@@ -78,6 +84,7 @@
 
 <script type="text/javascript">
 
+
     $(document).ready(function(){
     
     var id = $('#supplier_id').val();
@@ -85,20 +92,25 @@
         $('#dTable-components-item-table tbody').empty();
 
                 $.ajax({
-                        url:  '{{ url('supplier/showitems') }}',
+                        url:  '{{ url("supplier/showitems") }}',
                         type: 'POST',
                         dataType: 'json',
                         data: { _token: "{{ csrf_token() }}",
                         id: id}, 
                         success:function(results){
-
+                            var _av = ''
                             for(var i=0;i<=results.length;i++) {
+                                if(results[i].free == '1') 
+                                {
+                                    _av = '<label class="label label-danger " >FREE</label>  '
+                                }
+                               
 
                                  $('#dTable-components-item-table tbody').append("<tr>\
                                 <td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td>\
                                 <td>"+ results[i].name +"</td>\
-                                <td>"+ results[i].description +"</td>\
-                                <td>"+ results[i].units +"</td>\
+                                <td>"+ results[i].description +" "+ _av +"</td>\
+                                <td>"+ results[i].units +" </td>\
                                 <td style='text-align:center;'>\
                                     <div class='checkbox checkbox-success'>\
                                             <input type='checkbox' name='remove'><label for='remove'></label>\
@@ -112,13 +124,12 @@
                 })
         });
 
-
      function clickToAdditem(data) {
 
             var id = data;
 
                 $.ajax({
-                        url:  '{{ url('supplier/supplied') }}',
+                        url:  '{{ url("supplier/supplied") }}',
                         type: 'POST',
                         dataType: 'json',
                         data: { _token: "{{ csrf_token() }}",

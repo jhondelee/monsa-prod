@@ -1,167 +1,163 @@
 @extends('layouts.app')
 
-@section('pageTitle','Consumable')
+@section('pageTitle','Inventory')
 
 @section('content')
 
 
-        <div class="row wrapper border-bottom white-bg page-heading">
-
+      <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-
                     <h2>Consumable Inventory</h2>
-
-                   <ol class="breadcrumb">
-                        <li>
-                            <a href="{{route('main')}}">Home</a>
-                        </li>
+                    <ol class="breadcrumb">
                         <li class="active">
-                            <strong>Consumable Inventory</strong>
+                             <a href="{{ route('main') }}">Home</a>
                         </li>
-                       
+                        <li>
+                            <strong><a href="#">Consumable Inventory</a></strong>
+                        </li>
+                    
                     </ol>
-
                 </div>
-
         </div>
 
-       @include('layouts.alert')
-       @include('layouts.deletemodal')
-    
-        <div class="wrapper wrapper-content animated fadeInRight">
-                <div class="row">
-                    <div class="col-lg-12">
+        @include('layouts.alert')
+        @include('layouts.deletemodal')    
+
+        <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
                         <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>Consumable Inventory List</h5>
-          
-                                                                   
-                                    @if (!can('consumables.create'))
-                                     <div class="ibox-tools">
-                                        <a href="#" class="btn btn-primary btn-sm add-consumable-item"  id="add-product"><i class="fa fa-plus">&nbsp;</i>Create Consumable Inventory</a> 
-                                         <a href="{{route('consumables.print')}}" class="btn btn-info btn-sm print-inventory-item"><i class="fa fa-print">&nbsp;</i>Print</a>
+
+                            <div class="ibox-content" >                       
+
+                                <div class="row m-t-lg">
+                                    <div class="col-lg-12">
+                                        <div class="tabs-container">
+                                            <ul class="nav nav-tabs">
+
+                                                @if (!can('consumables.index'))
+                                                <li class="active">
+                                                    <a data-toggle="tab" href="#tab-1">
+                                                    <i class="fa fa-briefcase">&nbsp;</i>Inventory
+                                                    </a>
+                                                </li>
+                                                @endif
+
+                                                <li>
+                                                    <a data-toggle="tab" href="#tab-2">
+                                                    <i class="fa fa-send">&nbsp;</i>Item Request List
+                                                    </a>
+                                                </li>
+
+
+                                            </ul>
+                                            <div class="tab-content">
+                                                    <div id="tab-1" class="tab-pane active">
+                                                        <div class="panel-body">
+                                                           <div class="table-responsive" >
+                                                            
+                                                        @include('pages.warehouse.consumables.consumable_list') 
+                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>
+       
+                                                <div id="tab-2" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <div class="table-responsive" >
+
+                                                        @include('pages.warehouse.consumables.item_request.request_list') 
+                                                       
+                                                        </div>
+                                                    </div>
+                                                </div>
+                       
+                                            </div>
+                                        </div>
                                     </div>
-                                    @endif
-                                       
-
-                            </div>
-
-                            <div class="ibox-content">
-                              
-                                <div class="table-responsive">
-                                    
-                                    <table class="table table-striped table-hover dataTables-items"data-toggle="dataTable" data-form="deleteForm" >
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Item Name</th>
-                                                <th>Unit</th>
-                                                <th>Quantity</th>
-                                                <th>Location</th>
-                                                <th>Status</th>
-                                                <th>Action</th>  
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                             @foreach($consumables as $consumable)
-                                            <tr>
-                                                <td>{{$consumable->id}}</td>
-                                                <td>
-                                                    @if ($consumable->picture!="")
-                                                        <img class="img-thumbnail img-responsive text-center"  width="56" height="56" src="/item_image/{!! $consumable->picture !!}"/>
-                                                    @else
-                                                        <img class="img-thumbnail img-responsive text-center"  width="56" height="56" alt="image" src="{!! asset('item_image/image_default.png') !!}">
-                                                    @endif
-                                                    {{$consumable->name}}
-                                                </td>
-                                                               
-                                                <td>{{$consumable->units}}</td>
-                                                <td>{{$consumable->onhand_quantity}}</td>   
-                                                <td>{{$consumable->location}}</td>
-                                                <td class="text-center"><label class="label label-warning " >{{$consumable->status}}</label></td>
-                                                <td class="text-center">
-                                                        <div class="btn-group">
-                                                            <a href="{{route('consumables.show',$consumable->item_id)}}" class="btn-primary btn btn-xs"><i class="fa fa-eye"></i></a>
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <a href="{{route('consumables.edit',$consumable->item_id)}}" class="btn-primary btn btn-xs"><i class="fa fa-pencil"></i></a>
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <a href="#" class="btn-primary btn btn-xs"><i class="fa fa-ticket"></i></a>
-                                                        </div>
-                                                        
-                                                </td>
-                                                 <td class="text-center">
-                                                    
-                                                </td>
-                                            </tr>  
-                                        @endforeach
-                                                                               
-                                        </tbody>
-
-                                    </table>
-
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
+        </div>
 
-            
-@include('pages.warehouse.consumables.add_item')
+@include('pages.warehouse.consumables.add_item') 
+@include('pages.warehouse.consumables.item_request.add_request')    
+@include('pages.warehouse.consumables.item_request.edit_request')   
+          
+@endsection
+
+@section('styles')
+<link href="/css/plugins/footable/footable.core.css" rel="stylesheet">
 @endsection
 
 
 @section('scripts')
-
 <script src="/js/plugins/footable/footable.all.min.js"></script>
-
 <script type="text/javascript">
-    
-
 
         $(document).ready(function(){
-              $('.dataTables-items').DataTable({
+              $('.dataTables-consumable-items').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    //{ extend: 'copy'},
-                    //{extend: 'csv'},
-                    //{extend: 'excel', title: 'Suppier List'},
-                    {extend: 'pdf', title: 'Suppliers'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
+                buttons: []
             });
-
         });
+
 
         $(document).on('click', '.add-consumable-item', function() {
            $('.modal-title').text('Add Consumable Item');
            $('#myModal').modal('show');
-        });  
-    
+        }); 
 
-           
-    
-    
+        $(document).on('click', '#add-ticket-request', function() {
+           $('.modal-title').text('Add Request Item');
+            $('#inven_id').val($(this).data('id'));
+            $('#item_name').val($(this).data('name'));
+            $('#item_units').val($(this).data('units'));
+           $('#myModalrequest').modal('show');
+        }); 
+      
+        $(document).on('click', '#btn-edit-request', function() {
+           $('.modal-title').text('Add Request Item');
+            $('#request_id').val($(this).data('edt_id'));
+            $('#edit_reference_no').val($(this).data('edit_ref_no'));
+            $('#edit_item_name').val($(this).data('edit_name'));
+            $('#edit_item_units').val($(this).data('edit_units'));
+            $('#edit_req_quantity').val($(this).data('edit_req_qty'));
+            $hide = $(this).data('edit_status');
+            if ($hide == 0)   {
+                   $('#mdfooter').append("<button type='submit' class='btn btn-primary btn-save' name='btnSD' value='0'>Save Only</button>");
+            }
+           $('#myModalEditrequest').modal('show');
+        }); 
+
+
+
+    function confirmPost(data,model) {   
+         $('#confirmPost').modal({ backdrop: 'static', keyboard: false })
+            .on('click', '#post-btn', function(){
+                $(this).attr("disabled","disabled");
+                document.location.href="/consumables/post-request/"+data;
+            });
+        }
+
+
+    function confirmDelete(data,model) {   
+         $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
+            .on('click', '#delete-btn', function(){
+                $(this).attr("disabled","disabled");
+                document.location.href="/consumables/delete-request/"+data;
+            });
+        }
+   
+
+
+
 </script>
 
 @endsection

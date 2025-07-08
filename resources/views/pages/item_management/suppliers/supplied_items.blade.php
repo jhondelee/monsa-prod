@@ -46,6 +46,8 @@
                         </div>
 
                         <div class="ibox-content">
+                            
+                            <a href="{{route('supplier.print',$suppliers->id)}}" class="btn btn-primary btn-print"><i class="fa fa-print">&nbsp;</i>Print</a> 
 
                             <div class="form-horizontal m-t-md">
 

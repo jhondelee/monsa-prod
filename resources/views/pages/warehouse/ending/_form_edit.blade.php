@@ -39,12 +39,12 @@
                     <tr>
                         <td class="text-center">
                             {{$item->id}}
+                              <input type="hidden" id="id" name="id[]" value="{{$item->inventory_id}}">
                             <input type="hidden" id="item_id" name="item_id[]" value="{{$item->item_id}}">
                         </td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
                         <td class="text-center">
-                        <input type="input" size ="3" id="item_unit_qty" name="item_unit_qty[]" value="{{$item->unit_quantity}}" class="text-center">
                         {{$item->units}}
                         </td>
                         <td class="text-center">

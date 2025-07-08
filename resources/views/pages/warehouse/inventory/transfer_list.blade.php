@@ -7,6 +7,7 @@
 <table class="table table-striped table-hover dataTables-trasfer" >
     <thead>
         <tr>
+            <th>Id</th>
             <th>Reference No.</th>
             <th>Source Loc.</th>
             <th>Destination Loc.</th>
@@ -18,10 +19,11 @@
     </thead>
     <tbody>
         @foreach($transferLists as $transferList)
-            <tr>           
+            <tr>  
+                <td>{{$transferList->id}}</td>        
                 <td>{{$transferList->reference_no}}</td>
-                <td>{{$transferList->source}}</td>
-                <td>{{$transferList->destination}}</td>
+                <td>{{$transferList->w_sourse}}</td>
+                <td>{{$transferList->w_destination}}</td>
                 <td>{{$transferList->created_by}}</td>
                 <td>{{date('m-d-Y', strtotime($transferList->transfer_date))}}</td>
                 <td>
@@ -38,10 +40,10 @@
                             <a href="{{route('transfer.edit',$transferList->id)}}" class="btn-primary btn btn-xs"><i class="fa fa-pencil"></i></a>
                         </div>
                     @endif
-                    @if($trasferList->status != 'POSTED')
+                    @if($transferList->status != 'POSTED')
                         @if (!can('transfer.delete'))
                              <div class="btn-group">
-                                <a class="btn-danger btn btn-xs" onclick="confirmDeleteOrder('{{$transferList       ->id}}'); return false;"><i class="fa fa-trash"></i></a>
+                                <a class="btn-danger btn btn-xs" onclick="confirmDeleteOrder('{{$transferList->id}}'); return false;"><i class="fa fa-trash"></i></a>
                             </div>
                         @endif  
                     @endif

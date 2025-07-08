@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Factories\Item\Factory as ItemFactory;
+use Yajra\Datatables\Datatables;
 use App\Item;
 use App\UnitOfMeasure; 
 use App\User as Users;
+use Fpdf;
 
 
 class ItemController extends Controller
@@ -23,21 +25,20 @@ class ItemController extends Controller
         $this->middleware('auth');
     }
 
-     public function index()
+     public function index(Request $request)
     {
-        $items = $this->items->getindex();
+        $item_name = Item::pluck('name','name');
 
-        return view('pages.item_management.items.index',compact('items'));
+        $val = $request->val;
+
+        return view('pages.item_management.items.index',compact('item_name','val'));
+       
     }
-
-
 
 
     public function create()
     {
         
-       
-
         $units = UnitOfMeasure::pluck('name','id');
 
         return view('pages.item_management.items.create',compact('units'));
@@ -51,8 +52,7 @@ class ItemController extends Controller
         $this->validate($request, [
             'name'          => 'required',
             'description'   => 'required',
-            'unit_id'       => 'required',
-            'unit_quantity' => 'required'
+            'unit_id'       => 'required'
         ]);
 
 
@@ -78,6 +78,10 @@ class ItemController extends Controller
 
         $item->unit_cost = $request->unit_cost;
 
+        $item->free = $request->free;
+
+        $item->activated = $request->activated;
+
         $item->created_by = $employee;
 
      
@@ -90,6 +94,8 @@ class ItemController extends Controller
 
 
         $item->save();
+
+      
 
         return redirect()->route('item.index')
 
@@ -112,7 +118,7 @@ class ItemController extends Controller
 
     public function update(request $request,$id)
     {
-
+        
         $this->validate($request, [
             'code'          => 'required',
             'name'          => 'required',
@@ -143,6 +149,10 @@ class ItemController extends Controller
 
         $item->unit_cost = $request->unit_cost;
 
+        $item->free = $request->free;
+
+        $item->activated = $request->activated;
+
         $item->created_by = $employee;
 
         if ( $request->hasFile('item_picture') )  {
@@ -153,7 +163,9 @@ class ItemController extends Controller
 
         $item->save();
 
-          return redirect()->route('item.index')
+        $val = $request->name;
+
+        return redirect()->route('item.index',['val'=>$val])
 
             ->with('success','Item has been updated successfully.');
 
@@ -171,6 +183,53 @@ class ItemController extends Controller
         return redirect()->route('item.index')
 
             ->with('success','Item has been deleted successfully.');
+    }
+
+
+    public function update_price(request $request)
+    {
+        $items = Item::findOrfail($request->id);
+    
+        $items->srp = $request->unit_srp;
+
+        $items->unit_cost = $request->unit_cost;
+
+        $items->save();
+
+        $val = $items->name;
+
+        return redirect()->route('item.index',['val'=>$val])
+
+            ->with('success','Item SRP and Unit Cost has been update successfully.');
+    }
+
+
+
+    public function datatable(Request $request)
+    {
+
+        if (!$request->value==true){
+           $results = $this->items->getitemList();
+        }else{
+            $results = $this->items->getitemname($request->value);
+            
+        }
+        
+        return response()->json($results);
+
+    }
+
+    public function getname(Request $request)
+    {
+
+        if (!$request->value==true){
+           $results = $this->items->getitemList();
+        }else{
+           $results = $this->items->getitemname($request->value);
+            
+        }
+
+        return response()->json($results);
     }
 
 }

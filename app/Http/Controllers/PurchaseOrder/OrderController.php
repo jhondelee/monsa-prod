@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Factories\Item\Factory as ItemFactory;
 use App\Factories\Order\Factory as OrderFactory;
+use Yajra\Datatables\Datatables;
 use App\Item;
 use App\Order;
 use App\OrderItems;
@@ -64,7 +65,7 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-       
+
         $this->validate($request, [
             'po_date'       => 'required',
             'supplier_id'   => 'required',
@@ -96,8 +97,6 @@ class OrderController extends Controller
         $orders_id      = $orders->id;
         $item_id        = $request->get('item_id');
         $item_quantity  = $request->get('quantity');
-        $unit_cost      = $request->get('unit_cost');
-        $total_amount   = $request->get('total_amount');
         
 
         for ( $i=0 ; $i < count($item_id) ; $i++ ){
@@ -112,9 +111,9 @@ class OrderController extends Controller
 
             $order_items->quantity          = $item_quantity[$i];
 
-            $order_items->unit_cost         = $unit_cost[$i];
+            $order_items->unit_cost         = 0.00;
 
-            $order_items->unit_total_cost   = floatval($total_amount[$i]);
+            $order_items->unit_total_cost   = 0.00;
 
             $order_items->save();
 
@@ -157,6 +156,26 @@ class OrderController extends Controller
     }
 
 
+    public function additemSupplier(Request $request)
+    {
+        
+        $results = $this->items->additemSupplier($request->id);   
+
+        return response()->json($results);       
+        
+    }
+
+    public function orderToSupplier(Request $request)
+    {
+
+        $results = $this->orders->orderToSupplier($request->id);
+
+        return response()->json($results); 
+
+      
+    }
+
+    
     public function edit($id)
     {
 
@@ -196,9 +215,9 @@ class OrderController extends Controller
 
         $orders->supplier_id    = $request->supplier_id;
 
-        $orders->discount       = $request->discount;
+        $orders->discount       = 0;
 
-        $orders->grand_total    = $request->grand_total;
+        $orders->grand_total    = 0;
 
         $orders->approved_by    = $request->approved_by;
 
@@ -206,9 +225,7 @@ class OrderController extends Controller
 
         $item_id        = $request->get('id');
         $item_quantity  = $request->get('quantity');
-        $unit_cost      = $request->get('unit_cost');
-        $total_amount   = $request->get('unit_total_cost');
-
+        
 
 
          if(count($request->get('id')) > 0);
@@ -241,9 +258,9 @@ class OrderController extends Controller
 
                 $order_items->quantity          = $item_quantity[$i];
 
-                $order_items->unit_cost         = $unit_cost[$i];
+                $order_items->unit_cost         = 0;
 
-                $order_items->unit_total_cost   = $total_amount[$i];
+                $order_items->unit_total_cost   = 0;
 
                 $order_items->save();
 
@@ -339,8 +356,8 @@ class OrderController extends Controller
         
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
-        $pdf::Image('img/monsa-logo-header.jpg',10, 5, 30.00);
-        //$pdf::Image('img/temporary-logo.jpg',5, 5, 40.00);
+        //$pdf::Image('/home/u648374046/domains/monsais.net/public_html/public/img/monsa-logo-header.jpg',10, 5, 30.00);
+        $pdf::Image('img/temporary-logo.jpg',5, 5, 40.00);
         $pdf::SetFont('Arial','B',12);
         $pdf::SetY(20);     
 
@@ -395,31 +412,29 @@ class OrderController extends Controller
         //Column Name
             $pdf::Ln(15);
             $pdf::SetFont('Arial','B',9);
-            $pdf::cell(25,6,"Item No.",0,"","C");
-            $pdf::cell(75,6,"Item Name",0,"","L");
+            $pdf::cell(10,6,"No.",0,"","L");
+            $pdf::cell(40,6,"Item Name",0,"","L");
+            $pdf::cell(75,6,"Description",0,"","L");
+            $pdf::cell(25,6,"Unit",0,"","C");
+            $pdf::cell(30,6,"Order Quantity",0,"","C");
 
-            $pdf::cell(20,6,"Unit",0,"","C");
-            $pdf::cell(20,6,"Quantity",0,"","C");
-            $pdf::cell(20,6,"Price",0,"","C");
-            $pdf::cell(20,6,"Amount",0,"","C");
 
          $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
         $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
 
-        $orde_items = $this->items->getForPO($id);;
-
+        $orde_items = $this->items->getForPO($id);
+        $order_number = 0;
         foreach ($orde_items as $key => $value) {
 
             $pdf::Ln(5);
             $pdf::SetFont('Arial','',9);
-            $pdf::cell(25,6,$value->id,0,"","C");
-            $pdf::cell(75,6,$value->name,0,"","L");
+            $pdf::cell(10,6,$order_number=$order_number+1,0,"","L");
+            $pdf::cell(40,6,$value->name,0,"","L");
+            $pdf::cell(75,6,$value->description,0,"","L");
   
-            $pdf::cell(20,6,$value->units,0,"","C");
-            $pdf::cell(20,6,number_format($value->quantity,2),0,"","C");
-            $pdf::cell(20,6,number_format($value->unit_cost,2),0,"","C");
-            $pdf::cell(20,6,number_format($value->unit_total_cost,2),0,"","R");
+            $pdf::cell(25,6,$value->units,0,"","C");
+            $pdf::cell(30,6,number_format($value->quantity,2),0,"","C");
         }
 
         $pdf::Ln(5);
@@ -431,7 +446,7 @@ class OrderController extends Controller
         $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
 
 
-
+        /*
         $pdf::Ln(10);
         $pdf::SetFont('Arial','B',9);
         $pdf::cell(150,6,"Discount :",0,"","R");
@@ -443,7 +458,7 @@ class OrderController extends Controller
         $pdf::cell(150,6,"Total Amount :",0,"","R");
         $pdf::SetFont('Arial','',9);
         $pdf::cell(30,6,number_format($orders->grand_total,2),0,"","R");
-
+        */
        
 
         $preparedby = $this->user->getCreatedbyAttribute($orders->created_by);

@@ -8,4 +8,5 @@ interface SetInterface {
 
      public function AddTransferItem($source);
      
+     public function getTransferList();
 }

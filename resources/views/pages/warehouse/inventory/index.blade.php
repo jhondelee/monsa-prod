@@ -45,7 +45,14 @@
                                                 @if (!can('transfer.index'))
                                                 <li>
                                                     <a data-toggle="tab" href="#tab-2">
-                                                    <i class="fa fa-send">&nbsp;</i>Stock Transfer
+                                                    <i class="fa fa-share-square-o">&nbsp;</i>Stock Transfer
+                                                    </a>
+                                                </li>
+                                                @endif
+                                                @if (!can('returns.index'))
+                                                <li>
+                                                    <a data-toggle="tab" href="#tab-3">
+                                                    <i class="fa fa-trash">&nbsp;</i>Returns
                                                     </a>
                                                 </li>
                                                 @endif
@@ -72,6 +79,17 @@
                                                     </div>
                                                 </div>
                                                 @endif
+                                                @if (!can('returns.index'))
+                                                <div id="tab-3" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <div class="table-responsive" >
+
+                                                            @include('pages.warehouse.inventory.return_list')
+                                                       
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -83,16 +101,23 @@
             </div>
         </div>
 
-@include('pages.warehouse.inventory.create.add')          
+@include('pages.warehouse.inventory.create.add')
+
+@include('pages.warehouse.inventory.create.return_supplier') 
+
+@include('pages.warehouse.inventory.create.return_inventory')   
+
 @endsection
 
 
 
 @section('scripts')
+
+
 <link href="/css/plugins/select2/select2.min.css" rel="stylesheet">
 <script src="/js/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
-        
+
         $(document).ready(function(){
               $('.dataTables-items').DataTable({
                 pageLength: 25,
@@ -161,7 +186,7 @@
          $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
             .on('click', '#delete-btn', function(){
                 $(this).attr("disabled","disabled");
-                document.location.href="/stock-transfer/delete/"+data;
+                document.location.href="/transfer/delete/"+data;
             });
         }
 
@@ -171,10 +196,71 @@
            $('#myModal').modal('show');
         });   
         
+        //
+        $(document).on('click', '#rtn-supplier', function() {
+            var _id = $(this).data('rtn_id');
+                
+                //get-supplier
+                $.ajax({
+                    url:  '{{ url('inventory/get-item-to-supplier') }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { _token: "{{ csrf_token() }}",
+                    id: _id}, 
+                    success:function(results){
+
+                        $('.supplier_id').val( results.id ).trigger("chosen:updated");
+
+                    }
+                });
+
+            //suppliers
+           $('.modal-title').text('Return to Supplier');
+           $('#item_rtn_id').val( $(this).data('rtn_id') );
+           $('#inven_id').val($(this).data('rtn_invenid') );
+           $('.item_return_to_supplier').val( $(this).data('rtn_name') );
+           $('.unti_qty').val( $(this).data('rtn_unit') );
+           $('.return_date').val( $(this).data('rtn_date') );
+           $('.location').prop('disabled', true);
+           $('.location').val( $(this).data('rtn_loc') ).trigger("chosen:updated");
+           $('.return_by').val( $(this).data('userid') ).trigger("chosen:updated");
+           $('#myModalsupplier').modal('show');
+
+        });  
+
+        //
+        $(document).on('click', '#rtn-inventory', function() {
+           $('.modal-title').text('Return to Inventory');
+           $('#item_id').val( $(this).data('rtn_id') );
+           $('#inven_item_id').val($(this).data('rtn_invenid') );
+           $('#item_return_to_supplier').val( $(this).data('rtn_name') );
+           $('#unti_qty_o').val( $(this).data('rtn_unit') );
+           $('.return_date').val( $(this).data('rtn_date') );
+           $('#inv_loc').val( $(this).data('rtn_loc') ).trigger("chosen:updated");
+           $('.return_by').val( $(this).data('userid') ).trigger("chosen:updated");
+           $('#myModalRtnInventory').modal('show');
+        }); 
+
+
+        $('.unti_qty_i').on('keyup', function() {  
+            var _o_qty = $('#unti_qty_o').val();
+            var _qty = $(this).val(); 
+
+            if (!_qty == false) {
+                     
+                     if ( _qty > _o_qty ){
+                        toastr.info('Insufficient Unit Qty' ,'Warning')
+                        $(this).val('');
+                     }
+
+            }
+        });
+
+
         $('#inventory_item_id').change(function(){
             var id = $(this).val();
             var _item_name = $('#inventory_item_id option:selected').text();
-      
+                
                 $.ajax({
                     url:  '{{ url('inventory/iteminfo') }}',
                     type: 'POST',
@@ -190,13 +276,14 @@
                 });
         })
         
-        
+        //deduct to inventory
         $(document).on('click', '.deduct-inventory-item', function() {
            $('.modal-title').text('Deduct Inventory Item');
            $('.source_deduct').val($(this).data('')).trigger("chosen:updated");
            $('.items_deduct').val($(this).data('')).trigger("chosen:updated");
            $('#deduct-Modal').modal('show');
         });  
+
 
 
 
@@ -227,7 +314,8 @@
                     
                 });
 
-        
+
+
       
 </script>
 

@@ -116,10 +116,9 @@
 @section('scripts')
 
 <script src="/js/plugins/footable/footable.all.min.js"></script>
-
+<script src="/js/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
     
-
 
         $(document).ready(function(){
               $('.dataTables-items').DataTable({

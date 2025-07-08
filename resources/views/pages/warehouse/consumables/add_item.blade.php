@@ -1,4 +1,4 @@
-
+    
 {!! Form::open(array('route' => array('consumables.store'),'class'=>'form-horizontal','role'=>'form')) !!} 
 
  <div id="myModal" class="modal fade" aria-hidden="true">

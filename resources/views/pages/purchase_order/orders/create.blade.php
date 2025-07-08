@@ -66,42 +66,89 @@
 
 @endsection
 
-
+@section('styles')
+<link href="/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+@endsection
 
 @section('scripts')
-
 <script src="/js/plugins/toastr/toastr.min.js"></script>
 
 <script type="text/javascript">
 
 
- $(document).ready(function(){
-    
-        $('.dataTables-add-items').DataTable({
-                pageLength: 10,
-                responsive: true,
-            
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    //{ extend: 'copy'},
-                    //{extend: 'csv'},
-                    //{extend: 'excel', title: 'ExampleFile'},
-                    //{extend: 'pdf', title: 'Inventory List'},
+        $('#supplier_id').on('change', function (e) {
 
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
+            var id = this.value;
+         
+            $('#dTable-ItemList-table').empty()
+            $('#dTable-ItemList-table').datatable().destroy()
 
+           
+        });
+
+        $(document).on('click', '.btn-show-item', function() {
+            var id = $('#supplier_id').val();
+            var sup_name = $('#supplier_id :selected').text();
+
+            $('.modal-title').text('Add Item');
+            $('#myModal').modal('show'); 
+
+            $(function() {
+            $.ajax({
+                url:  '{{ url("order/orderToSupplier") }}',
+                type: 'POST',
+                dataType: 'json',
+                data: { _token: "{{ csrf_token() }}",
+                id: id}, 
+                success:function(results){
+
+                    toastr.success(sup_name + ' Supplier','Selected!')
+
+                    $('#dTable-ItemList-table').DataTable({
+                        destroy: true,
+                        pageLength: 100,
+                        responsive: true,
+                        fixedColumns: true,
+                        autoWidth: true,
+                        data: results,
+                        dom: '<"html5buttons"B>lTfgitp',
+                        buttons: [],
+                        columns: [
+                            {data: id ,title: 'Id', 
+                                render: function(data,type,row){
+                                return '<input type="text" name="item_id[]" class="form-control input-sm text-center item_id" size="4"  readonly="true" id ="item_id" value="'+ row.id +'">';
+                                }
+                            },  
+                            {data: 'description', title: 'Description'},                               
+                            {data: 'units', title: 'Units'},
+                            {data: 'status', title: 'Status',
+                                render: function(data, type, row){
+                                    if(row.status=='In Stock'){
+                                        return '<label class="label label-success" >In Stock</label>  '
+                                    }else{
+                                        if(row.status=='Reorder'){
+                                            return '<label class="label label-warning" >Reorder</label>'
+                                        }else{
+                                            return '<label class="label label-danger" >Critical</label>';
+                                        }
+                                        
+                                    }   
+                                }
+                            },
+                            {data: 'id', title: 'Action',
+                                render: function(data,type,row) {
+                                     return '<a class="btn-primary btn btn-xs btn-add-items" onclick="confirmAddItem('+ row.id +'); return false;"><i class="fa fa-plus"></i></a>';
+                                }
+                            }
+                            ]
+                    });
+                }
             });
-
+        });
     });
+
+          
 
     $('#discount').val('0.00');
     $('#total_amount').val('0.00');
@@ -120,11 +167,12 @@
             }
 
             _sub_amount = _sub_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
             $(this).closest('tr').find('#amount').val( _sub_amount );
 
                 // sum of price
                 var _total_amount = 0.00;
-                $( "#dTable-selected-item-table tbody > tr" ).each( function() {
+                $("#dTable-selected-item-table tbody > tr" ).each( function() {
                         var $row = $( this );        
                         var _subtotal = $row.find( ".amount" ).val();
     
@@ -167,12 +215,8 @@
         });
 
 
-       $(document).on('click', '.btn-show-item', function() {
-            var id = $('#supplier_id').val();
-                $('.modal-title').text('Add Item');
-                $('#myModal').modal('show'); 
-        });
 
+        
         
         $("#remove-row").click(function(){
             $("table tbody").find('input[name="remove"]').each(function(){
@@ -218,7 +262,7 @@
         function confirmAddItem(data) {   
             var id = data;
             $.ajax({
-            url:  '{{ url('order/getitems') }}',
+            url:  '{{ url("order/getitems") }}',
             type: 'POST',
             dataType: 'json',
             data: { _token: "{{ csrf_token() }}",
@@ -226,17 +270,10 @@
             success:function(results){
                                                
                 $('#dTable-selected-item-table tbody').append("<tr><td><input type='text' name='item_id[]' class='form-control input-sm text-center item_id' required=true size='4'  value="+ results.id +" readonly></td>\
-                        <td>"+ results.name +"</td>\
                         <td>"+ results.description +"</td>\
                         <td>"+ results.units +"</td>\
                         <td>\
                         <input type='text' name='quantity[]' class='form-control input-sm text-center quantity' required=true size='4'  placeholder='0.00'  id ='quantity'>\
-                        </td>\
-                         <td>\
-                        <input type='text' name='unit_cost[]' class='form-control input-sm text-center price' required=true size='4'  value="+ results.unit_cost +"  id ='price'>\
-                        </td>\
-                        <td>\
-                        <input type='text' name='total_amount[]' class='form-control input-sm text-right amount' required=true size='4'  placeholder='0.00'  id ='amount' readonly>\
                         </td>\
                         <td style='text-align:center;'>\
                             <div class='checkbox checkbox-success'>\
@@ -265,6 +302,8 @@
                 toastr.warning('No Items to be save!','Invalid!')
             }
          }
+
+
 
 
 </script>

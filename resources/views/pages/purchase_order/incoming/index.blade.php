@@ -56,6 +56,7 @@
                                             
                                             <th>PO Number</th>
                                             <th>DR Number</th>
+                                            <th>Supplier</th>
                                             <th>DR Date</th>
                                             <th>Received By</th>
                                             <th>Status</th>
@@ -68,8 +69,8 @@
                                                 <tr>
                                                     <td>{{$incoming->po_number}}</td>
                                                     <td>{{$incoming->dr_number}}</td>
+                                                    <td>{{$incoming->supplier}}</td>
                                                     <td>{{date('m-d-Y', strtotime($incoming->dr_date))}}</td>
-                                                 
                                                     
                                                     <td>{{$incoming->received_by}}</td>
                                                     <td>

@@ -17,10 +17,15 @@ class Factory implements SetInterface
           i.po_number,
           i.dr_number,
           i.dr_date,
+          s.name AS supplier,
           CONCAT(e.firstname,' ',e.middlename,'. ',e.lastname) AS received_by,
           i.`status` FROM incomings i
           INNER JOIN employees e
           ON i.received_by = e.id
+          INNER JOIN orders o
+          ON o.id = i.order_id
+          INNER JOIN suppliers s
+          ON s.id = o.supplier_id
           ORDER BY i.id DESC;");
 
         return collect($results);
@@ -36,9 +41,11 @@ class Factory implements SetInterface
                 e.name,
                 e.description,
                 u.code AS units,
-                e.unit_cost,
-                s.quantity,
+                i.unit_cost,
+                ifnull(s.quantity,0) as quantity,
                 i.received_quantity,
+                i.unit_total_cost,
+                e.free,
                 n.status
             FROM incomings n
             INNER JOIN incoming_items i
@@ -47,7 +54,7 @@ class Factory implements SetInterface
             ON e.id = i.item_id
             INNER JOIN unit_of_measure u
             ON u.id = e.unit_id
-            INNER JOIN order_items s
+            LEFT JOIN order_items s
             ON s.order_id = n.order_id AND s.item_id = i.item_id
             WHERE i.incoming_id = ?;",[$id]);
 

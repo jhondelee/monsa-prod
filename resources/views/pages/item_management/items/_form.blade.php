@@ -110,14 +110,41 @@
 </div>
 
 <div class="hr-line-dashed"></div>
- 
+ @if (!can('item.unit_cost'))
 <div class="form-group">
     <label class="col-sm-2 control-label">Unit Cost</label>
     <div class="col-sm-2">
         {!! Form::text('unit_cost', null, ['class'=>'form-control', 'placeholder'=>'0.00','onchange'=>'validateFloatKeyPress(this);'])  !!}
     </div>
 </div>
-    
+@endif 
+
+<div class="hr-line-dashed"></div>
+<div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-6">
+        <div class="checkbox checkbox-info">
+            {!! Form::checkbox('free', '1', null, ['id'=>'free']) !!}
+            <label for="free_item">
+                Free Item
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-6">
+        <div class="checkbox checkbox-success">
+            {!! Form::checkbox('activated', '1', null, ['id'=>'activated']) !!}
+            <label for="activated">
+                Activate
+            </label>
+        </div>
+    </div>
+</div>
 
 
 <div class="hr-line-dashed"></div>

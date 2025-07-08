@@ -15,13 +15,13 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                            <img alt="image" class="img-circle" src="/img/logo_v2.jpg"/>
+                            <img alt="image" class="img-circle" src="/img/temp-logo.jpg"/>
                         </div>
                     </li> 
 
            @foreach($auth_navigation->where('group_id', null) as $nav)
                 @if(isRouteExist($nav->route_name))
-                    <li class="{{isActive($nav->route_name)}}">
+                    <li class="{{isActive('location.index')}}">
                         <a href="{{route($nav->route_name)}}">
                             <i class="fa {{$nav->icon_class}}"></i> 
                             <span class="nav-label">{{$nav->display_name}}</span>
@@ -37,7 +37,7 @@
                         <ul class="nav nav-second-level collapse">
                         @foreach($auth_navigation->where('group_id', $group->id) as $nav)
                             @if(isRouteExist($nav->route_name))
-                                <li class="{{isActive($nav->route_name)}}"><a href="{{route($nav->route_name)}}"><i class="fa fa-caret-right"></i> {{$nav->display_name}}</a></li>                           
+                                <li class="{{isActive($nav->route_name)}}"><a href="{{route($nav->route_name)}}"><i class="fa fa-caret-right"></i> {{$nav->display_name}}</a></li>                          
                             @endif
                         @endforeach
                         </ul>

@@ -44,7 +44,7 @@
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
                         <td class="text-center">
-                        <input type="input" size ="3" id="item_unit_qty" name="item_unit_qty[]" value="{{$item->unit_quantity}}" class="text-center">
+                      
                         {{$item->units}}
                         </td>
                         <td class="text-center">

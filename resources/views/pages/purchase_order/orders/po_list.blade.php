@@ -7,7 +7,7 @@
             <th>PO #</th>
             <th>PO Date</th>
             <th>Supplier</th>
-            <th>Total Amount</th>   
+            
             <th class="text-center">Status</th>
             <th class="text-center">Action</th>                                                   
         </tr>
@@ -22,7 +22,7 @@
                     <td>{{$order_open->po_number}}</td>
                     <td>{{ date('m-d-y', strtotime($order_open->po_date))}}</td>
                     <td>{{$order_open->supplier}}</td>
-                    <td class="text-right">{{number_format($order_open->grand_total,2)}}</td>
+                    
                     <td class="text-center">
                         @IF($order_open->status == 'NEW')
                             <label class="label label-info" >NEW</label> 

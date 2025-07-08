@@ -7,7 +7,7 @@
             <th>PO #</th>
             <th>PO Date</th>
             <th>Supplier</th>
-            <th>Total Amount</th>   
+            <!--<th>Total Amount</th>   -->
             <th class="text-center">Status</th>
             <th class="text-center">Action</th>                                                   
         </tr>
@@ -21,12 +21,13 @@
                     <td>{{$closed->po_number}}</td>
                     <td>{{ date('m-d-y', strtotime($closed->po_date))}}</td>
                     <td>{{$closed->supplier}}</td>
-                    <td class="text-right">{{number_format($closed->grand_total,2)}}</td>
-                    <td class="text-center">{{$closed->status}}</td>
+                    <!--<td class="text-right">{{number_format($closed->grand_total,2)}}</td>-->
+                    <td class="text-center">
+                        <label class="label label-warning" >{{$closed->status}}</label> </td>
                     <td class="text-center">
 
                         <div class="btn-group">
-                            <a href="{{ route ('purchase_order.edit', $closed->id) }}" class="btn-primary btn btn-xs"><i class="fa fa-eye"></i></a>
+                            <a href="{{ route ('order.edit', $closed->id) }}" class="btn-primary btn btn-xs"><i class="fa fa-eye"></i></a>
                         </div>
 
 

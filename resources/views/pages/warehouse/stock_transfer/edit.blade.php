@@ -40,15 +40,19 @@
                         <div class="ibox-title">
 
                             <h5>Edit Stock Transfer</h5>
-                            
+
+                               <div class="ibox-tools"> 
+                                   <a href="{{route('transfer.print',$inventorymovements->id)}}" class="btn btn-primary btn-print"><i class="fa fa-print">&nbsp;</i>Print</a>&nbsp;
+                                </div>
+                                                            
                         </div>
 
                         <div class="ibox-content">
-
+                                        
                             <div class="form-horizontal m-t-md">
-                                {!! Form::model($WarehouseMovements, ['route'=>['stock_transfer.update', $WarehouseMovements->id], 'class'=>'form-horizontal']) !!}
+                                {!! Form::model($inventorymovements, ['route'=>['transfer.update', $inventorymovements->id], 'class'=>'form-horizontal']) !!}
 
-                                    @include('pages.inventory.warehouse.transfer._form_edit')
+                                    @include('pages.warehouse.stock_transfer._form_edit')
                                                                      
                                     
                                 {!! Form::close() !!}
@@ -65,7 +69,7 @@
 
         </div>
 
-        @include('pages.inventory.warehouse.transfer.AddItem')
+       @include('pages.warehouse.stock_transfer.AddItem')
 
   @endsection
 
@@ -84,7 +88,7 @@
          $('#confirmPost').modal({ backdrop: 'static', keyboard: false })
             .on('click', '#post-btn', function(){
                 $(this).attr("disabled","disabled");
-                document.location.href="/stock-transfer/post/"+data;
+                document.location.href="/transfer/post/"+data;
             });
         }
 
@@ -92,6 +96,7 @@
         $(document).on('click', '#add-item-modal', function() {
             var _source = $( '.source' ).val();
             var _destination = $( '.destination' ).val();
+            var _warehouse = $( '.source :selected' ).text();
 
             if ( !_source ) {
 
@@ -110,13 +115,13 @@
             }
             if ( _source !=  _destination ){
   
-                $('.modal-title').text('Add Item');
+                $('.modal-title').text('Add Item - FROM: ' + _warehouse);
                 $('#AddItemModal').modal('show');
 
                 $(function() {
                     var id = _source;
                     $.ajax({
-                    url:  '{{ url('stock-transfer/source') }}',
+                    url:  '{{ url('transfer/source') }}',
                     type: 'POST',
                     dataType: 'json',
                     data: { _token: "{{ csrf_token() }}",
@@ -127,16 +132,16 @@
                             destroy: true,
                             pageLength: 10,
                             responsive: true,
+                            fixedColumns: true,
                             data: results,
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [],
                             columns: [
-                                    {data: 'warehouse_id', name: 'warehouse_id'},
-                                    {data: 'location', name: 'location'},
-                                    {data: 'item_code', name: 'item_code'},
-                                    {data: 'item_description', name: 'item_description'},
-                                    {data: 'quantity', name: 'quantity'},
-                                    {data: undefined, defaultContent: '{!! Form::text('qty_value',null, array('id'=> 'qty_value','placeholder' => '0', 'size' => '4','class'=>'text-center')) !!}'},
+                                    {data: 'inventory_id', name: 'inventory_id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'units', name: 'units'},
+                                    {data: 'onhand_quantity', name: 'onhand_quantity'},
+                                    {data: undefined, defaultContent: '{!! Form::text('req_quantity',null, array('id'=> 'req_quantity','placeholder' => '0', 'size' => '4','class'=>'text-center')) !!}'},
                                     {data: 'action', orderable: false, searchable: true},
                                 ],
                             columnDefs: [{
@@ -152,7 +157,7 @@
             }               
 
         });  
-        
+        //get functionbutton
         btnAction = function(id) {
             return '<div class="text-center">\
             <a class="btn btn-xs btn-info add-item" id="add_button" ><i class="fa fa-plus"></i></button></div>';
@@ -162,7 +167,7 @@
             event.preventDefault();
             var cellIndexMapping = { 0: true, 1:true, 2: true, 3: true, 4: true, 5: true};
             var data = [];
-            var qty_value = parseFloat($(this).closest('tr').find('#qty_value').val());
+            var qty_value = parseFloat($(this).closest('tr').find('#req_quantity').val());
             var tableData = $(this).parents('tr').map(function () 
                 { 
                     $(this).find("td").each(function(cellIndex) 
@@ -174,9 +179,9 @@
                 }).get();
 
             item_id = data[0];  
-            source = data[1];
-            item_name = data[3]; 
-            onhand = data[4];
+            item_name = data[1]; 
+            units = data[2]; 
+            onhand = data[3];
             var int_quantity = parseFloat(qty_value);
             var int_onhand = parseFloat(onhand);
            
@@ -185,7 +190,7 @@
                 return false;
             }
 
-            var destination = $( '.destination' ).val();
+            var destination = $( '.destination :selected' ).text();
             
              //   table_data = createTableData (item_id,item_name,destination,qty_value)
 
@@ -199,10 +204,10 @@
                     }
                 });
 
-                $('#create_transfer_order tbody').append("<tr>\
-                    <td>"+ item_id +"<input type='hidden'  name='item_id[]' id='item_id' value="+ item_id +" readonly></td><td>"+ item_name +"</td><td>"+ destination +"</td>\
-                    <td><input type='text'  name='qty_value[]' class='text-center' size='8' value="+ qty_value.toFixed(2) +" readonly></td>\
-                    <td><a class='btn btn-xs btn-danger' id='delete_line'><i class='fa fa-minus'></i></td></tr>");
+                 $('#create_transfer_order tbody').append("<tr>\
+                    <td>"+ item_id +"<input type='hidden'  name='item_id[]' id='item_id' value="+ item_id +" readonly></td><td>"+ destination +"</td><td>"+ item_name +"</td><td class='text-center'>"+ units +"</td>\
+                    <td class='text-center'><input type='text'  name='qty_value[]' class='text-center' size='8' value="+ qty_value.toFixed(2) +" readonly></td>\
+                    <td class='text-center'><a class='btn btn-xs btn-danger' id='delete_line'><i class='fa fa-minus'></i></td></tr>");
                     toastr.warning(item_name + ' Added ' + qty_value,'Warning');
                     var qty_value = $(this).closest('tr').find('#qty_value').val('0');
 
@@ -212,7 +217,6 @@
             }
             
         }); 
-
 
         $('.source').on('change', function (e) {
             var valueSelected = this.value;

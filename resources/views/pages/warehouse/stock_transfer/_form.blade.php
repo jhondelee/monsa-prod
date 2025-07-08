@@ -48,15 +48,16 @@
 
                             
         <div class="col-sm-9">
-        	<button type="button" class="btn btn-rounded btn-xs btn-warning" id="add-item-modal"><i class="fa fa-plus">&nbsp;</i>Add Items</button>
+        	<button type="button" class="btn btn-w-m btn-xs btn-warning" id="add-item-modal"><i class="fa fa-plus">&nbsp;</i>Add Items</button>
             <div class="table-responsive">
             	<table class="table table-bordered" id="create_transfer_order" >
                     <thead > 
                         <tr >
                             <th>ID</th>
-                            <th>Item Name</th>
                             <th>Destination</th>
-                            <th>Qty</th>
+                            <th>Item Name</th>
+                            <th class="text-center">Units</th>
+                            <th class="text-center">Req Qty</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>

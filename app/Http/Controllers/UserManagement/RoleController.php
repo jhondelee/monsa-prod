@@ -136,8 +136,6 @@ class RoleController extends Controller
         $permissions = DB::table('role_permission')->select('permission_id')->where('role_id',$id)->get();
 
         return view($this->data['views'].'edit',compact('role','routes','permissions'));
-
-
     }
     
     /**

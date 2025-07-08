@@ -247,6 +247,7 @@ class Factory implements SetInterface
     {
  
         return $this->find($id)->delete();
-    }    
+    }   
+
 }
 

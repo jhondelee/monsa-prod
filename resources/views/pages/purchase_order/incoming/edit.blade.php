@@ -75,6 +75,7 @@
             </div>
         </div>     
 
+@include('pages.purchase_order.incoming.add_item')
 
 @endsection
 
@@ -131,32 +132,12 @@
             });
         });
 
-        $(document).on("keyup", ".recvd_qty", function () {
-            $( "#dTable-receive-item-table tbody > tr" ).each( function() {
-                var $row = $( this );        
-                var _qty = $row.find( ".quantity" ).val();
-                var _recd_qty = $row.find( ".recvd_qty" ).val();
-                var _total_recd = $row.find( ".total_received").val();
-
-                _qty =parseFloat( ('0' + _qty).replace(/[^0-9-\.]/g, ''), 10 );
-                _recd_qty =parseFloat( ('0' + _recd_qty).replace(/[^0-9-\.]/g, ''), 10 );
-                _total_recd =parseFloat( ('0' + _total_recd).replace(/[^0-9-\.]/g, ''), 10 );
-
-                _recd_qty = _recd_qty + _total_recd;
-
-                   /* if( _recd_qty > _qty) {
-                        toastr.options ={ "closeButton": false,"positionClass": "toast-top-center","preventDuplicates": true}
-                        toastr.error('Over Quantity to be received!','Invalid')
-                        $row.find( ".recvd_qty" ).val('');
-                    }*/
-            });
-            
-        });
-
-          $('#dTable-receive-item-table').on('keyup','.item_quantity',function(e){
+       
+        // compute total by input in received quanity
+        $('#dTable-receive-item-table').on('keyup','._received_qty',function(e){
         //compute price
-        var _price = parseFloat($(this).closest( 'tr ').find( '#unit_cost' ).val());
-        var _quantity = parseFloat($(this).closest( 'tr' ).find( '#item_quantity' ).val());
+        var _price = parseFloat($(this).closest( 'tr ').find( '#_item_unit_cost' ).val());
+        var _quantity = parseFloat($(this).closest( 'tr' ).find( '#_received_qty' ).val());
         var _sub_amount = 0.00;
 
            if (isNaN(_price)){
@@ -166,31 +147,100 @@
             }
 
             _sub_amount = _sub_amount.toFixed(2);
-            $(this).closest('tr').find('#total_amount_input').val( _sub_amount );
+            $(this).closest('tr').find('#_total_amount').val( _sub_amount );
 
                 // sum of price
-                var _total_amount = 0.00;
+                var i_total_amount = 0.00;
                 $( "#dTable-receive-item-table tbody > tr" ).each( function() {
                         var $row = $( this );        
-                        var _subtotal = $row.find( ".total_amount_input" ).val();
+                        var _subtotal = $row.find( "._total_amount" ).val();
     
-                        total_amount += parseFloat( ('0' + _subtotal).replace(/[^0-9-\.]/g, ''), 10 );
+                        i_total_amount += parseFloat( ('0' + _subtotal).replace(/[^0-9-\.]/g, ''), 10 );
                        
                 });
 
-                 total_amount = total_amount.toFixed(2);
-                $('input[name="grand_total"]').val(  total_amount  );
+                 i_total_amount = i_total_amount.toFixed(2);
+                $('input[name="grand_total_amount"]').val(  i_total_amount  );
+ 
+        }); 
+
+        // compute total by input in unitcost
+        $('#dTable-receive-item-table').on('keyup','._item_unit_cost',function(e){
+        //compute price
+        var _price = parseFloat($(this).closest( 'tr ').find( '#_item_unit_cost' ).val());
+        var _quantity = parseFloat($(this).closest( 'tr' ).find( '#_received_qty' ).val());
+        var _sub_amount = 0.00;
+
+           if (isNaN(_price)){
+                var _sub_amount =0.00;
+            }else{
+                var _sub_amount = ( _price * _quantity );
+            }
+
+            _sub_amount = _sub_amount.toFixed(2);
+            $(this).closest('tr').find('#_total_amount').val( _sub_amount );
+
+                // sum of price
+                var i_total_amount = 0.00;
+                $( "#dTable-receive-item-table tbody > tr" ).each( function() {
+                        var $row = $( this );        
+                        var _subtotal = $row.find( "._total_amount" ).val();
+    
+                        i_total_amount += parseFloat( ('0' + _subtotal).replace(/[^0-9-\.]/g, ''), 10 );
+                       
+                });
+
+                 i_total_amount = i_total_amount.toFixed(2);
+                $('input[name="grand_total_amount"]').val(  i_total_amount  );
   
         }); 
 
         // allow only numeric with decimal
-        $(".recvd_qty").on("keypress keyup blur",function (event) {
+        $("._received_qty").on("keypress keyup blur",function (event) {
             //this.value = this.value.replace(/[^0-9\.]/g,'');
          $(this).val($(this).val().replace(/[^0-9\.]/g,''));
                 if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
                     event.preventDefault();
                 }
         });
+
+        
+         $(document).on("keyup", "._discount_input", function () {
+
+                        if (var_discount == 0 || var_discount == null){
+
+                            var i_total_amount = 0;
+
+                            $( "#dTable-receive-item-table tbody > tr" ).each( function() {
+                                    var $row = $( this );        
+                                    var _subtotal = $row.find( "._total_amount" ).val();
+                
+                                    i_total_amount += parseFloat( ('0' + _subtotal).replace(/[^0-9-\.]/g, ''), 10 );
+                                   
+                            });
+
+                             i_total_amount = i_total_amount.toFixed(2);
+                            $('input[name="grand_total_amount"]').val(  i_total_amount  );
+
+                        }   
+      
+                var var_discount = $( "._discount_input" ).val();
+                var var_gtotal = $( "._grand_total_amount" ).val();
+
+                //var_discount =parseFloat( ('0' + var_discount).replace(/[^0-9-\.]/g, ''), 10 );
+                //var_gtotal =parseFloat( ('0' + var_gtotal).replace(/[^0-9-\.]/g, ''), 10 );
+
+                var var_Gtotal_amount = 0.00;
+           
+                    var_Gtotal_amount = var_gtotal - var_discount;
+
+                    var_Gtotal_amount = var_Gtotal_amount.toFixed(2);
+                    
+                    $('input[name="grand_total_amount"]').val(  var_Gtotal_amount  );
+
+
+              
+            });
 
 
         function confirmPost(data,model) {   
@@ -201,9 +251,114 @@
             });
         }
 
-        
-  
 
+    $(document).on('click', '.btn-show-item', function() {
+            var id = $('#supplier_id').val();
+            var sup_name = $('#supplier_id :selected').text();
+
+            $('.modal-title').text('Add Item');
+            $('#myModal').modal('show'); 
+
+            $(function() {
+            $.ajax({
+                url:  '{{ url("order/orderToSupplier") }}',
+                type: 'POST',
+                dataType: 'json',
+                data: { _token: "{{ csrf_token() }}",
+                id: id}, 
+                success:function(results){
+                   
+                    $('#dTable-ItemList-table').DataTable({
+                        destroy: true,
+                        pageLength: 100,
+                        responsive: true,
+                        fixedColumns: true,
+                        autoWidth: true,
+                        data: results,
+                        dom: '<"html5buttons"B>lTfgitp',
+                        buttons: [],
+                        columns: [
+                            {data: id ,title: 'Id', 
+                                render: function(data,type,row){
+                                return '<input type="text" name="item_id[]" class="form-control input-sm text-center item_id" size="4"  readonly="true" id ="item_id" value="'+ row.id +'">';
+                                }
+                            },  
+                            {data: 'description', title: 'Description',
+                                    render: function(data, type, row){
+                                        if(row.free=='1'){
+                                            return row.description +'  <label class="label label-danger" >Free</label> '
+                                        }else{
+                                            return row.description +'<label class="label label-warning" ></label>';
+                                        }   
+                                    }
+
+                            },                               
+                            {data: 'units', title: 'Units'},
+                            {data: 'status', title: 'Status',
+                                render: function(data, type, row){
+                                    if(row.status=='In Stock'){
+                                        return '<label class="label label-success" >In Stock</label>  '
+                                    }else{
+                                        if(row.status=='Reorder'){
+                                            return '<label class="label label-warning" >Reorder</label>'
+                                        }else{
+                                            return '<label class="label label-danger" >Critical</label>';
+                                        }
+                                        
+                                    }   
+                                }
+                            },
+                            {data: 'id', title: 'Action',
+                                render: function(data,type,row) {
+                                     return '<a class="btn-primary btn btn-xs btn-add-items" onclick="confirmAddItem('+ row.id +'); return false;"><i class="fa fa-plus"></i></a>';
+                                }
+                            }
+                            ]
+                    });
+                }
+            });
+        });
+    });
+
+  function confirmAddItem(data) {   
+            var id = data;
+            $.ajax({
+            url:  '{{ url("order/getitems") }}',
+            type: 'POST',
+            dataType: 'json',
+            data: { _token: "{{ csrf_token() }}",
+            id: id}, 
+            success:function(results){
+                var _free="";
+                var _unitCost= results.unit_cost;
+                if(results.free =='1'){
+                    _free = ' <label class="label label-danger " >FREE</label>';
+                    _unitCost = 0;
+                }
+
+                $('#dTable-receive-item-table tbody').append("<tr><td><input type='text' name='item_id[]' class='form-control input-sm text-center item_id' required=true size='4'  value="+ results.id +" readonly></td>\
+                        <td>"+ results.description +" "+ _free + "</td>\
+                        <td class='text-left'>"+ results.units +"</td>\
+                        <td>\
+                        <input type='text' name='quantity[]' class='form-control input-sm text-center quantity' required=true size='4'   value='0'  id ='quantity'>\
+                        </td>\
+                         <td>\
+                        <input type='text' name='received_qty[]' class='form-control input-sm text-center _received_qty' required=true size='4'  placeholder='0.00'  id ='_received_qty'>\
+                        </td>\
+                         <td>\
+                        <input type='text' name='item_unit_cost[]' class='form-control input-sm text-right _item_unit_cost' size='4'  placeholder='0.00'  id ='_item_unit_cost' value ="+ _unitCost + ">\
+                        </td>\
+                        <td>\
+                        <input type='text' name='total_amount[]' class='form-control input-sm text-right _total_amount' required=true size='4'  placeholder='0.00'  id ='_total_amount'>\
+                        </td>\
+                    </tr>"); 
+
+                    toastr.success(results.description +' has been added','Success!')
+                }
+            })
+        }
+
+   
 </script>
 
 @endsection
