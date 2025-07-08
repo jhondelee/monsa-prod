@@ -72,3 +72,20 @@ Route::group(['prefix' => 'sales-payment'], function() {
 });
     
 
+// Sales Report
+Route::group(['prefix' => 'sales-report'], function() {  
+
+    Route::get('/', 'SalesReportController@index')->name("salesreport.index");
+    
+    Route::get('add', 'SalesReportController@create')->name("salesreport.create");
+
+    Route::post('add', 'SalesReportController@store')->name("salesreport.store");
+
+    Route::get('update/{id}', 'SalesReportController@update')->name("salesreport.update");  
+
+    Route::get('edit/{id}', 'SalesReportController@edit')->name("salesreport.edit"); 
+
+    Route::get('delete/{id}', 'SalesReportController@destroy')->name("salesreport.delete");    
+
+
+});

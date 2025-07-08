@@ -429,9 +429,11 @@ class SalesController extends Controller
 
                         $inventory = Inventory::findOrfail($salesorderitems->inventory_id);
 
-                        $inventory->unit_quantity = $inventory->unit_quantity - $salesorderitems->order_quantity;
+                        $resultQTY = $inventory->unit_quantity - $salesorderitems->order_quantity;
 
-                        $inventory->onhand_quantity = ($inventory->unit_quantity * $items->unit_quantity);
+                        $inventory->unit_quantity = $resultQTY;
+
+                        $inventory->onhand_quantity = $resultQTY;
 
                         $inventory->save();
                 }
