@@ -69,9 +69,9 @@ class SalesController extends Controller
 
         $salesorder_status = "NEW";
 
-  
+         $subAmount = 0;
 
-          return view('pages.salesorder.create',compact('employee','employee_agent','creator','customer_id','items','salesorder_status','location'));
+          return view('pages.salesorder.create',compact('employee','employee_agent','creator','customer_id','items','salesorder_status','location','subAmount'));
     }
 
 
