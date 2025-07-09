@@ -305,9 +305,9 @@ class ReturnsController extends Controller
 
             $SalesPayment =SalesPayment::findorfail($getSalesPayment->id);
 
-                    $sorder = SalesOrder::findorfail($sorder->id);
+                    $sorderid = SalesOrder::findorfail($sorder->id);
 
-            $SalesPayment->sales_total =  $sorder->total_sales;
+            $SalesPayment->sales_total =  $sorderid->total_sales;
 
             $SalesPayment->save();
 
