@@ -12,7 +12,7 @@
                     
 
                              <div class="form-group">
-                                 <label class="col-sm-4 control-label">Payment Date <span class="text-danger">*</span></label>
+                                <label class="col-sm-4 control-label">Payment Date <span class="text-danger">*</span></label>
                                 <div  class="col-sm-7">
                                     <div class="input-group date">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -35,6 +35,17 @@
                                 <div class="col-sm-7">
                                     {!! Form::text('_payment_mode_id',null, ['class'=>'form-control _payment_mode_id']) !!}
 
+                                </div>
+                            </div>
+
+
+                             <div class="form-group">
+                                <label class="col-sm-4 control-label">Post Dated<span class="text-danger">*</span></label>
+                                <div  class="col-sm-7">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        {!! Form::text('_post_dated',null, ['class'=>'form-control','id'=>'_post_dated']) !!}
+                                    </div>
                                 </div>
                             </div>
 

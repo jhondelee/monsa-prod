@@ -45,7 +45,15 @@
                                     {!! Form::select ('payment_mode_id',$payment_mode, null,['placeholder' => 'Choose Payment Mode...','class'=>'chosen-select required payment_mode_id'])!!}
                                 </div>
                             </div>
-
+                             <div class="form-group">
+                                <label class="col-sm-4 control-label">Post Dated</label>
+                                <div  class="col-sm-7">
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        {!! Form::text('post_dated',null, ['class'=>'form-control','id'=>'_post_dated']) !!}
+                                    </div>
+                                </div>
+                            </div>
                             <div class="hr-line-dashed"></div> 
 
                             <div class="form-group">

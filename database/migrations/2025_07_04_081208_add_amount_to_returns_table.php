@@ -26,7 +26,7 @@ class AddAmountToReturnsTable extends Migration
     public function down()
     {
         Schema::table('returns', function (Blueprint $table) {
-            //
+           $table->dropColumn('amount');
         });
     }
 }

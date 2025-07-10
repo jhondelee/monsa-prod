@@ -163,6 +163,8 @@ class SalesPaymentController extends Controller
 
             $paymentterms->trasanction_no       = $request->trasanction_no;
 
+            $paymentterms->post_dated           = $request->post_dated;
+
             $paymentterms->bank_name            = $request->bank_name;
 
             $paymentterms->bank_account_no      = $request->bank_account_no;

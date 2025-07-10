@@ -26,7 +26,7 @@ class AddLocationToIncomingsTable extends Migration
     public function down()
     {
         Schema::table('incomings', function (Blueprint $table) {
-            //
+            $table->dropColumn('location');
         });
     }
 }

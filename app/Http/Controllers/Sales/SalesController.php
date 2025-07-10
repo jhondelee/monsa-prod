@@ -616,9 +616,9 @@ class SalesController extends Controller
                 $pdf::cell(10,6,$order_number=$order_number+1,0,"","L");
 
             }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
-
-                $pdf::cell(60,6,$value->description,0,"","L");
-                $pdf::cell(15,6,$value->unti_code,0,"","L");
+                $pdf::cell(10,6,$order_number=$order_number+1,0,"","L");
+                $pdf::cell(65,6,$value->description,0,"","L");
+                $pdf::cell(10,6,$value->unti_code,0,"","L");
                 $pdf::cell(15,6,$value->order_quantity,0,"","C");
                 $pdf::cell(20,6,number_format($value->srp,2),0,"","R");
                 $pdf::cell(20,6,number_format($value->discount_percentage,2),0,"","C");

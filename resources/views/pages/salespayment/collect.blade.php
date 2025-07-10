@@ -140,6 +140,7 @@
                                             <th>Date</th>
                                             <th>Transaction No.</th>
                                             <th>Payemnt Mode</th>
+                                            <th>Post Dated</th>
                                             <th>Amount Paid</th>
                                             <th>Collector</th>
                                             <th class="text-center">Action</th>
@@ -243,7 +244,7 @@
 
                 for(var i=0;i<=results.length;i++) {
 
-                    $('#dTable-terms-item-table tbody').append("<tr><td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td><td>"+ results[i].date_payment +"</td><td>"+ results[i].trasanction_no +"</td><td>"+ results[i].modes +"</td><td class='text-right'>"+ results[i].amount_collected +"</td><td>"+ results[i].collected_by +"</td><td style='text-align:center;'><a class='btn-primary btn btn-xs details' onclick='showdetails("+ results[i].id +"); return false;'><i class='fa fa-eye'></i></a>&nbsp;@IF($salespayments->payment_status == 'Existing Balance')<a class='btn-danger btn btn-xs' onclick='confirmDelete("+ results[i].id +"); return false;'><i class='fa fa-trash'></i></a>@ENDIF</td></tr>"); 
+                    $('#dTable-terms-item-table tbody').append("<tr><td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td><td>"+ results[i].date_payment +"</td><td>"+ results[i].trasanction_no +"</td><td>"+ results[i].modes +"</td><td>"+ results[i].post_dated +"</td><td class='text-right'>"+ results[i].amount_collected +"</td><td>"+ results[i].collected_by +"</td><td style='text-align:center;'><a class='btn-primary btn btn-xs details' onclick='showdetails("+ results[i].id +"); return false;'><i class='fa fa-eye'></i></a>&nbsp;@IF($salespayments->payment_status == 'Existing Balance')<a class='btn-danger btn btn-xs' onclick='confirmDelete("+ results[i].id +"); return false;'><i class='fa fa-trash'></i></a>@ENDIF</td></tr>"); 
                 }
                     
             }
