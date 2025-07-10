@@ -150,5 +150,13 @@ class Factory implements SetInterface
         WHERE item_id = ? AND area_id = ? AND activated_added = 1",[$itemID,$areaID]);
         return collect($results);
     } 
+
+    public function getActualAmount($soID)
+    {
+       $results = DB::select("
+        SELECT (order_quantity * srp) as subAmount 
+        FROM sales_order_items WHERE sales_order_id = ?;",[$soID]);
+        return collect($results);
+    } 
 }
     
