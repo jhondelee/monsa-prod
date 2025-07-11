@@ -33,6 +33,7 @@ class Factory implements SetInterface
                      s.date_payment,
                      s.trasanction_no,
                      m.name AS modes,
+                     ifnull(s.post_dated,'0000-00-00') as post_dated,
                      s.amount_collected,
                      CONCAT(e.firstname,' ',e.lastname) AS collected_by,
                      s.bank_name,
