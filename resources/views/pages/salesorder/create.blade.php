@@ -221,7 +221,7 @@
                                     var _per = ( parseFloat(results.csPrice.dis_percent) / 100 ) * _newSRP ;
 
                                     _setSRP = _newSRP - _per;
-                                    _PerAmount = _per ;
+                                    _PerAmount = _per
 
                                 }
 
@@ -241,7 +241,7 @@
 
                           $('#dTable-selected-item-table tbody').append("<tr><td><input type='text' name='invenId[]' class='form-control input-sm text-center invenId' size='3'  value="+ results.invenId.id +" readonly></td>\
                             <td>"+ results.csPrice.description +"</td>\
-                            <td>"+'('+ results.invenId.unit_quantity +') '+results.csPrice.units+"</td><td><input type='text' name='setQty[]' class='form-control input-sm text-center setQty' size='3'  value="+ _setQty.toFixed(2) +" readonly></td><td><input type='text' name='setPrice[]' class='form-control input-sm text-center setPrice' size='6'  id='setPrice' value="+_newSRP+" readonly></td><td><input type='text' name='dis_amount[]' class='form-control input-sm text-center dis_amount' size='6'  id='dis_amount' value="+results.csPrice.dis_amount+" readonly></td><td><input type='text' name='dis_percent[]' class='form-control input-sm text-center dis_percent' size='3'  id='dis_percent' value="+_PerAmount.toFixed(2)+" readonly></td><td><input type='text' name='setSRP[]' class='form-control input-sm text-center setSRP' size='8'  id='setSRP' value="+_setSRP.toFixed(2) +" readonly></td><td><b><input type='text' name='gAmount[]' class='form-control input-sm text-right gAmount' size='6'  id='gAmount' value="+_Gamount.toFixed(2)+" readonly></b></td>\
+                            <td>"+'('+ results.invenId.unit_quantity +') '+results.csPrice.units+"</td><td><input type='text' name='setQty[]' class='form-control input-sm text-center setQty' size='3'  value="+ _setQty.toFixed(2) +" readonly></td><td><input type='text' name='setPrice[]' class='form-control input-sm text-center setPrice' size='6'  id='setPrice' value="+_newSRP+" readonly></td><td><input type='text' name='dis_amount[]' class='form-control input-sm text-center dis_amount' size='6'  id='dis_amount' value="+results.csPrice.dis_amount+" readonly></td><td><input type='text' name='dis_percent[]' class='form-control input-sm text-center dis_percent' size='3'  id='dis_percent' value="+results.csPrice.dis_percent+" readonly></td><td><input type='text' name='setSRP[]' class='form-control input-sm text-center setSRP' size='8'  id='setSRP' value="+_setSRP.toFixed(2) +" readonly></td><td><b><input type='text' name='gAmount[]' class='form-control input-sm text-right gAmount' size='6'  id='gAmount' value="+_Gamount.toFixed(2)+" readonly></b></td>\
                             <td class='text-center'><a class='btn btn-xs btn-danger' id='delete_line'><i class='fa fa-minus'></i></td>\
                               </tr>");
 
