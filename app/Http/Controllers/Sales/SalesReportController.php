@@ -115,7 +115,7 @@ class SalesReportController extends Controller
         foreach ($payments as $key => $payment) {
             $pdf::Ln(5);
             $pdf::SetFont('Arial','',9);
-            $pdf::cell(25,6,$payment->date_payment,0,"","L");
+            $pdf::cell(20,6,$payment->date_payment,0,"","L");
             $pdf::cell(30,6,$payment->address,0,"","L");
             $pdf::cell(25,6,$payment->so_number,0,"","L");
             $pdf::cell(35,6,$payment->cs_name,0,"","L");
