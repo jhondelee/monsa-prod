@@ -64,7 +64,7 @@ class SalesReportController extends Controller
         if (!$paymode){
             $paymode = 0;
         }
- 
+
        return redirect()->route('salesreport.generate',[$request->start_date,$request->end_date,$paymode]);
     }
 
@@ -100,30 +100,34 @@ class SalesReportController extends Controller
         $pdf::SetFont('Arial','',9);
         $pdf::cell(40,6,': '.$end,0,"","L");
         $title = 'All Paymode';
+      
+
+        $ModeName = Str::lower($title);
+
+        if ($mode > 0){
+            $payname = ModeOfPayment::findOrfail($mode);
+            $ModeName = Str::lower($payname->name);
+            $title = $payname->name;
+        }
+
         $pdf::SetFont('Arial','BU',12);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
         $pdf::cell(70,1,"$title",0,"","C");
 
-
-        $payname = ModeOfPayment::findOrfail($mode);
-        $ModeName = Str::lower($payname->name);
-        $title = $payname->name;
-
         if ($ModeName == 'cash'){
                 
-            $payments =  $this->salesreport->paymentperMode($start,$end,$mode);
+            $payments =  $this->salesreport->paymentCashMode($start,$end,$mode);
         }   
 
-        if ($mode = 0){
+        if ($mode == 0){
         
            $payments =  $this->salesreport->paymentAll($start,$end);
-            
+
         }
-                    
+        
+        // All Payments Column Header                    
+        if ($mode == 0){
 
-      
-
-        //Column Name
             $pdf::Ln(6);
             $pdf::SetFont('Arial','B',9);
             $pdf::cell(20,6,"Payment Date",0,"","C");
@@ -133,6 +137,20 @@ class SalesReportController extends Controller
             $pdf::cell(30,6,"Payment Mode",0,"","C");
             $pdf::cell(25,6,"Amount",0,"","R");
             $pdf::cell(25,6,"Status",0,"","R");
+        }
+
+        // Cash Payments Column Header 
+        if ($ModeName == 'cash'){
+
+            $pdf::Ln(6);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(35,6,"Payment Date",0,"","L");
+            $pdf::cell(50,6,"Address",0,"","L");
+            $pdf::cell(35,6,"DR No.",0,"","L");
+            $pdf::cell(35,6,"Customer",0,"","L");
+            $pdf::cell(25,6,"Amount",0,"","R");
+        }
+
 
          $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
@@ -140,18 +158,39 @@ class SalesReportController extends Controller
 
         
         $tatolAmount = 0;
-        foreach ($payments as $key => $payment) {
-            $pdf::Ln(5);
-            $pdf::SetFont('Arial','',9);
-            $pdf::cell(20,6,$payment->date_payment,0,"","L");
-            $pdf::cell(35,6,$payment->address,0,"","L");
-            $pdf::cell(25,6,$payment->so_number,0,"","L");
-            $pdf::cell(35,6,$payment->cs_name,0,"","L");
-            $pdf::cell(30,6,$payment->paymode,0,"","L");
-            $pdf::cell(15,6,number_format($payment->amount_collected,2),0,"","R");
-            $pdf::cell(25,6,$payment->payment_status,0,"","R");
 
-            $tatolAmount = $tatolAmount + $payment->amount_collected;
+        foreach ($payments as $key => $payment) {
+
+            if ($mode == 0){
+
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(20,6,$payment->date_payment,0,"","L");
+                $pdf::cell(35,6,$payment->address,0,"","L");
+                $pdf::cell(25,6,$payment->so_number,0,"","L");
+                $pdf::cell(35,6,$payment->cs_name,0,"","L");
+                $pdf::cell(30,6,$payment->paymode,0,"","L");
+                $pdf::cell(15,6,number_format($payment->amount_collected,2),0,"","R");
+                $pdf::cell(25,6,$payment->payment_status,0,"","R");
+
+                $tatolAmount = $tatolAmount + $payment->amount_collected;
+
+            }
+
+            if ($ModeName == 'cash'){
+
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(35,6,$payment->date_payment,0,"","L");
+                $pdf::cell(50,6,$payment->address,0,"","L");
+                $pdf::cell(35,6,$payment->so_number,0,"","L");
+                $pdf::cell(35,6,$payment->cs_name,0,"","L");
+                $pdf::cell(25,6,number_format($payment->amount_collected,2),0,"","R");
+
+                $tatolAmount = $tatolAmount + $payment->amount_collected;
+
+            }
+
         }
 
         $pdf::Ln(5);
@@ -162,12 +201,27 @@ class SalesReportController extends Controller
         $pdf::SetFont('Arial','',9);
         $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
 
+        // All Payment Grand Total
+        if ($mode == 0){
 
-        $pdf::Ln(5);
-        $pdf::SetFont('Arial','B',10);
-        $pdf::cell(130,6,"Total:",0,"","R");
-        $pdf::SetFont('Arial','B',10);
-        $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(130,6,"Total:",0,"","R");
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+
+        }
+        // Cash Grand Total
+        if ($ModeName == 'cash'){
+
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(150,6,"Total:",0,"","R");
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+
+        }
+
 
        
 
