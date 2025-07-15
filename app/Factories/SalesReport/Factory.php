@@ -25,7 +25,7 @@ class Factory implements SetInterface
             INNER JOIN customers c ON c.id = o.customer_id
             INNER JOIN mode_of_payments m ON m.id = e.payment_mode_id
             WHERE date_payment BETWEEN ? AND ?
-            ORDER BY m.name,date_payment ASC;",[$startdate,$enddate]);
+            ORDER BY c.address,date_payment ASC;",[$startdate,$enddate]);
 
         return collect($results);
     }
