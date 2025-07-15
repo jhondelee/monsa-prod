@@ -119,6 +119,11 @@ class SalesReportController extends Controller
             $payments =  $this->salesreport->paymentCashMode($start,$end,$mode);
         }   
 
+        if ($ModeName == 'gcash'){
+                
+            $payments =  $this->salesreport->paymentGCashMode($start,$end,$mode);
+        } 
+
         if ($mode == 0){
         
            $payments =  $this->salesreport->paymentAll($start,$end);
@@ -151,6 +156,19 @@ class SalesReportController extends Controller
             $pdf::cell(25,6,"Amount",0,"","R");
         }
 
+        // GCash Payments Column Header 
+        if ($ModeName == 'gcash'){
+
+            $pdf::Ln(6);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(25,6,"Payment Date",0,"","L");
+            $pdf::cell(35,6,"Address",0,"","L");
+            $pdf::cell(20,6,"DR No.",0,"","L");
+            $pdf::cell(35,6,"Customer",0,"","L");
+            $pdf::cell(15,6,"Transac. No.",0,"","L");
+            $pdf::cell(25,6,"Amount",0,"","R");
+            $pdf::cell(25,6,"Receiver",0,"","R");
+        }
 
          $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
@@ -191,6 +209,22 @@ class SalesReportController extends Controller
 
             }
 
+            if ($ModeName == 'gcash'){
+
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(25,6,$payment->date_payment,0,"","L");
+                $pdf::cell(35,6,$payment->address,0,"","L");
+                $pdf::cell(20,6,$payment->so_number,0,"","L");
+                $pdf::cell(35,6,$payment->cs_name,0,"","L");
+                $pdf::cell(15,6,$payment->trasanction_no,0,"","L");
+                $pdf::cell(30,6,number_format($payment->amount_collected,2),0,"","R");
+                $pdf::cell(2,6,$payment->collected_by,0,"","L");
+
+                $tatolAmount = $tatolAmount + $payment->amount_collected;
+
+            }
+
         }
 
         $pdf::Ln(5);
@@ -222,6 +256,16 @@ class SalesReportController extends Controller
 
         }
 
+        // GCash Grand Total
+        if ($ModeName == 'gcash'){
+
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(130,6,"Total:",0,"","R");
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+
+        }
 
        
 

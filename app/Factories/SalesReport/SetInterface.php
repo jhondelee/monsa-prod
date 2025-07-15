@@ -6,10 +6,12 @@ interface SetInterface {
     
      public function getindex();
 
-      public function paymentAll($startdate, $enddate);
+     public function paymentAll($startdate, $enddate);
 
-      public function paymentperMode($startdate, $enddate, $paymode);
+     public function paymentperMode($startdate, $enddate, $paymode);
 
-      public function paymentCashMode($startdate, $enddate, $paymode);
+     public function paymentCashMode($startdate, $enddate, $paymode);
+
+    public function paymentGCashMode($startdate, $enddate, $paymode);
     
  }

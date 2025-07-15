@@ -57,5 +57,21 @@ class Factory implements SetInterface
 
         return collect($results);
     }
+
+    public function paymentGCashMode($startdate, $enddate, $paymode)
+    {
+        $results = DB::select("SELECT e.date_payment, c.address, o.so_number, c.name AS cs_name , e.trasanction_no, 
+            e.amount_collected,CONCAT(p.firstname,' ',p.lastname) AS collected_by
+            FROM sales_payment_terms e
+            INNER JOIN sales_payment s ON s.id = e.sales_payment_id
+            INNER JOIN sales_order o ON o.id = s.sales_order_id
+            INNER JOIN customers c ON c.id = o.customer_id
+            INNER JOIN mode_of_payments m ON m.id = e.payment_mode_id
+            INNER JOIN employees p ON p.user_id = e.collected_by
+            WHERE date_payment BETWEEN ? AND ? AND m.id = ?
+            ORDER BY c.address,date_payment ASC;",[$startdate,$enddate,$paymode]);
+
+        return collect($results);
+    }
 }
     
