@@ -21,8 +21,9 @@
                                 </div>
                             </div>
 
+
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Transaction No.<span class="text-danger">*</span></label>
+                                <label class="col-sm-4 control-label">Transaction No. <span class="text-danger">*</span></label>
                                 <div class="col-sm-7">
                                     {!! Form::text('_trasanction_no',null, ['class'=>'form-control _trasanction_no','required'=> true]) !!}
                                 </div>
@@ -31,7 +32,7 @@
 
 
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Payment Mode <span class="text-danger">*</span></label>
+                                <label class="col-sm-4 control-label">Payment Mode </label>
                                 <div class="col-sm-7">
                                     {!! Form::text('_payment_mode_id',null, ['class'=>'form-control _payment_mode_id']) !!}
 
@@ -40,7 +41,7 @@
 
 
                              <div class="form-group">
-                                <label class="col-sm-4 control-label">Post Dated<span class="text-danger">*</span></label>
+                                <label class="col-sm-4 control-label">Post Dated <span class="text-danger">*</span></label>
                                 <div  class="col-sm-7">
                                     <div class="input-group date">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -52,7 +53,7 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Bank Name</label>
+                                <label class="col-sm-4 control-label">Bank Name </label>
                                 <div class="col-sm-7">
                                     {!! Form::text('_bank_name',null, ['class'=>'form-control _bank_name']) !!}
                                 </div>

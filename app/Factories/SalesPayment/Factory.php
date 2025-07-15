@@ -31,7 +31,7 @@ class Factory implements SetInterface
         $results = DB::select("
             SELECT s.id,
                      s.date_payment,
-                     s.trasanction_no,
+                     s.trasanction_no as transaction_no,
                      m.name AS modes,
                      ifnull(s.post_dated,'0000-00-00') as post_dated,
                      s.amount_collected,

@@ -503,16 +503,16 @@ class SalesController extends Controller
         $pdf::Ln(2);
         $pdf::SetFont('Arial','B',12);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(185,1,"Sales Order",0,"","C");
+        $pdf::cell(185,1,"Delivery Receipt",0,"","C");
 
         $pdf::Ln(15);
         $pdf::SetFont('Arial','B',9);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(20,6,"SO Number",0,"","L");
+        $pdf::cell(20,6,"DR Number",0,"","L");
         $pdf::SetFont('Arial','',9);
         $pdf::cell(40,6,': '.$salesorders->so_number,0,"","L");
         $pdf::SetFont('Arial','B',9);
-        $pdf::cell(100,6,"SO Date",0,"","R");
+        $pdf::cell(100,6,"DR Date",0,"","R");
         $pdf::SetFont('Arial','',9);
         $so_date = Carbon::parse($salesorders->so_date);
         $pdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
@@ -603,6 +603,7 @@ class SalesController extends Controller
                 $pdf::cell(15,6,$value->unti_code,0,"","L");
                 $pdf::cell(30,6,$value->order_quantity,0,"","C");
                 $pdf::cell(30,6,number_format($value->srp,2),0,"","R");
+                $pdf::cell(30,6,number_format($value->sub_amount,2),0,"","R");
 
             }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 $pdf::cell(10,6,$order_number=$order_number+1,0,"","L");

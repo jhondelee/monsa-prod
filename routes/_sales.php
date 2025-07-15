@@ -79,7 +79,9 @@ Route::group(['prefix' => 'sales-report'], function() {
     
     Route::get('add', 'SalesReportController@create')->name("salesreport.create");
 
-    Route::post('add', 'SalesReportController@store')->name("salesreport.store");
+    Route::post('print', 'SalesReportController@print')->name("salesreport.print");
+
+    Route::get('generate/{start}/{end}/{mode}', 'SalesReportController@generate')->name("salesreport.generate");
 
     Route::get('update/{id}', 'SalesReportController@update')->name("salesreport.update");  
 
