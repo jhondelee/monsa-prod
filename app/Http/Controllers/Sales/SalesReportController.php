@@ -164,7 +164,7 @@ class SalesReportController extends Controller
             $pdf::cell(50,6,"Address",0,"","L");
             $pdf::cell(35,6,"DR No.",0,"","L");
             $pdf::cell(35,6,"Customer",0,"","L");
-            $pdf::cell(25,6,"Amount",0,"","R");
+            $pdf::cell(30,6,"Amount",0,"","R");
         }
 
         // GCash Payments Column Header 
@@ -213,7 +213,7 @@ class SalesReportController extends Controller
                 $pdf::cell(50,6,$payment->address,0,"","L");
                 $pdf::cell(35,6,$payment->so_number,0,"","L");
                 $pdf::cell(35,6,$payment->cs_name,0,"","L");
-                $pdf::cell(25,6,number_format($payment->amount_collected,2),0,"","R");
+                $pdf::cell(30,6,number_format($payment->amount_collected,2),0,"","R");
 
                 $tatolAmount = $tatolAmount + $payment->amount_collected;
 
