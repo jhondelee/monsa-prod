@@ -312,6 +312,12 @@ class SalesPaymentController extends Controller
         
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
+
+        $pdf::SetFont('Arial','',7);
+        $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
+        date_default_timezone_set("singapore");
+        $pdf::cell(0,0,date("h:i:a"),0,"","L");
+        
         //$pdf::Image('/home/u648374046/domains/monsais.net/public_html/public/img/monsa-logo-header.jpg',10, 5, 30.00);
         $pdf::Image('img/temporary-logo.jpg',5, 5, 40.00);
         $pdf::SetFont('Arial','B',12);
@@ -389,7 +395,7 @@ class SalesPaymentController extends Controller
             $pdf::SetFont('Arial','',9);
             $pdf::cell(10,6,$order_number=$order_number+1,0,"","L");
             $pdf::cell(30,6,$value->date_payment,0,"","L");
-            $pdf::cell(30,6,$value->trasanction_no,0,"","L");
+            $pdf::cell(30,6,$value->transaction_no,0,"","L");
             $pdf::cell(30,6,$value->modes,0,"","L");
             $pdf::cell(30,6,$value->bank_name,0,"","L");
             $pdf::cell(30,6,$value->collected_by,0,"","L");

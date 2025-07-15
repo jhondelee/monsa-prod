@@ -74,6 +74,12 @@ class SalesReportController extends Controller
 
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
+
+        $pdf::SetFont('Arial','',7);
+        $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
+        date_default_timezone_set("singapore");
+        $pdf::cell(0,0,date("h:i:a"),0,"","L");
+
         $pdf::Image('img/temporary-logo.jpg',2, 2, 30.00);
         $pdf::SetFont('Arial','B',12);
         $pdf::SetY(20);     
@@ -274,8 +280,10 @@ class SalesReportController extends Controller
         if ($mode == 0){
 
             $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(100,6,"Prepared by:",0,"","L");
             $pdf::SetFont('Arial','B',10);
-            $pdf::cell(130,6,"Total:",0,"","R");
+            $pdf::cell(30,6,"Total:",0,"","R");
             $pdf::SetFont('Arial','B',10);
             $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
 
@@ -284,8 +292,10 @@ class SalesReportController extends Controller
         if ($ModeName == 'cash'){
 
             $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(125,6,"Prepared by:",0,"","L");
             $pdf::SetFont('Arial','B',10);
-            $pdf::cell(150,6,"Total:",0,"","R");
+            $pdf::cell(30,6,"Total:",0,"","R");
             $pdf::SetFont('Arial','B',10);
             $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
 
@@ -302,6 +312,9 @@ class SalesReportController extends Controller
             $pdf::SetFont('Arial','B',10);
             $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
 
+        }
+
+    
             $pdf::Ln(7);
             $pdf::SetFont('Arial','B',9);
             $pdf::cell(60,6,"      ".$preparedby."      ",0,"","L");
@@ -309,10 +322,6 @@ class SalesReportController extends Controller
             $pdf::SetFont('Arial','',9);
             $pdf::cell(60,6,"______________________",0,"","L");
 
-
-        }
-
-    
 
         $pdf::Ln();
         $pdf::Output();
