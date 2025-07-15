@@ -66,6 +66,14 @@ class SalesReportController extends Controller
 
     public function generate($start,$end,$mode)
     {       
+        $title = 'All Paymode';
+        if ($mode > 0) {
+            $payments =  $this->salesreport->paymentperMode($start,$end,$mode);
+            $payname = ModeOfPayment::findOrfail($mode);
+            $title = $payname->name;
+        }else{
+            $payments =  $this->salesreport->paymentAll($start,$end);
+        }
 
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
@@ -94,6 +102,9 @@ class SalesReportController extends Controller
         $pdf::cell(15,6,"End Date",0,"","L");
         $pdf::SetFont('Arial','',9);
         $pdf::cell(40,6,': '.$end,0,"","L");
+        $pdf::SetFont('Arial','BU',12);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(70,1,"$title",0,"","C");
 
         //Column Name
             $pdf::Ln(6);
@@ -109,8 +120,8 @@ class SalesReportController extends Controller
          $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
         $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+
         
-        $payments =  $this->salesreport->paymentAll($start,$end);
         $tatolAmount = 0;
         foreach ($payments as $key => $payment) {
             $pdf::Ln(5);
