@@ -139,7 +139,7 @@
                                             <th>Id</th>
                                             <th>Date</th>
                                             <th>Transaction No.</th>
-                                            <th>Payemnt Mode</th>
+                                            <th>Payment Mode</th>
                                             <th>Post Dated</th>
                                             <th>Amount Paid</th>
                                             <th>Collector</th>
