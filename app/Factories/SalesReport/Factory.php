@@ -73,5 +73,17 @@ class Factory implements SetInterface
 
         return collect($results);
     }
+
+    public function GCashReceiver($startdate, $enddate, $paymode)
+    {
+        $results = DB::select("SELECT CONCAT(p.firstname,' ',p.lastname) AS collected_by
+            FROM sales_payment_terms e
+            INNER JOIN employees p ON p.user_id = e.collected_by
+            WHERE e.date_payment BETWEEN ? AND ? AND e.payment_mode_id = ?
+            GROUP BY  CONCAT(p.firstname,' ',p.lastname) ORDER BY  CONCAT(p.firstname,' ',p.lastname);",[$startdate,$enddate,$paymode]);
+
+        return collect($results);
+    }
+
+
 }
-    
