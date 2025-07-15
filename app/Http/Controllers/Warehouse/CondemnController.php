@@ -317,6 +317,12 @@ class CondemnController extends Controller
         
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
+
+        $pdf::SetFont('Arial','',7);
+        $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
+        date_default_timezone_set("singapore");
+        $pdf::cell(0,0,date("h:i A"),0,"","L");
+        
         //$pdf::Image('/home/u648374046/domains/monsais.net/public_html/public/img/monsa-logo-header.jpg',10, 5, 30.00);
         $pdf::Image('img/temporary-logo.jpg',5, 5, 40.00);
         $pdf::SetFont('Arial','B',12);

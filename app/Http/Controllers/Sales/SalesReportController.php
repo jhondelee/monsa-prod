@@ -78,7 +78,7 @@ class SalesReportController extends Controller
         $pdf::SetFont('Arial','',7);
         $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
         date_default_timezone_set("singapore");
-        $pdf::cell(0,0,date("h:i:a"),0,"","L");
+        $pdf::cell(0,0,date("h:i A"),0,"","L");
 
         $pdf::Image('img/temporary-logo.jpg',2, 2, 30.00);
         $pdf::SetFont('Arial','B',12);
