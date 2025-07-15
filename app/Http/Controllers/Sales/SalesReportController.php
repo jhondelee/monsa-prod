@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sales;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Factories\Item\Factory as ItemFactory;
 use App\Factories\SalesOrder\Factory as SalesOrderFactory;
@@ -21,6 +22,7 @@ use App\WarehouseLocation;
 use App\ModeOfPayment;
 use App\User as Users;
 use Carbon\Carbon;
+
 use Fpdf;
 use DB;
 
@@ -55,6 +57,8 @@ class SalesReportController extends Controller
 
     public function print(Request $request)
     {       
+
+
         $paymode = $request->pay_mode;
 
         if (!$paymode){
@@ -66,14 +70,7 @@ class SalesReportController extends Controller
 
     public function generate($start,$end,$mode)
     {       
-        $title = 'All Paymode';
-        if ($mode > 0) {
-            $payments =  $this->salesreport->paymentperMode($start,$end,$mode);
-            $payname = ModeOfPayment::findOrfail($mode);
-            $title = $payname->name;
-        }else{
-            $payments =  $this->salesreport->paymentAll($start,$end);
-        }
+
 
         $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
@@ -102,9 +99,29 @@ class SalesReportController extends Controller
         $pdf::cell(15,6,"End Date",0,"","L");
         $pdf::SetFont('Arial','',9);
         $pdf::cell(40,6,': '.$end,0,"","L");
+        $title = 'All Paymode';
         $pdf::SetFont('Arial','BU',12);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
         $pdf::cell(70,1,"$title",0,"","C");
+
+
+        $payname = ModeOfPayment::findOrfail($mode);
+        $ModeName = Str::lower($payname->name);
+        $title = $payname->name;
+
+        if ($ModeName == 'cash'){
+                
+            $payments =  $this->salesreport->paymentperMode($start,$end,$mode);
+        }   
+
+        if ($mode = 0){
+        
+           $payments =  $this->salesreport->paymentAll($start,$end);
+            
+        }
+                    
+
+      
 
         //Column Name
             $pdf::Ln(6);
