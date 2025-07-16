@@ -157,15 +157,15 @@ class SalesPaymentController extends Controller
             $paymentterms = New SalesPaymentTerm;
 
             $paymentterms->sales_payment_id     = $request->sales_payment_id;
-
-            $paymentterms->date_payment         = $request->date_payment;
-
+                                                  
+            $paymentterms->date_payment         = date('Y-m-d', strtotime($request->date_payment));
+            
             $paymentterms->payment_mode_id      = $request->payment_mode_id;
 
             $paymentterms->trasanction_no       = $request->trasanction_no;
-
-            $paymentterms->post_dated           = $request->post_dated;
-
+                                                  
+            $paymentterms->post_dated           = date('Y-m-d', strtotime($request->post_dated));
+            
             $paymentterms->bank_name            = $request->bank_name;
 
             $paymentterms->bank_account_no      = $request->bank_account_no;
@@ -258,15 +258,15 @@ class SalesPaymentController extends Controller
             $paymentterms = SalesPaymentTerm::findOrfail($request->salespaymentterms_id);
 
             $paymentterms->sales_payment_id     = $request->salespayment_id;
-
-            $paymentterms->date_payment         = $request->_date_payment;
+                                                 
+            $paymentterms->date_payment         = date('Y-m-d', strtotime($request->_date_payment));
 
             $paymentterms->payment_mode_id      = $request->payment_mode_id;
 
             $paymentterms->trasanction_no       = $request->_trasanction_no;
-
-            $paymentterms->post_dated           = $request->_post_dated;
-
+                                                
+            $paymentterms->post_dated           =  date('Y-m-d', strtotime($request->_post_dated));
+            
             $paymentterms->bank_name            = $request->_bank_name;
 
             $paymentterms->bank_account_no      = $request->_bank_account_no;
