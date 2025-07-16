@@ -184,7 +184,7 @@ class SalesPaymentController extends Controller
             $paymentterms->collected_by         = $request->collected_by;
 
             $paymentterms->created_by           = auth()->user()->id;
-s
+
             $paymentterms->save();
 
 
