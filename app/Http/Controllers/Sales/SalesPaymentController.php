@@ -163,8 +163,13 @@ class SalesPaymentController extends Controller
             $paymentterms->payment_mode_id      = $request->payment_mode_id;
 
             $paymentterms->trasanction_no       = $request->trasanction_no;
+
+            $postdated=null;
+            if (!empty($request->_post_dated)){
+                $postdated =date('Y-m-d',strtotime($request->_post_dated));
+            }
                                                   
-            $paymentterms->post_dated           = date('Y-m-d', strtotime($request->post_dated));
+            $paymentterms->post_dated           = $postdated;
             
             $paymentterms->bank_name            = $request->bank_name;
 
@@ -179,7 +184,7 @@ class SalesPaymentController extends Controller
             $paymentterms->collected_by         = $request->collected_by;
 
             $paymentterms->created_by           = auth()->user()->id;
-
+s
             $paymentterms->save();
 
 
@@ -264,9 +269,14 @@ class SalesPaymentController extends Controller
             $paymentterms->payment_mode_id      = $request->payment_mode_id;
 
             $paymentterms->trasanction_no       = $request->_trasanction_no;
-                                                
-            $paymentterms->post_dated           =  date('Y-m-d', strtotime($request->_post_dated));
-            
+
+            $postdated=null;
+            if (!empty($request->_post_dated)){
+                $postdated =date('Y-m-d',strtotime($request->_post_dated));
+            }
+
+            $paymentterms->post_dated           = $postdated;
+
             $paymentterms->bank_name            = $request->_bank_name;
 
             $paymentterms->bank_account_no      = $request->_bank_account_no;
