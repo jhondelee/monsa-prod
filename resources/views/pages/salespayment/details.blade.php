@@ -122,9 +122,9 @@
                                 <div class="col-md-12 form-horizontal">
 
                                     <div class="ibox-tools pull-right">
-                                    
+                                    @IF($salespayments->payment_status == 'Existing Balance')
                                      {!! Form::submit('Save Changes', ['class' => 'btn btn-primary btn-save']) !!}
-  
+                                    @ENDIF
                                     <button type="button" class="btn btn-danger btn-close" data-dismiss="modal" >Close</button>  
 
                                    

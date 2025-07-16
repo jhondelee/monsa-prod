@@ -88,7 +88,7 @@
                                     <div  class="col-sm-3 ">
                                         <div class="input-group date">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            {!! Form::text('so_date',$salesorder->so_date, ['class'=>'form-control','readonly'=>true,'id'=>'so_date']) !!}
+                                            {!! Form::text('so_date',$salesorder->so_date, ['class'=>'form-control so_date','readonly'=>true,'id'=>'so_date']) !!}
                                         </div>
                                     </div>
 
@@ -230,6 +230,11 @@
 <script src="/js/plugins/toastr/toastr.min.js"></script>
 
 <script type="text/javascript">
+
+         $('._post_dated').datepicker({
+            autoclose: true,
+            format:'mm-dd-yyyy'
+         });
 
     $(document).ready(function(){
         var _status = $('.payment_status').val();
