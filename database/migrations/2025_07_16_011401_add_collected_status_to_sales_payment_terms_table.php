@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDrNumberToSalesPaymentTermsTable extends Migration
+class AddCollectedStatusToSalesPaymentTermsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddDrNumberToSalesPaymentTermsTable extends Migration
     public function up()
     {
         Schema::table('sales_payment_terms', function (Blueprint $table) {
-            $table->string('dr_number',45)->nullable()->after('payment_mode_id');
+            $table->enum('status', array('Pending','Complete', 'Redep ','Pull Out'))->after('amount_collected');
         });
     }
 
@@ -26,7 +26,9 @@ class AddDrNumberToSalesPaymentTermsTable extends Migration
     public function down()
     {
         Schema::table('sales_payment_terms', function (Blueprint $table) {
-            $table->dropColumn('dr_number');
+               $table->dropColumn('status');
         });
     }
 }
+
+

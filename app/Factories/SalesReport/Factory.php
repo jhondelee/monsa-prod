@@ -18,7 +18,7 @@ class Factory implements SetInterface
 
     public function paymentAll($startdate, $enddate)
     {
-        $results = DB::select("SELECT e.date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
+        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id
             INNER JOIN sales_order o ON o.id = s.sales_order_id
@@ -32,7 +32,7 @@ class Factory implements SetInterface
 
     public function paymentperMode($startdate, $enddate, $paymode)
     {
-        $results = DB::select("SELECT e.date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
+        $results = DB::select("SELECT eDATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id
             INNER JOIN sales_order o ON o.id = s.sales_order_id
@@ -46,7 +46,7 @@ class Factory implements SetInterface
 
     public function paymentCashMode($startdate, $enddate, $paymode)
     {
-        $results = DB::select("SELECT e.date_payment, c.address, o.so_number, c.name AS cs_name ,e.amount_collected
+        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name ,e.amount_collected
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id
             INNER JOIN sales_order o ON o.id = s.sales_order_id
@@ -60,7 +60,7 @@ class Factory implements SetInterface
 
     public function paymentGCashMode($startdate, $enddate, $paymode)
     {
-        $results = DB::select("SELECT e.date_payment, c.address, o.so_number, c.name AS cs_name , e.trasanction_no, 
+        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , e.trasanction_no, 
             e.amount_collected,CONCAT(p.firstname,' ',p.lastname) AS collected_by
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id

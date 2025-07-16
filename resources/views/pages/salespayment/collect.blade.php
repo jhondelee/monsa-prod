@@ -141,7 +141,8 @@
                                             <th>Transaction No.</th>
                                             <th>Payment Mode</th>
                                             <th>Post Dated</th>
-                                            <th>Amount Paid</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
                                             <th>Collector</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -243,8 +244,27 @@
             success:function(results){
 
                 for(var i=0;i<=results.length;i++) {
+                        var _stats = results[i].status;
+                        var _label ='';
 
-                    $('#dTable-terms-item-table tbody').append("<tr><td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td><td>"+ results[i].date_payment +"</td><td>"+ results[i].transaction_no +"</td><td>"+ results[i].modes +"</td><td>"+ results[i].post_dated +"</td><td class='text-right'>"+ results[i].amount_collected +"</td><td>"+ results[i].collected_by +"</td><td style='text-align:center;'><a class='btn-primary btn btn-xs details' onclick='showdetails("+ results[i].id +"); return false;'><i class='fa fa-eye'></i></a>&nbsp;@IF($salespayments->payment_status == 'Existing Balance')<a class='btn-danger btn btn-xs' onclick='confirmDelete("+ results[i].id +"); return false;'><i class='fa fa-trash'></i></a>@ENDIF</td></tr>"); 
+                        if (_stats == 'Pending'){
+                            _label = "<label class='label label-primary'>";
+                        }
+                        if (_stats == 'Complete'){
+                            _label = "<label class='label label-success'>";
+                        }
+                        if (_stats == 'Redep'){
+                           _label = "<label class='label label-warning'>";
+                        }
+                        if (_stats == 'Pull Out'){
+                           _label = "<label class='label label-danger'>";
+                        }
+                             
+                                                
+                     $('#dTable-terms-item-table tbody').append("<tr><td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td><td>"+ results[i].date_payment +"</td><td>"+ results[i].transaction_no +"</td><td>"+ results[i].modes +"</td><td>"+ results[i].post_dated +"</td><td class='text-right'>"+ results[i].amount_collected.toFixed(2) +"</td><td>"+_label+"\
+                       "+ results[i].status +"</label></td><td>"+ results[i].collected_by +"</td>\
+                        <td style='text-align:center;'><a class='btn-primary btn btn-xs details' onclick='showdetails("+ results[i].id +"); return false;'><i class='fa fa-pencil'></i></a>&nbsp;\
+                        @IF($salespayments->payment_status == 'Existing Balance')<a class='btn-danger btn btn-xs' onclick='confirmDelete("+ results[i].id +"); return false;'><i class='fa fa-trash'></i></a>@ENDIF</td></tr>"); 
                 }
                     
             }
@@ -281,14 +301,17 @@
             id: _id, spID : _salespaymentID },  
             success:function(results){
 
+                $('#salespaymentterms_id').val( results.id );
                 $('#_date_payment').val( results.date_payment );
-                $('._payment_mode_id').val( results.modes );
+                $('._payment_mode_id').val(results.mode_id).trigger("chosen:updated");
                 $('._trasanction_no').val( results.transaction_no );
+                $('._post_dated').val( results.post_dated ); 
                 $('._bank_name').val( results.bank_name );
                 $('._bank_account_no').val( results.bank_account_no );
                 $('._bank_account_name').val( results.bank_account_name );
                 $('._amount_collected').val( results.amount_collected );
-                $('._collected_by').val( results.collected_by );
+                $('._status').val( results.status).trigger("chosen:updated");
+                $('._collected_by').val(results.collector).trigger("chosen:updated");
                 $('.modal-title').text('Show Details');
                 $('#ShowPayemntModal').modal('show');
             }

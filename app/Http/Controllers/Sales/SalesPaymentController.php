@@ -136,6 +136,7 @@ class SalesPaymentController extends Controller
 
     public function storeitems(Request $request)
     {
+
         $this->validate($request, [
             'date_payment' => 'required',
             'trasanction_no' => 'required',
@@ -172,6 +173,8 @@ class SalesPaymentController extends Controller
             $paymentterms->bank_account_name    = $request->bank_account_name;
 
             $paymentterms->amount_collected     = $request->amount_collected;
+
+            $paymentterms->status               = $request->status;
 
             $paymentterms->collected_by         = $request->collected_by;
 
@@ -224,6 +227,107 @@ class SalesPaymentController extends Controller
         } else {
 
             return redirect()->route('sales_payment.update',$request->sales_payment_id)
+
+                    ->with('success','Payment terms has been added successfully.');
+
+        }
+
+
+    }
+
+    public function updateitems(Request $request)
+    {
+
+        $this->validate($request, [
+            '_date_payment' => 'required',
+            '_trasanction_no' => 'required',
+            'payment_mode_id' => 'required',
+            '_amount_collected' => 'required',
+            'status' => 'required',
+            '_collected_by' => 'required'
+        ]);
+         
+        $salespayments = SalesPayment::findOrfail($request->salespayment_id);
+
+        $total_paid =  $this->salespayment->totalpaid($request->salespayment_id)->first();
+ 
+        $totalSales = $salespayments->sales_total ;
+
+        $totalPayment = $total_paid->amount +  $request->amount_collected;
+  
+            $paymentterms = SalesPaymentTerm::findOrfail($request->salespaymentterms_id);
+
+            $paymentterms->sales_payment_id     = $request->salespayment_id;
+
+            $paymentterms->date_payment         = $request->_date_payment;
+
+            $paymentterms->payment_mode_id      = $request->payment_mode_id;
+
+            $paymentterms->trasanction_no       = $request->_trasanction_no;
+
+            $paymentterms->post_dated           = $request->_post_dated;
+
+            $paymentterms->bank_name            = $request->_bank_name;
+
+            $paymentterms->bank_account_no      = $request->_bank_account_no;
+
+            $paymentterms->bank_account_name    = $request->_bank_account_name;
+
+            $paymentterms->amount_collected     = $request->_amount_collected   ;
+
+            $paymentterms->status               = $request->status;
+
+            $paymentterms->collected_by         = $request->_collected_by;
+
+            $paymentterms->created_by           = auth()->user()->id;
+
+            $paymentterms->save();
+
+
+        if ( $totalPayment > $totalSales ){
+
+
+            $salesPayment = SalesPayment::find($request->salespayment_id);
+
+            $salesPayment->payment_status = 'Completed';
+
+            $salesPayment->save();
+            
+
+            $salesorder = SalesOrder::findOrfail($salespayments->sales_order_id);
+
+            $salesorder->status = 'CLOSED';
+
+            $salesorder->save();
+
+
+                return redirect()->route('sales_payment.update',$request->salespayment_id)
+
+                    ->with('warning','Customer has been made an Overpayment Transaction.');
+
+        } elseif ( $totalPayment == $totalSales ) {
+
+
+            $salesPayment = SalesPayment::find($request->salespayment_id);
+
+            $salesPayment->payment_status = 'Completed';
+
+            $salesPayment->save();
+
+
+            $salesorder = SalesOrder::findOrfail($salespayments->sales_order_id);
+
+            $salesorder->status = 'CLOSED';
+
+            $salesorder->save();
+
+            
+                return redirect()->route('sales_payment.update',$request->salespayment_id)
+
+                    ->with('success','Customer Amount Due has been Completed!');
+        } else {
+
+            return redirect()->route('sales_payment.update',$request->salespayment_id)
 
                     ->with('success','Payment terms has been added successfully.');
 

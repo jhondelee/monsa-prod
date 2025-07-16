@@ -90,6 +90,14 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-4 control-label">Status </label>
+                                <div class="col-sm-7">
+                                    {!! Form::select ('status',['Pending'=>'Pending','Complete'=>'Complete','Redep '=>'Redep','Pull Out'=>'Pull Out'], null,['placeholder' => 'Select Status...','class'=>'chosen-select required _status'])!!}
+    
+                                </div>
+                            </div>
+
+                            <div class="form-group">
 
                             
                                 <label class="col-sm-4 control-label">Collector <span class="text-danger">*</span></label>
@@ -110,10 +118,11 @@
                                 <div class="col-md-12 form-horizontal">
 
                                     <div class="ibox-tools pull-right">
-                                        
-                                        <button type="button" class="btn btn-danger btn-close" data-dismiss="modal" >Close</button>  
+                                    
+                                    {!! Form::submit('Save Changes', ['class' => 'btn btn-primary btn-save']) !!} 
+                                    <button type="button" class="btn btn-danger btn-close" data-dismiss="modal" >Close</button>  
 
-                                        {!! Form::submit('Save Changes', ['class' => 'btn btn-primary btn-save']) !!}  
+                                  
 
                                     </div>
 

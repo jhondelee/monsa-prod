@@ -76,7 +76,7 @@ class SalesReportController extends Controller
         $pdf::AddPage('P','A4');
 
         $pdf::SetFont('Arial','',7);
-        $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
+        $pdf::cell(170,0,date("m-d-Y") ,0,"","R");
         date_default_timezone_set("singapore");
         $pdf::cell(0,0,date("h:i A"),0,"","L");
 
@@ -98,13 +98,15 @@ class SalesReportController extends Controller
         $pdf::SetXY($pdf::getX(), $pdf::getY());
         $pdf::cell(15,6,"Start Date",0,"","L");
         $pdf::SetFont('Arial','',9);
-        $pdf::cell(40,6,': '.$start,0,"","L");
+        $startdate = Carbon::parse($start);
+        $pdf::cell(40,6,': '.$startdate->format('m-d-Y') ,0,"","L");
         $pdf::Ln(4); 
         $pdf::SetFont('Arial','B',9);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
         $pdf::cell(15,6,"End Date",0,"","L");
         $pdf::SetFont('Arial','',9);
-        $pdf::cell(40,6,': '.$end,0,"","L");
+        $enddate = Carbon::parse($end);
+        $pdf::cell(40,6,': '.$enddate->format('m-d-Y'),0,"","L");
         $title = 'All Paymode';
       
 

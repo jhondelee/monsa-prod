@@ -51,8 +51,10 @@ Route::group(['prefix' => 'sales-payment'], function() {
 
     Route::get('update/{id}', 'SalesPaymentController@update')->name("sales_payment.update"); 
 
-    Route::post('addterm', 'SalesPaymentController@storeitems')->name("sales_payment.storeitems");   
+    Route::post('addterm', 'SalesPaymentController@storeitems')->name("sales_payment.storeitems");
 
+    Route::post('updateterm', 'SalesPaymentController@updateitems')->name("sales_payment.updateitems");   
+    
     Route::get('edit/{id}', 'SalesPaymentController@edit')->name("sales_payment.edit");
 
     Route::get('remove/{id}', 'SalesPaymentController@remove')->name("sales_payment.remove");  
