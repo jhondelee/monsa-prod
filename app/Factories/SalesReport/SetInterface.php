@@ -12,10 +12,14 @@ interface SetInterface {
 
      public function paymentCashMode($startdate, $enddate, $paymode);
 
-    public function paymentGCashMode($startdate, $enddate, $paymode);
+     public function paymentGCashMode($startdate, $enddate, $paymode);
 
-    public function GetGCashReceiver($startdate, $enddate, $paymode);
-
+     public function GetGCashReceiver($startdate, $enddate, $paymode);
+ 
      public function GetCheQueStatus($startdate, $enddate, $paymode);
+
+     public function AllpaymenCustomer($startdate, $enddate, $customer);
+
+     public function GetCustomerPaymodeStatus($startdate, $enddate, $customer);
     
  }

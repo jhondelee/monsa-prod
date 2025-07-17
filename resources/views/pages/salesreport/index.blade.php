@@ -49,7 +49,11 @@
                             
                             <div class="form-group">  
                                 <div class="col-sm-8">
-                                    {!! Form::select ('select_report',['Sales Report','Sales Payment Report'],null,['placeholder' => '--Select Report--','class'=>'chosen-select','id'=>'select_report'])!!}
+                                    {!! Form::select ('select_report',[
+                                        'Sales Report',
+                                        'Sales Payment Report',
+                                        'Customer Payment Report'
+                                    ],null,['placeholder' => '--Select Report--','class'=>'chosen-select','id'=>'select_report'])!!}
                                 </div>
                                 <div class="col-sm-3">
                                     <button type="button" class="btn btn-primary btn-generate" id="btn-generate">Generate</button>
@@ -104,7 +108,7 @@
 
             var _report =  $('#select_report :selected').text();
 
-                if( _report  == 'Sales Payment Report'){
+                if( _report  == 'Sales Payment Report' || _report == 'Customer Payment Report' ){
                             
                     $('.modal-title').text('Report Filter');
                     $('#myModalReport').modal('show');

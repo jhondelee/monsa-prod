@@ -34,6 +34,16 @@
 
                 <div class="hr-line-dashed"></div>
 
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Customer <span class="text-danger"></span></label>
+                        <div class="col-sm-8">
+                        
+                        {!! Form::select ('customer_id',$customers,null,['placeholder' => 'Choose Customer..','class'=>'chosen-select customer_id','id'=>'customer_id'])!!}
+
+                        </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Payment Mode <span class="text-danger"></span></label>
@@ -43,6 +53,7 @@
 
                         </div>
                 </div>
+                
             </div>
             <div class="modal-footer">
                 {!! Form::submit('Submit', ['class' => 'btn btn-primary btn-submit']) !!}

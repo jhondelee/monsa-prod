@@ -85,6 +85,8 @@ Route::group(['prefix' => 'sales-report'], function() {
 
     Route::get('generate/{start}/{end}/{mode}', 'SalesReportController@generate')->name("salesreport.generate");
 
+    Route::get('cs_generate/{start}/{end}/{customer}/{mode}', 'SalesReportController@cs_generate')->name("salesreport.cs_generate");
+
     Route::get('update/{id}', 'SalesReportController@update')->name("salesreport.update");  
 
     Route::get('edit/{id}', 'SalesReportController@edit')->name("salesreport.edit"); 
