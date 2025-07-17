@@ -132,7 +132,7 @@ class SalesReportController extends Controller
             $payments =  $this->salesreport->paymentGCashMode($start,$end,$mode);
         } 
 
-        if ($ModeName == 'cheque'){
+        if ($ModeName == 'cheque' or $ModeName == 'bank deposit' or $ModeName == 'bank transfer'){
                 
             $payments =  $this->salesreport->paymentCheQuehMode($start,$end,$mode);
         } 
@@ -182,21 +182,34 @@ class SalesReportController extends Controller
             $pdf::cell(33,6,"Amount",0,"","R");
         }
 
-        // GCash Payments Column Header 
+        // CheQue Payments Column Header 
         if ($ModeName == 'cheque'){
 
             $pdf::Ln(6);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(30,6,"Payment Date",0,"","C");
+            $pdf::cell(35,6,"Address",0,"","L");
+            $pdf::cell(20,6,"DR No.",0,"","L");
+            $pdf::cell(35,6,"Customer",0,"","L");
+            $pdf::cell(35,6,"Post Dated",0,"","L");
+            $pdf::cell(20,6,"Amount",0,"","R");
+        }
+
+        // Bank Deposit Payments Column Header 
+        if ($ModeName == 'bank deposit' or $ModeName == 'bank transfer'){
+
+            $pdf::Ln(6);
             $pdf::SetFont('Arial','B',8);
-            $pdf::cell(25,6,"Payment Date",0,"","L");
+            $pdf::cell(20,6,"Payment Date",0,"","L");
             $pdf::cell(25,6,"Address",0,"","L");
             $pdf::cell(20,6,"DR No.",0,"","L");
-            $pdf::cell(25,6,"Customer",0,"","L");
-            $pdf::cell(20,6,"Bank Name",0,"","L");
-            $pdf::cell(18,6,"BA No.",0,"","L");
-            $pdf::cell(20,6,"BA Name.",0,"","L");
-            $pdf::cell(18,6,"Amount",0,"","R");
-            $pdf::cell(20,6,"Status",0,"","R");
+            $pdf::cell(30,6,"Customer",0,"","L");
+            $pdf::cell(25,6,"Bank Name",0,"","L");
+            $pdf::cell(25,6,"BA No.",0,"","L");
+            $pdf::cell(25,6,"BA Name",0,"","L");
+            $pdf::cell(20,6,"Amount",0,"","R");
         }
+
          $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
         $pdf::cell(30,6,"___________________________________________________________________________________________________________",0,"","L");
@@ -236,24 +249,22 @@ class SalesReportController extends Controller
 
             }
 
-            if ($ModeName == 'cheque'){
-
+            if ($ModeName == 'bank deposit' or $ModeName == 'bank transfer'){
 
                 $pdf::Ln(5);
                 $pdf::SetFont('Arial','',8);
                 $pdf::cell(20,6,$payment->date_payment,0,"","L");
-                $pdf::cell(30,6,$payment->address,0,"","L");
+                $pdf::cell(25,6,$payment->address,0,"","L");
                 $pdf::cell(20,6,$payment->so_number,0,"","L");
-                $pdf::cell(25,6,$payment->cs_name,0,"","L");
-                $pdf::cell(20,6,$payment->bank_name,0,"","L");
-                $pdf::cell(18,6,$payment->bank_account_no,0,"","L");
-                $pdf::cell(20,6,$payment->bank_account_name,0,"","L");
-                $pdf::cell(18,6,number_format($payment->amount_collected,2),0,"","R");
-                $pdf::cell(20,6,$payment->status,0,"","R");
+                $pdf::cell(30,6,$payment->cs_name,0,"","L");
+                $pdf::cell(25,6,$payment->bank_name,0,"","L");
+                $pdf::cell(25,6,$payment->bank_account_no,0,"","L");
+                $pdf::cell(25,6,$payment->bank_account_name,0,"","L");
+                $pdf::cell(20,6,number_format($payment->amount_collected,2),0,"","R");
 
                 $tatolAmount = $tatolAmount + $payment->amount_collected;
-            }
 
+            }
 
         }
 
@@ -261,7 +272,7 @@ class SalesReportController extends Controller
 
             $subtotal = 0;
 
-            $receivers =  $this->salesreport->GCashReceiver($start,$end,$mode); 
+            $receivers =  $this->salesreport->GetGCashReceiver($start,$end,$mode); 
 
             foreach ($receivers  as $key => $receiver) {
 
@@ -301,7 +312,49 @@ class SalesReportController extends Controller
                 
         }
 
+        if ($ModeName == 'cheque'){
 
+            $subtotal = 0;
+
+            $statuses =  $this->salesreport->GetCheQueStatus($start,$end,$mode); 
+
+            foreach ($statuses  as $key => $status) {
+
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','B',9);
+                $pdf::cell(30,6,$status->status,0,"","L");
+
+                foreach ($payments as $key => $payment) {
+
+                    if ($status->status == $payment->status) {
+
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,$payment->date_payment,0,"","C");
+                        $pdf::cell(35,6,$payment->address,0,"","L");
+                        $pdf::cell(20,6,$payment->so_number,0,"","L");
+                        $pdf::cell(40,6,$payment->cs_name,0,"","L");
+                        $pdf::cell(40,6,$payment->post_dated,0,"","L");
+                        $pdf::cell(20,6,number_format($payment->amount_collected,2),0,"","R");
+
+                        $subtotal = $subtotal + $payment->amount_collected;
+
+                    }                
+                }
+                $pdf::Ln(1);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(185,6,"________",0,"","R");
+
+                $pdf::Ln(4);
+                $pdf::SetFont('Arial','B',9);
+                $pdf::cell(165,6,"Total:",0,"","R");
+                $pdf::cell(20,6,number_format($subtotal,2),0,"","R");
+
+                $tatolAmount = $tatolAmount + $subtotal;
+                $subtotal = 0;
+            }
+                
+        }
 
         $pdf::Ln(5);
             $pdf::SetFont('Arial','I',8);
@@ -355,12 +408,25 @@ class SalesReportController extends Controller
         if ($ModeName == 'cheque'){
 
             $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(125,6,"Prepared by:",0,"","L");
+           // $pdf::SetFont('Arial','B',9);
+           // $pdf::cell(30  ,6,"Total:",0,"","R");
+            //$pdf::SetFont('Arial','B',9);
+           // $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+
+        }
+
+        // Bank Deposit & Transfer Grand Total
+        if ( $ModeName == 'bank deposit' or $ModeName == 'bank transfer'){
+
+            $pdf::Ln(5);
             $pdf::SetFont('Arial','',8);
-            $pdf::cell(112,6,"Prepared by:",0,"","L");
+            $pdf::cell(130,6,"Prepared by:",0,"","L");
             $pdf::SetFont('Arial','B',8);
             $pdf::cell(30  ,6,"Total:",0,"","R");
             $pdf::SetFont('Arial','B',8);
-            $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+           $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
 
         }
 
