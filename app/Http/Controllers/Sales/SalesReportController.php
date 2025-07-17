@@ -564,7 +564,7 @@ class SalesReportController extends Controller
             $pdf::cell(30,6,"DR No.",0,"","L");
             $pdf::cell(30,6,"Transac. No.",0,"","L");
             $pdf::cell(30,6,"Payment Mode",0,"","L");
-            $pdf::cell(30,6,"Post Dated",0,"","R");
+            $pdf::cell(30,6,"Post Dated",0,"","L");
             $pdf::cell(25,6,"Amount",0,"","R");
             $pdf::cell(35,6,"Status",0,"","R");
         }
@@ -777,7 +777,7 @@ class SalesReportController extends Controller
                         $pdf::cell(30,6,$payment->so_number,0,"","L");
                         $pdf::cell(30,6,$payment->trasanction_no,0,"","L");
                         $pdf::cell(30,6,$payment->paymode,0,"","L");
-                        $pdf::cell(25,6,$payment->post_dated,0,"","R");
+                        $pdf::cell(25,6,$payment->post_dated,0,"","L");
                         $pdf::cell(35,6,number_format($payment->amount_collected,2),0,"","R");
 
                         $subtotal = $subtotal + $payment->amount_collected;
