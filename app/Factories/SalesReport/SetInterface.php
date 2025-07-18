@@ -21,5 +21,11 @@ interface SetInterface {
      public function AllpaymenCustomer($startdate, $enddate, $customer);
 
      public function GetCustomerPaymodeStatus($startdate, $enddate, $customer);
+
+     public function CustomerPaymode($startdate, $enddate, $customer,$mode);
+
+     public function GetCustomerGCashReceiver($startdate, $enddate, $customer,$mode);   
+
+     public function GetCustomerCheQueStatus($startdate, $enddate, $customer,$mode);  
     
  }
