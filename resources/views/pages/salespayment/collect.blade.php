@@ -164,14 +164,14 @@
                                         <div class="form-group">
                                             <label class="col-md-6 control-label">Total Amount</label>
                                             <div class="col-md-6">
-                                                {!! Form::text('total_sales',$salespayments->sales_total, array('class' => 'form-control text-right total_sales','readonly' => 'true')) !!}
+                                                {!! Form::text('total_sales',number_format($salespayments->sales_total,2,".",""), array('class' => 'form-control text-right total_sales','readonly' => 'true')) !!}
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-md-6 control-label">Total Paid</label>
                                             <div class="col-md-6">
-                                                {!! Form::text('total_paid',$total_paid->amount, array('placeholder' => '0.00','class' => 'form-control text-right total_paid', 'readonly' => 'true')) !!}
+                                                {!! Form::text('total_paid',number_format($total_paid->amount,2,".",""), array('placeholder' => '0.00','class' => 'form-control text-right total_paid', 'readonly' => 'true')) !!}
                                             </div>
 
                                         </div>
@@ -285,8 +285,6 @@
         var _total_paid = $('.total_paid').val();
         var _total_balance = _total_sales - _total_paid ;
 
-        $('#total_sales').val( _total_sales.toFixed(2) );
-        $('#total_paid').val( _total_paid.toFixed(2) );
         $('#total_balance').val( _total_balance.toFixed(2) );
 
     });
