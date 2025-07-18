@@ -164,7 +164,7 @@
                                         <div class="form-group">
                                             <label class="col-md-6 control-label">Total Amount</label>
                                             <div class="col-md-6">
-                                                {!! Form::text('total_sales',number_format($salespayments->sales_total,2,".",""), array('class' => 'form-control text-right total_sales','readonly' => 'true')) !!}
+                                                {!! Form::text('total_sales',number_format($salespayments->sales_total  ,2,".",""), array('class' => 'form-control text-right total_sales','readonly' => 'true')) !!}
                                             </div>
                                         </div>
 
@@ -306,7 +306,7 @@
             data: { _token: "{{ csrf_token() }}",
             id: _id, spID : _salespaymentID },  
             success:function(results){
-
+         
                 $('#salespaymentterms_id').val( results.id );
                 $('#_date_payment').val( results.date_payment );
                 $('._payment_mode_id').val(results.mode_id).trigger("chosen:updated");

@@ -17,7 +17,7 @@
 
                             {!! csrf_field() ; !!}
 
-                            {!! Form::hidden('sales_payment_id',$salespayments->id, ['class'=>'form-control id','id'=>'salespayment_id']) !!}
+                            {!! Form::text('sales_payment_id',$salespayments->id, ['class'=>'form-control id','id'=>'salespayment_id']) !!}
  
                              <div class="form-group">
                                  <label class="col-sm-4 control-label">Payment Date <span class="text-danger">*</span></label>
