@@ -21,9 +21,9 @@ class Factory implements SetInterface
         $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
             FROM sales_payment_terms e
             LEFT JOIN sales_payment s ON s.id = e.sales_payment_id
-            INNER JOIN sales_order o ON o.id = s.sales_order_id
-            INNER JOIN customers c ON c.id = o.customer_id
-            INNER JOIN mode_of_payments m ON m.id = e.payment_mode_id
+            LEFT JOIN sales_order o ON o.id = s.sales_order_id
+            LEFT JOIN customers c ON c.id = o.customer_id
+            LEFT JOIN mode_of_payments m ON m.id = e.payment_mode_id
             WHERE date_payment BETWEEN ? AND ?
             ORDER BY c.address,date_payment ASC;",[$startdate,$enddate]);
 
