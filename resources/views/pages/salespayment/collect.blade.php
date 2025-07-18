@@ -278,12 +278,15 @@
     });
 
 
+
     $(document).ready(function(){
 
         var _total_sales = $('.total_sales').val();
         var _total_paid = $('.total_paid').val();
         var _total_balance = _total_sales - _total_paid ;
 
+        $('#total_sales').val( _total_sales.toFixed(2) );
+        $('#total_paid').val( _total_paid.toFixed(2) );
         $('#total_balance').val( _total_balance.toFixed(2) );
 
     });

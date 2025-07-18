@@ -129,7 +129,7 @@ class SalesPaymentController extends Controller
         $creator = $this->user->getCreatedbyAttribute(auth()->user()->id);
 
         $total_paid =  $this->salespayment->totalpaid($id)->first();
-
+        
         return view('pages.salespayment.collect',compact('payment_mode','salespayments','customer','collector','creator','salesorder','total_paid'));
     }
 
