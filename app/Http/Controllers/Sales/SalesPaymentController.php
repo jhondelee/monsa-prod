@@ -143,6 +143,7 @@ class SalesPaymentController extends Controller
             'payment_mode_id' => 'required',
             'amount_collected' => 'required',
             'collected_by' => 'required',
+            'status' => 'required',
         ]);
        
         $salespayments = SalesPayment::findOrfail($request->sales_payment_id);
@@ -166,8 +167,8 @@ class SalesPaymentController extends Controller
             $paymentterms->trasanction_no       = $request->trasanction_no;
 
             $postdated=null;
-            if (!empty($request->_post_dated)){
-                $postdated =date('Y-m-d',strtotime($request->_post_dated));
+            if (!empty($request->post_dated)){
+                $postdated =date('Y-m-d',strtotime($request->post_dated));
             }
                                                   
             $paymentterms->post_dated           = $postdated;

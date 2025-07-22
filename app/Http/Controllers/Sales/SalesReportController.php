@@ -62,7 +62,11 @@ class SalesReportController extends Controller
     public function print(Request $request)
     {       
 
-      
+        $this->validate($request, [
+            'start_date'       => 'required',
+            'end_date'   => 'required',
+        ]);
+
         $paymode = $request->pay_mode;
 
         if (!$paymode){

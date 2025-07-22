@@ -94,7 +94,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Status </label>
+                                <label class="col-sm-4 control-label">Status <span class="text-danger">*</span></label>
                                 <div class="col-sm-7">
                                     {!! Form::select ('status',['Pending'=>'Pending','Complete'=>'Complete','Redep '=>'Redep','Pull Out'=>'Pull Out'], null,['placeholder' => 'Select Status...','class'=>'chosen-select required _status'])!!}
     
