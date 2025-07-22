@@ -338,11 +338,14 @@ class SalesPaymentController extends Controller
 
     public function remove($id)
     {
+
         $SalesPaymentTerm =  SalesPaymentTerm::findOrfail($id);
+
+        $sales_payment_id = $SalesPaymentTerm->sales_payment_id;
 
         $SalesPaymentTerm->delete();
 
-        return redirect()->route('sales_payment.update',$SalesPaymentTerm->sales_payment_id)
+        return redirect()->route('sales_payment.update',$sales_payment_id)
 
                     ->with('success','Payment terms has been remove successfully.');
 

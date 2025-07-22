@@ -236,6 +236,15 @@
             format:'mm-dd-yyyy'
          });
 
+        function confirmDelete(data,model) {   
+         $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
+            .on('click', '#delete-btn', function(){
+                $(this).attr("disabled","disabled");
+                document.location.href="/sales-payment/remove/"+data;
+            });
+        }
+
+
     $(document).ready(function(){
         var _status = $('.payment_status').val();
         var _SpID  = $('#salespayment_id').val();
@@ -325,10 +334,8 @@
     }
 
 
-    function confirmDelete(data,model) {   
-            var _id = data;
-            document.location.href="/sales-payment/remove/"+_id;
-    }
+
+
 
 </script>
 
