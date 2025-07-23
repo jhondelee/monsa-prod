@@ -114,7 +114,7 @@ class Factory implements SetInterface
 
     public function AllpaymenCustomer($startdate, $enddate, $customer)
     {
-        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment,e.trasanction_no, e.post_dated, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,e.status
+        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment,e.trasanction_no, DATE_FORMAT(e.post_dated,'%m-%d-%Y')  as post_dated, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,e.status
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id
             INNER JOIN sales_order o ON o.id = s.sales_order_id
