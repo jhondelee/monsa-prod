@@ -144,7 +144,7 @@ class Factory implements SetInterface
     public function CustomerPaymode($startdate, $enddate, $customer,$mode)
     {
         $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment,e.trasanction_no, 
-            e.post_dated, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,e.status,
+            DATE_FORMAT(e.post_dated,'%m-%d-%Y')  as post_dated, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,e.status,
             e.bank_name, e.bank_account_no, e.bank_account_name,
             CONCAT(p.firstname,' ',p.lastname) AS collected_by
             FROM sales_payment_terms e
