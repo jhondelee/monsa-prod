@@ -231,10 +231,10 @@
 
 <script type="text/javascript">
 
-         $('._post_dated').datepicker({
-            autoclose: true,
-            format:'mm-dd-yyyy'
-         });
+
+
+
+
 
         function confirmDelete(data,model) {   
          $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
@@ -315,9 +315,9 @@
             data: { _token: "{{ csrf_token() }}",
             id: _id, spID : _salespaymentID },  
             success:function(results){
-         
+
                 $('#salespaymentterms_id').val( results.id );
-                $('#_date_payment').val( results.date_payment );
+                $('#_date_payment').val( results.date_payment);
                 $('._payment_mode_id').val(results.mode_id).trigger("chosen:updated");
                 $('._trasanction_no').val( results.transaction_no );
                 $('._post_dated').val( results.post_dated ); 

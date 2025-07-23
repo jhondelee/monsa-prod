@@ -1,4 +1,4 @@
-<div id="ShowPayemntModal" class="modal fade" aria-hidden="true">
+    <div id="ShowPayemntModal" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,7 +23,7 @@
                                 <div  class="col-sm-7">
                                     <div class="input-group date">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        {!! Form::text('_date_payment',null, ['class'=>'form-control','id'=>'_date_payment']) !!}
+                                        {!! Form::text('date_payment',null, ['class'=>'form-control','id'=>'_date_payment']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Transaction No. <span class="text-danger">*</span></label>
                                 <div class="col-sm-7">
-                                    {!! Form::text('_trasanction_no',null, ['class'=>'form-control _trasanction_no','required'=> true]) !!}
+                                    {!! Form::text('trasanction_no',null, ['class'=>'form-control _trasanction_no','required'=> true]) !!}
                                 </div>
 
                             </div>
@@ -52,7 +52,7 @@
                                 <div  class="col-sm-7">
                                     <div class="input-group date">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        {!! Form::text('_post_dated',null, ['class'=>'form-control _post_dated','id'=>'_post_dated']) !!}
+                                        {!! Form::text('post_dated',null, ['class'=>'form-control _post_dated','id'=>'_post_dated']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Bank Name </label>
                                 <div class="col-sm-7">
-                                    {!! Form::text('_bank_name',null, ['class'=>'form-control _bank_name']) !!}
+                                    {!! Form::text('bank_name',null, ['class'=>'form-control _bank_name']) !!}
                                 </div>
 
                             </div>
@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Bank Account No.</label>
                                 <div class="col-sm-7">
-                                    {!! Form::text('_bank_account_no',null, ['class'=>'form-control _bank_account_no']) !!}
+                                    {!! Form::text('bank_account_no',null, ['class'=>'form-control _bank_account_no']) !!}
                                 </div>
 
                             </div>
@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Bank Account Name</label>
                                 <div class="col-sm-7">
-                                    {!! Form::text('_bank_account_name',null, ['class'=>'form-control _bank_account_name']) !!}
+                                    {!! Form::text('bank_account_name',null, ['class'=>'form-control _bank_account_name']) !!}
                                 </div>
                             </div>
 
@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Amount Paid<span class="text-danger">*</span></label>
                                     <div class="col-sm-7">
-                                        {!! Form::text('_amount_collected',null, ['class'=>'form-control text-right _amount_collected','placeholder' => '0.00', 'required'=>true]) !!}
+                                        {!! Form::text('amount_collected',null, ['class'=>'form-control text-right _amount_collected','placeholder' => '0.00', 'required'=>true]) !!}
                                     </div>
                             </div>
 
@@ -107,7 +107,7 @@
                             
                                 <label class="col-sm-4 control-label">Collector <span class="text-danger">*</span></label>
                                 <div class="col-sm-7">
-                                    {!! Form::select ('_collected_by',$collector, null,['placeholder' => 'Choose Collector...','class'=>'chosen-select required _collected_by'])!!}
+                                    {!! Form::select ('collected_by',$collector, null,['placeholder' => 'Choose Collector...','class'=>'chosen-select required _collected_by'])!!}
                                 </div>
 
                             </div>

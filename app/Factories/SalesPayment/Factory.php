@@ -53,6 +53,34 @@ class Factory implements SetInterface
 
     }
 
+        public function Editpayments($salespayment_id)
+    {
+        $results = DB::select("
+            SELECT s.id,
+                     DATE_FORMAT(s.date_payment,'%Y-%m-%d') as date_payment,
+                     s.trasanction_no as transaction_no,
+                     m.name AS modes,
+                     m.id as mode_id,
+                     ifnull(DATE_FORMAT(s.post_dated,'%Y-%m-%d'),'') as post_dated,
+                     s.amount_collected,
+                     s.status,
+                     CONCAT(e.firstname,' ',e.lastname) AS collected_by,
+                     s.collected_by as collector,
+                     s.bank_name,
+                     s.bank_account_no,
+                     s.bank_account_name,
+                     s.status
+            FROM sales_payment_terms s
+            INNER JOIN mode_of_payments m ON s.payment_mode_id = m.id
+            INNER JOIN employees e ON e.user_id = s.collected_by
+            WHERE s.sales_payment_id = ?
+            ORDER BY s.id DESC;",[$salespayment_id]);
+
+        return collect($results);
+
+    }
+
+
     public function totalpaid($salespayment_id)
     {
         $results = DB::select("
