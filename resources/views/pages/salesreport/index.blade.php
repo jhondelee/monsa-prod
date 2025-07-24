@@ -82,6 +82,7 @@
 
             </div>
 @include('pages.salesreport.filter')
+@include('pages.salesreport.salesfilter')
 @endsection
 
 
@@ -110,12 +111,13 @@
 
                 if( _report  == 'Sales Payment Report' || _report == 'Customer Payment Report' ){
                             
-                    $('.modal-title').text('Report Filter');
+                    $('.modal-title').text('Sales Payment Report Filter');
                     $('#myModalReport').modal('show');
 
                 }else{
 
-                    toastr.warning('Please Select Report','Warning' )
+                    $('.modal-title').text('Sales Report Filter');
+                    $('#mySalesReport').modal('show');
 
                 }
 
@@ -134,19 +136,19 @@
             
         });
 
-    $(document).ready(function(){
-        var _id = 0;
-        $.ajax({
-            url:  '{{ url('sales-payment/datatable') }}',
-            type: 'POST',
-            dataType: 'json',
-            data: { _token: "{{ csrf_token() }}",
-            id: _id},  
-            success:function(results){
-            }
-        }); 
+        $(document).ready(function(){
+            var _id = 0;
+            $.ajax({
+                url:  '{{ url('sales-payment/datatable') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: { _token: "{{ csrf_token() }}",
+                id: _id},  
+                success:function(results){
+                }
+            }); 
 
-    });
+        });
     
 </script>
 

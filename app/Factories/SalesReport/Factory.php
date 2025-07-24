@@ -32,7 +32,7 @@ class Factory implements SetInterface
 
     public function paymentperMode($startdate, $enddate, $paymode)
     {
-        $results = DB::select("SELECT eDATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
+        $results = DB::select("SELECT DATE_FORMAT(e.date_payment,'%m-%d-%Y') as date_payment, c.address, o.so_number, c.name AS cs_name , m.name AS paymode, e.amount_collected,s.payment_status
             FROM sales_payment_terms e
             INNER JOIN sales_payment s ON s.id = e.sales_payment_id
             INNER JOIN sales_order o ON o.id = s.sales_order_id
@@ -188,6 +188,23 @@ class Factory implements SetInterface
              INNER JOIN employees p ON p.user_id = e.collected_by
             WHERE e.date_payment BETWEEN ? AND ? AND c.id = ? AND e.payment_mode_id = ?
             GROUP BY e.status ORDER BY e.status;",[$startdate, $enddate, $customer,$mode]);
+
+        return collect($results);
+    }
+
+    public function CollectCustomerSales($startdate,$enddate)
+    {
+        $results = DB::select("SELECT  DATE_FORMAT(s.so_date,'%m-%d-%Y') as so_date,s.so_number, c.name AS cs_name, a.name AS area_name,s.total_sales, 
+            sum(e.amount_collected) AS amount_collected,
+        ifnull( s.total_sales - sum(e.amount_collected),s.total_sales) AS balance
+        FROM sales_order s
+        INNER JOIN customers c ON c.id = s.customer_id
+        INNER JOIN areas a ON a.id = c.area_id 
+        INNER JOIN sales_payment p ON s.id = p.sales_order_id
+        LEFT JOIN sales_payment_terms e ON e.sales_payment_id = p.id AND e.`status`='Complete'
+        WHERE s.so_date BETWEEN ? AND ?
+        GROUP BY s.so_date, s.so_number, c.name , a.name , s.total_sales
+        ORDER BY s.so_date;",[$startdate, $enddate]);
 
         return collect($results);
     }
