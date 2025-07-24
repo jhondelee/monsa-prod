@@ -50,7 +50,8 @@
                             <div class="form-group">  
                                 <div class="col-sm-8">
                                     {!! Form::select ('select_report',[
-                                        'Sales Report',
+                                        'Customer Sales Report',
+                                        'Item Sales Report',
                                         'Sales Payment Report',
                                         'Customer Payment Report'
                                     ],null,['placeholder' => '--Select Report--','class'=>'chosen-select','id'=>'select_report'])!!}
@@ -114,41 +115,24 @@
                     $('.modal-title').text('Sales Payment Report Filter');
                     $('#myModalReport').modal('show');
 
-                }else{
+                }
+                if( _report  == 'Customer Sales Report'){
 
                     $('.modal-title').text('Sales Report Filter');
                     $('#mySalesReport').modal('show');
+                    $('#items_generate').val('no');
+                    
+                } 
+                
+                if( _report  == 'Item Sales Report') {
 
+                    $('.modal-title').text('Sales Report Filter');
+                    $('#mySalesReport').modal('show');
+                    $('#items_generate').val('items');
                 }
 
         });
 
-
-        $(document).on('click', '.btn-submit', function() {
-
-            var pay_mode = $('#pay_mode').val();
-
-            if (pay_mode ==''){
-                pay_mode = 0;
-            }
- 
-            document.location.href="/sales-report/generate/"+pay_mode;
-            
-        });
-
-        $(document).ready(function(){
-            var _id = 0;
-            $.ajax({
-                url:  '{{ url('sales-payment/datatable') }}',
-                type: 'POST',
-                dataType: 'json',
-                data: { _token: "{{ csrf_token() }}",
-                id: _id},  
-                success:function(results){
-                }
-            }); 
-
-        });
     
 </script>
 

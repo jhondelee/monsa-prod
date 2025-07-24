@@ -14,6 +14,7 @@
                 {!! csrf_field() ; !!} 
             <div class="form-group">
                 <label class="col-sm-3 control-label">Start Date <span class="text-danger">*</span></label>
+                <input type="hidden" name="items_generate" value="" id="items_generate">
                 <div  class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>

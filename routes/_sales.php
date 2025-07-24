@@ -85,13 +85,17 @@ Route::group(['prefix' => 'sales-report'], function() {
 
     Route::get('generate/{start}/{end}/{mode}', 'SalesReportController@generate')->name("salesreport.generate");
 
-    Route::get('cs_generate/{start}/{end}/{customer}/{mode}', 'SalesReportController@cs_generate')->name("salesreport.cs_generate");
+    Route::get('cs_generate/{start}/{end}/{customer}/{mode}', 'SalesReportController@cs_generate')
+    ->name("salesreport.cs_generate");
 
     Route::post('printsales', 'SalesReportController@printsales')->name("salesreport.printsales"); 
 
-    Route::get('salesgenerate/{start}/{end}', 'SalesReportController@salesgenerate')->name("salesreport.salesgenerate");
+    Route::get('salesgenerate/{start}/{end}', 'SalesReportController@salesgenerate')
+    ->name("salesreport.salesgenerate");
 
-    Route::get('delete/{id}', 'SalesReportController@destroy')->name("salesreport.delete");    
+    Route::get('itemsgenerate/{start}/{end}', 'SalesReportController@itemsgenerate')
+    ->name("salesreport.itemsgenerate");
+
 
 
 });

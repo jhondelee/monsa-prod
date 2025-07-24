@@ -29,5 +29,7 @@ interface SetInterface {
      public function GetCustomerCheQueStatus($startdate, $enddate, $customer,$mode);  
 
      public function CollectCustomerSales($startdate,$enddate);
+
+     public function CollectSalesItems($startdate,$enddate);
     
  }

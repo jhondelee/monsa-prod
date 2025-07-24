@@ -891,10 +891,21 @@ class SalesReportController extends Controller
         ]);
 
 
-        return redirect()->route('salesreport.salesgenerate',[
+        if($request->items_generate =='no'){
+
+            return redirect()->route('salesreport.salesgenerate',[
             $request->start_date,
             $request->end_date
-        ]);
+            ]);
+
+        } else {
+
+            return redirect()->route('salesreport.itemsgenerate',[
+            $request->start_date,
+            $request->end_date
+            ]);
+        }
+
 
     }
 
@@ -902,7 +913,7 @@ class SalesReportController extends Controller
     public function salesgenerate($start,$end)
     {
 
-         $pdf = new Fpdf('P');
+        $pdf = new Fpdf('P');
         $pdf::AddPage('P','A4');
 
         $pdf::SetFont('Arial','',7);
@@ -1010,6 +1021,121 @@ class SalesReportController extends Controller
             $pdf::SetFont('Arial','B',10);
             $pdf::cell(25,6,number_format( $totalCollect,2),0,"","R");
 
+        
+            $pdf::Ln(7);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(60,6,"      ".$preparedby."      ",0,"","L");
+            $pdf::ln(0);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(60,6,"______________________",0,"","L");
+
+
+        $pdf::Ln();
+        $pdf::Output();
+        exit;
+        
+    }
+
+    public function itemsgenerate($start,$end)
+    {
+
+        $pdf = new Fpdf('P');
+        $pdf::AddPage('P','A4');
+
+        $pdf::SetFont('Arial','',7);
+        $pdf::cell(170,0,date("m-d-Y") ,0,"","R");
+        date_default_timezone_set("singapore");
+        $pdf::cell(0,0,date("h:i A"),0,"","L");
+
+        $pdf::Image('img/temporary-logo.jpg',2, 2, 30.00);
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetY(20);     
+
+        // Header
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetY(20);  
+
+        $pdf::Ln(2);
+        $pdf::SetFont('Arial','B',12);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(185,1,"Item Sales Report",0,"","C");
+
+        $pdf::Ln(6);    
+        $pdf::SetFont('Arial','B',9);
+        $pdf::cell(20,6,"Start Date",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $startdate = Carbon::parse($start);
+        $pdf::cell(40,6,': '.$startdate->format('m-d-Y') ,0,"","L");
+        $pdf::Ln(4); 
+        $pdf::SetFont('Arial','B',9);
+        $pdf::cell(20,6,"End Date",0,"","L");
+        $pdf::SetFont('Arial','',9);
+        $enddate = Carbon::parse($end);
+        $pdf::cell(40,6,': '.$enddate->format('m-d-Y'),0,"","L");
+
+
+        //$title = 'Sales Report';
+
+       // $pdf::SetFont('Arial','BU',12);
+        //$pdf::cell(70,1,"$title",0,"","C");
+
+
+        
+        // All Sales Column Header                    
+
+            $pdf::Ln(8);
+            $pdf::SetFont('Arial','B',9);
+            $pdf::cell(20,6,"Code",0,"","");   
+            $pdf::cell(30,6,"Item",0,"","L");
+            $pdf::cell(65,6,"Description",0,"","L");
+            $pdf::cell(15,6,"Unit",0,"","L");
+            $pdf::cell(25,6,"Orders Qty",0,"","R");
+            $pdf::cell(35,6,"Sub Amount",0,"","R");
+        
+         $pdf::Ln(1);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"___________________________________________________________________________________________________________",0,"","L");
+
+        
+        $totalAmount = 0;
+
+        $salesitems =  $this->salesreport->CollectSalesItems($start,$end);
+
+        foreach ($salesitems as $key => $salesitem) {
+
+
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(20,6,$salesitem->code,0,"","L");
+                $pdf::cell(30,6,$salesitem->item_name,0,"","L");
+                $pdf::cell(65,6,$salesitem->description,0,"","L");
+                $pdf::cell(15,6,$salesitem->unit,0,"","L");
+                $pdf::cell(25,6,$salesitem->order_qty,0,"","R");
+                $pdf::cell(35,6,number_format($salesitem->sub_amount,2),0,"","R");
+
+                $totalAmount  = $totalAmount + $salesitem->sub_amount;
+   
+
+        }
+
+      
+        $pdf::Ln(5);
+            $pdf::SetFont('Arial','I',8);
+            $pdf::cell(185,6,"--Nothing Follows--",0,"","C");
+
+        $pdf::Ln(3);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"___________________________________________________________________________________________________________",0,"","L");
+
+        $preparedby = $this->user->getCreatedbyAttribute(auth()->user()->id);
+
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(135,6,"Prepared by:",0,"","L");
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(30,6,"Total:",0,"","R");
+            $pdf::SetFont('Arial','B',10);
+            $pdf::cell(25,6,number_format( $totalAmount,2),0,"","R");
         
             $pdf::Ln(7);
             $pdf::SetFont('Arial','B',9);

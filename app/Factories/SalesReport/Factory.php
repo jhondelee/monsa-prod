@@ -204,7 +204,22 @@ class Factory implements SetInterface
         LEFT JOIN sales_payment_terms e ON e.sales_payment_id = p.id AND e.`status`='Complete'
         WHERE s.so_date BETWEEN ? AND ?
         GROUP BY s.so_date, s.so_number, c.name , a.name , s.total_sales
-        ORDER BY s.so_date;",[$startdate, $enddate]);
+        ORDER BY a.name;",[$startdate, $enddate]);
+
+        return collect($results);
+    }
+
+    public function CollectSalesItems($startdate,$enddate)
+    {
+        $results = DB::select("SELECT  i.code , i.name AS item_name, i.description , u.code AS unit, 
+            sum(o.order_quantity) AS order_qty, SUM(o.sub_amount) AS sub_amount
+            FROM sales_order s
+            INNER JOIN sales_order_items o ON s.id = o.sales_order_id
+            INNER JOIN items i ON i.id = o.item_id
+            INNER JOIN unit_of_measure u ON u.id = i.unit_id 
+            WHERE s.so_date BETWEEN ? AND ? AND o.order_quantity > 0
+            GROUP BY i.code , i.name, i.description , u.code
+            ORDER BY i.name;",[$startdate, $enddate]);
 
         return collect($results);
     }
