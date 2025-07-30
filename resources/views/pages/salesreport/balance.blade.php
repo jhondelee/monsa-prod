@@ -26,7 +26,7 @@
                     <label class="col-sm-3 control-label">Areas <span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                         
-                        {!! Form::select ('areas_id',$areas,null,['class'=>'chosen-select area_id','multiple style'=>'width:350px;','tabindex'=>'4' ,'id'=>'area_id','required'=>true])!!}
+                        {!! Form::select ('areas_id',$areas,null,['class'=>'chosen-select area_id','multiple style'=>'width:350px;', 'multiple' => 'multiple','tabindex'=>'4' ,'id'=>'area_id','required'=>true])!!}
 
                         </div>
                 </div>
@@ -43,3 +43,4 @@
      </div>
  </div>
 {!! Form::close() !!}
+

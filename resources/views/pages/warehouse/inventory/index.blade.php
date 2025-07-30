@@ -103,6 +103,8 @@
 
 @include('pages.warehouse.inventory.create.add')
 
+@include('pages.warehouse.inventory.update.edit')
+
 @include('pages.warehouse.inventory.create.return_supplier') 
 
 @include('pages.warehouse.inventory.create.return_inventory')   
@@ -196,6 +198,15 @@
            $('#myModal').modal('show');
         });   
         
+        $(document).on('click', '.btn-edit', function() {
+           $('#myInventoryModal').modal('show');
+           $('#inventory_id').val($(this).data('id'));
+           $('#item_name').val($(this).data('name'));
+           $('#item_descript').val($(this).data('descript'));
+           $('#item_unit').val($(this).data('unit'));
+           $('#item_quantity').val($(this).data('qty'));
+        }); 
+
         //
         $(document).on('click', '#rtn-supplier', function() {
             var _id = $(this).data('rtn_id');

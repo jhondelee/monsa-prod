@@ -39,7 +39,7 @@ Route::group(['prefix' => 'inventory'], function() {
 
     Route::get('edit/{id}', 'InventoryController@edit')->name("inventory.edit");    
 
-    Route::post('edit/{id}', 'InventoryController@update')->name("inventory.update"); 
+    Route::post('edit', 'InventoryController@update')->name("inventory.update"); 
 
     Route::get('delete/{id}', 'InventoryController@destroy')->name("inventory.delete");   
 

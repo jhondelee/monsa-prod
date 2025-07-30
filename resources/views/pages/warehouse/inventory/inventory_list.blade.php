@@ -55,6 +55,17 @@
                             <div class="btn-group">
                                 <a href="{{route('inventory.show',$inventory->item_id)}}" class="btn-primary btn btn-xs"><i class="fa fa-eye"></i></a>
                             </div>
+                            <div class="btn-group">
+                                @if (!can('inventory.edit'))
+                                    <a href="#" class="btn-warning btn btn-xs btn-edit" 
+                                    data-id="{{$inventory->id}}"
+                                    data-name="{{$inventory->name}}"
+                                    data-descript="{{$inventory->description}}"
+                                    data-unit="{{$inventory->units}}"
+                                    data-qty="{{$inventory->unit_quantity}}">
+                                    <i class="fa fa-pencil"></i></a>
+                                @endif
+                            </div>
                     </td>
                 </tr>
             @endforeach                                                           

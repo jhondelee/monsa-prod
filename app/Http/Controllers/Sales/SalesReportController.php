@@ -1163,7 +1163,7 @@ class SalesReportController extends Controller
             'areas_id'   => 'required',
         ]);
 
-
+        dd($request->areas_id);
         return redirect()->route('salesreport.balancegenerate',[
         $request->sched_date,
         $request->areas_id]);

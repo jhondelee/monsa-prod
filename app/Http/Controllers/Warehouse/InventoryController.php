@@ -73,9 +73,21 @@ class InventoryController extends Controller
                
     }
 
-    public function create()
+    public function update(Request $request)
     {
+        $this->validate($request, [
+            'item_quantity'       => 'required'
+        ]);
+
+        $inventory = Inventory::findorfail($request->inventory_id);
         
+        $inventory->unit_quantity = $request->item_quantity;
+
+        $inventory->onhand_quantity = $request->item_quantity;
+
+        $inventory->save();
+
+        return redirect()->back()->with('success','Inventory Item updated successfully!');
     }
 
     public function upload_image(Request $request)
