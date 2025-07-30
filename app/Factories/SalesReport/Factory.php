@@ -223,4 +223,20 @@ class Factory implements SetInterface
 
         return collect($results);
     }
+
+    public function CollectCustomerBalance($areas)
+    {
+        $results = DB::select("SELECT a.so_number  , c.name AS customer, 
+            e.name AS areas,(a.sales_total - sum(s.amount_collected)) AS balances, o.so_date
+            FROM sales_payment_terms s
+            INNER JOIN sales_payment a ON s.sales_payment_id = a.id
+            INNER JOIN sales_order o ON o.id = a.sales_order_id
+            INNER JOIN customers c ON o.customer_id = c.id
+            INNER JOIN areas e ON e.id = c.area_id
+            WHERE a.payment_status = 'Existing Balance' AND e.id = ?
+            GROUP BY a.so_number, o.so_date , c.name, a.sales_total,e.name;",[$areas]);
+
+        return collect($results);
+    }
+
 }

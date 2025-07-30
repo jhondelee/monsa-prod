@@ -31,5 +31,7 @@ interface SetInterface {
      public function CollectCustomerSales($startdate,$enddate);
 
      public function CollectSalesItems($startdate,$enddate);
+
+     public function CollectCustomerBalance($areas);
     
  }

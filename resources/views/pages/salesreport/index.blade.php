@@ -53,7 +53,8 @@
                                         'Customer Sales Report',
                                         'Item Sales Report',
                                         'Sales Payment Report',
-                                        'Customer Payment Report'
+                                        'Customer Payment Report',
+                                        'Customer Balance Report'
                                     ],null,['placeholder' => '--Select Report--','class'=>'chosen-select','id'=>'select_report'])!!}
                                 </div>
                                 <div class="col-sm-3">
@@ -82,6 +83,7 @@
                 </div>
 
             </div>
+@include('pages.salesreport.balance')
 @include('pages.salesreport.filter')
 @include('pages.salesreport.salesfilter')
 @endsection
@@ -129,6 +131,13 @@
                     $('.modal-title').text('Sales Report Filter');
                     $('#mySalesReport').modal('show');
                     $('#items_generate').val('items');
+                }
+
+                if( _report  == 'Customer Balance Report') {
+
+                    $('.modal-title').text('Customer Filter');
+                    $('#myBalanceReport').modal('show');
+
                 }
 
         });

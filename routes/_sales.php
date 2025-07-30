@@ -93,8 +93,10 @@ Route::group(['prefix' => 'sales-report'], function() {
     Route::get('salesgenerate/{start}/{end}', 'SalesReportController@salesgenerate')
     ->name("salesreport.salesgenerate");
 
-    Route::get('itemsgenerate/{start}/{end}', 'SalesReportController@itemsgenerate')
-    ->name("salesreport.itemsgenerate");
+    Route::post('printbalance', 'SalesReportController@printbalance')->name("salesreport.printbalance"); 
+
+    Route::get('balancegenerate/{sched}/{areas}', 'SalesReportController@balancegenerate')
+    ->name("salesreport.balancegenerate");
 
 
 
