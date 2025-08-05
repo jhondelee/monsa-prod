@@ -49,7 +49,7 @@
 
                             {!! Form::open(array('route' => array('commission.store','method'=>'POST'),'id'=>'commission_form')) !!}
                                    
-                                @include('pages.sales_commission.commission._form')
+                                @include('pages.sales_commission.commission._addform')
                                      
                             {!! Form::close() !!} 
 

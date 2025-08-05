@@ -262,7 +262,6 @@ class SalesController extends Controller
 
         $subAmount = number_format($subAmount,2,'.','');
 
-
         $deductStatus = $salesorder->inventory_deducted;
 
         return view('pages.salesorder.edit',compact('salesorder','employee_agent','creator','employee','customer_id','items','salesorder_status','location','deductStatus','subAmount'));

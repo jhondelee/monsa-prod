@@ -58,7 +58,9 @@ Route::group(['prefix' => 'agent-commission'], function() {
 
     Route::get('delete/{id}', 'AgentCommissionController@destroy')->name("commission.delete");    
 
-    Route::get('print/{id}', 'AgentCommissionController@printSO')->name("commission.print"); 
+    Route::get('post/{id}', 'AgentCommissionController@post')->name("commission.post");
+
+    Route::get('print/{id}', 'AgentCommissionController@print')->name("commission.print");  
 
     Route::post('generate', 'AgentCommissionController@getsalesCom')->name("commission.generate"); 
 

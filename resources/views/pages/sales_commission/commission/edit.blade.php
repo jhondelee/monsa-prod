@@ -74,6 +74,15 @@
 <script src="/js/plugins/toastr/toastr.min.js"></script>
 
 <script type="text/javascript">
+
+    function confirmPost(data,model) {   
+         $('#confirmPost').modal({ backdrop: 'static', keyboard: false })
+            .on('click', '#post-btn', function(){
+                $(this).attr("disabled","disabled");
+                document.location.href="/agent-commission/post/"+data;
+            });
+        }
+
         $(document).ready(function(){
 
             var _MainAgent = $('#emp_id').val();
@@ -263,6 +272,7 @@
 
                     }
                 });
+
 
 
         });

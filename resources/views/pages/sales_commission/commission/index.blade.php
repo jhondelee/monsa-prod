@@ -57,7 +57,7 @@
                                             <th>From Date</th>
                                             <th>To Date</th>
                                             <th>Total Sales</th>
-                                            <th>Created At</th>
+                                            <th>Status</th>
                                             <th class="text-center">Action</th>
                                            
                                         </tr>
@@ -73,7 +73,13 @@
                                                     <td>{{$agentcommission->from_date}}</td>
                                                     <td>{{$agentcommission->to_date}}</td>
                                                     <td>{{$agentcommission->total_sales}}</td>
-                                                    <td>{{$agentcommission->created_at}}</td>
+                                                    <td>
+                                                    @if ($agentcommission->paid_status == '1')
+                                                        <label class="label label-success" >PAID</label> 
+                                                    @else
+                                                        <label class="label label-warning" >UNPAID</label> 
+                                                    @endif
+                                                     </td>
                                                     <td class="text-center">
                                                         @if (!can('commission.edit'))
                                                         <div class="btn-group">
@@ -83,9 +89,11 @@
                                                         </div>
                                                         @endif
                                                         @if (!can('commission.delete'))
-                                                        <div class="btn-group">
+                                                            @if ($agentcommission->paid_status == '0')
+                                                            <div class="btn-group">
                                                                    <a class="btn-danger btn btn-xs delete"onclick="confirmDelete('{{$agentcommission->id}}'); return false;"><i class="fa fa-trash"></i></a>
-                                                        </div>
+                                                            </div>
+                                                            @endif
                                                         @endif
                                                     </td>
 
@@ -144,6 +152,8 @@
 
         });
 
+
+        
         function confirmDelete(data,model) {   
          $('#confirmDelete').modal({ backdrop: 'static', keyboard: false })
             .on('click', '#delete-btn', function(){

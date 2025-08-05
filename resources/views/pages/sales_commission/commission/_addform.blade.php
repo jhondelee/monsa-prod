@@ -47,19 +47,7 @@
     <div class="form-group">
         <div class="col-sm-8">
             <a class='btn btn-success btn-xs btn-generate' id="btn-generate"><i class='fa fa-undo'></i> Generate S.C.</a>
-        </div>    
-                                           
-        <div class="col-sm-2 pull-right">
-
-            <a href="{{route('commission.print',$agentcommission->id)}}" class="btn btn-primary btn-print"><i class="fa fa-print"></i> Print </a>
-
-        @if (!can('commission.post'))
-            @if ($agentcommission->agent_paid_status == '0')
-            <button type="button" class="btn btn-success" onclick="confirmPost('{{$agentcommission->id}}'); return false;" id="post-btn"><i class="fa fa-check">&nbsp;</i>Post&nbsp; </button>
-            @endif
-        @endif
-        </div>
-
+        </div> 
     </div>
 
 
@@ -151,9 +139,9 @@
             <div class="ibox-tools pull-right">
                  
             <button type="button" class="btn btn-danger btn-close" id="btn-close">Close</button>
-            @if ($agentcommission->agent_paid_status == '0')
+
             {!! Form::submit('Save Changes', ['class' => 'btn btn-primary btn-save']) !!}                       
-            @endif
+
              </div>
         </div>
     <div class="col-md-2 form-hori  zontal">

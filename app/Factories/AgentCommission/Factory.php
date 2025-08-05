@@ -15,7 +15,7 @@ class Factory implements SetInterface
 				  a.from_date,
 				  a.to_date,
 				  a.total_sales,
-				  a.created_at
+				  a.agent_paid_status as paid_status
 		FROM agent_commission a
 		INNER JOIN employees emp ON a.employee_id = emp.id
 		ORDER BY a.id desc");
@@ -36,13 +36,16 @@ class Factory implements SetInterface
 					  cs.name as cs_name,
 					  cr.rate,
 					  REPLACE(FORMAT(cr.rate * so.total_sales, 2), ',', '') AS amount_com,
-			 		  so.total_sales
+			 		  so.total_sales,
+			 		  ag.agent_paid_status  as paid_status 
 		FROM sales_order so
 		LEFT  JOIN employees sub ON sub.id = so.sub_employee_id
 		LEFT JOIN customers cs ON so.customer_id = cs.id
 		LEFT JOIN assign_area aa ON aa.area_id = cs.area_id
 		LEFT JOIN commission_rate cr ON cr.id = aa.rate_id
-		WHERE so.employee_id = ? AND so.status IN( 'CLOSED','POSTED');",[$empId]);
+		LEFT JOIN agent_commission_items ai ON ai.sales_order_id = so.id
+		LEFT JOIN agent_commission ag ON ai.agent_commission_id = ag.id
+		WHERE so.employee_id = ? AND so.status IN( 'CLOSED');",[$empId]);
      
         return collect($results);
     } 
