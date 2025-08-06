@@ -90,3 +90,17 @@ Route::group(['prefix' => 'agent-team'], function() {
 });
 
 
+// Commission Report
+Route::group(['prefix' => 'commission-report'], function() {  
+
+    Route::get('/', 'CommissionReportController@index')->name("commission_report.index");
+    
+    Route::get('add', 'CommissionReportController@create')->name("commission_report.create");
+
+    Route::post('add', 'CommissionReportController@store')->name("commission_report.store");
+
+    Route::get('edit/{id}', 'CommissionReportController@edit')->name("commission_report.edit");    
+
+    Route::post('edit/{id}', 'CommissionReportController@update')->name("commission_report.update"); 
+
+});

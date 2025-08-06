@@ -145,15 +145,12 @@ class SalesPaymentController extends Controller
             'collected_by' => 'required',
             'status' => 'required',
         ]);
-       
+
         $salespayments = SalesPayment::findOrfail($request->sales_payment_id);
 
-        $total_paid =  $this->salespayment->totalpaid($request->sales_payment_id)->first();
- 
-        $totalSales = $salespayments->sales_total ;
 
-        $totalPayment = 0;
-        $totalPayment = $totalPayment + $total_paid->amount ;
+        $date = Carbon::parse($request->date_payment);
+        $result = $date->format('Y-m-d');
 
 
             $paymentterms = New SalesPaymentTerm;
@@ -189,10 +186,61 @@ class SalesPaymentController extends Controller
 
             $paymentterms->save();
 
+        $total_paid =  $this->salespayment->totalpaid($request->sales_payment_id)->first();
+ 
+        $totalSales = $salespayments->sales_total ;
 
-               return redirect()->route('sales_payment.update',$request->sales_payment_id)
+        $totalPayment = 0;
+        $totalPayment = $totalPayment + $total_paid->amount ;
+
+        if ( $totalPayment > $totalSales ){
+
+
+            $salesPayment = SalesPayment::find($request->sales_payment_id);
+        
+            $salesPayment->payment_status = 'Completed';
+
+            $salesPayment->save();
+            
+
+            $salesorder = SalesOrder::findOrfail($salespayments->sales_order_id);
+
+            $salesorder->status = 'CLOSED';
+
+            $salesorder->save();
+
+
+                return redirect()->route('sales_payment.update',$request->sales_payment_id)
+
+                    ->with('warning','Customer has been made an Overpayment Transaction.');
+
+        } elseif ( $totalPayment == $totalSales ) {
+
+
+            $salesPayment = SalesPayment::find($request->sales_payment_id);
+
+            $salesPayment->payment_status = 'Completed';
+
+            $salesPayment->save();
+
+
+            $salesorder = SalesOrder::findOrfail($salespayments->sales_order_id);
+          
+            $salesorder->status = 'CLOSED';
+
+            $salesorder->save();
+
+            
+                return redirect()->route('sales_payment.update',$request->sales_payment_id)
+
+                    ->with('success','Customer Amount Due has been Completed!');
+        } else {
+
+            return redirect()->route('sales_payment.update',$request->sales_payment_id)
 
                     ->with('success','Payment terms has been added successfully.');
+
+        }
 
     }
 
@@ -256,6 +304,7 @@ class SalesPaymentController extends Controller
         $totalPayment = $totalPayment + $total_paid->amount;
         
 
+
         if ( $totalPayment > $totalSales ){
 
 
@@ -288,7 +337,7 @@ class SalesPaymentController extends Controller
 
 
             $salesorder = SalesOrder::findOrfail($salespayments->sales_order_id);
-
+          
             $salesorder->status = 'CLOSED';
 
             $salesorder->save();
