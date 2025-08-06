@@ -101,7 +101,7 @@
                                                 </div>
                                                 <div id="tab-4" class="tab-pane">
                                                     <div class="panel-body">
-                                                        <div class="table-responsive" >
+                                                        <div class="table-responsive">
                                                         
                                                         @include('pages.salesorder.closed_list')
                                                         

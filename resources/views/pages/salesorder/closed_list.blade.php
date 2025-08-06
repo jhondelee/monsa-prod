@@ -10,7 +10,8 @@
             <th>Sales Agent</th>
             <th>Sales Total</th>
             <th class="text-center">Status</th>
-            <th class="text-center">Action</th>                                                   
+            <th class="text-center">Action</th>     
+                                                 
         </tr>
     </thead>
         <tbody>
@@ -20,10 +21,10 @@
                 <tr>
                     <td>{{$closed->id}}</td>
                     <td>{{$closed->so_number}}</td>
-                    <td>{{ date('m-d-y', strtotime($closed->so_date))}}</td>
+                    <td>{{date('m-d-y', strtotime($closed->so_date))}}</td>
                     <td>{{$closed->customer}}</td>
                     <td>{{$closed->sales_agent}}</td>
-                    <<td class="text-right">{{number_format($closed->total_sales,2)}}</td>
+                    <td class="text-right">{{number_format($closed->total_sales,2)}}</td>
                     <td class="text-center">
                         <label class="label label-warning" >{{$closed->status}}</label> </td>
                     <td class="text-center">

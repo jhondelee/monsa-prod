@@ -1,6 +1,6 @@
  
 
-{!! Form::open(array('route' => array('salesreport.print'),'class'=>'form-horizontal','role'=>'form')) !!} 
+{!! Form::open(array('route' => array('commission_report.print'),'class'=>'form-horizontal','role'=>'form')) !!} 
  <div id="myModalReport" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

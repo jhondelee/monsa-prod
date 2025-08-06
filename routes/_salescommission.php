@@ -95,12 +95,8 @@ Route::group(['prefix' => 'commission-report'], function() {
 
     Route::get('/', 'CommissionReportController@index')->name("commission_report.index");
     
-    Route::get('add', 'CommissionReportController@create')->name("commission_report.create");
+    Route::post('print', 'CommissionReportController@print_commission')->name("commission_report.print");
 
-    Route::post('add', 'CommissionReportController@store')->name("commission_report.store");
-
-    Route::get('edit/{id}', 'CommissionReportController@edit')->name("commission_report.edit");    
-
-    Route::post('edit/{id}', 'CommissionReportController@update')->name("commission_report.update"); 
+    Route::get('commission/{start}/{end}/{id}', 'CommissionReportController@generate_commission')->name("commission_report.generate_commission");    
 
 });

@@ -40,7 +40,7 @@ class Factory implements SetInterface
 		$results = DB::select("
 				SELECT a.employee_id, a.team_id ,
 		CONCAT(e.firstname ,' ',e.lastname ) AS sub_agent,
-		a.share_percentage as rates FROM agent_team a 
+		FLOOR(a.share_percentage) as rates FROM agent_team a 
 		INNER JOIN employees e ON a.team_id = e.id 
 		WHERE a.employee_id = ? ",[$empID]);
 
