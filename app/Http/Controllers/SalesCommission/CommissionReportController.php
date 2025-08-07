@@ -104,14 +104,12 @@ class CommissionReportController extends Controller
         //Column Name
             $pdf::Ln(10);
             $pdf::SetFont('Arial','B',9);
-            $pdf::cell(25,6,"SO Date",0,"","L");
-            $pdf::cell(25,6,"DR No.",0,"","L");
+            $pdf::cell(35,6,"SO Date",0,"","L");
             $pdf::cell(40,6,"Area",0,"","L");
-            $pdf::cell(30,6,"Total Sales",0,"","R");
-            $pdf::cell(30,6,"Total Return",0,"","R");
-            $pdf::cell(30,6,"Total Amount",0,"","R");
+            $pdf::cell(35,6,"Total Sales",0,"","R");
+            $pdf::cell(35,6,"Total Return",0,"","R");
+            $pdf::cell(35,6,"Total Amount",0,"","R");
 
-            $commissions = $this->commission_report->getCommissions($start, $end, $empID);  
 
         $pdf::Ln(1);
         $pdf::SetFont('Arial','',9);
@@ -122,25 +120,40 @@ class CommissionReportController extends Controller
         $tatolAmount = 0;
         $totalCommission = 0;
 
-            foreach ($commissions as $key => $commission) {
+            $ctrCom = $this->commission_report->getctrCommission($start, $end, $empID);
+            $commissions = $this->commission_report->getCommissions($start, $end, $empID);  
 
-                $pdf::Ln(5);
-                $pdf::SetFont('Arial','',9);
-                $pdf::cell(25,6,$commission->so_date,0,"","L");
-                $pdf::cell(25,6,$commission->so_number,0,"","L");
-                $pdf::cell(40,6,$commission->area,0,"","L");
-                $pdf::cell(30,6,number_format($commission->total_sales,2),0,"","R");
-                $pdf::cell(30,6,number_format($commission->total_returns,2),0,"","R");
-                $pdf::cell(30,6,number_format($commission->total_amount,2),0,"","R");
+        for ($i=0; $i < count($ctrCom); $i++) { 
+
+            $sales = 0; $returns = 0; $amount = 0 ;
+
+            foreach ($commissions as $key => $cms) {
                 
-                
-                $totalSales = $totalSales + $commission->total_sales;
-                $totalReturn = $totalReturn + $commission->total_returns;
-                $tatolAmount = $tatolAmount + $commission->total_amount;
-                $totalCommission = $totalCommission + (number_format($commission->rates,2) * $commission->total_amount);
-                
-                
+                    if($ctrCom[$i]->so_date == $cms->so_date AND $ctrCom[$i]->area == $cms->area) {
+
+                        $sales = $sales + $cms->total_sales;
+                        $returns = $returns + $cms->total_returns;
+                        $amount = $amount + $cms->total_amount;
+
+                    } 
             }
+
+            $pdf::Ln(5);
+            $pdf::SetFont('Arial','',9);
+            $pdf::cell(35,6,$ctrCom[$i]->so_date,0,"","L");
+            $pdf::cell(40,6,$ctrCom[$i]->area,0,"","L");
+            $pdf::cell(35,6,number_format($sales,2),0,"","R");
+            $pdf::cell(35,6,number_format($returns,2),0,"","R");
+            $pdf::cell(35,6,number_format($amount,2),0,"","R");
+                            
+                            
+            $totalSales = $totalSales + $commissions[$i]->total_sales;
+            $totalReturn = $totalReturn + $commissions[$i]->total_returns;
+            $tatolAmount = $tatolAmount + $commissions[$i]->total_amount;
+            $totalCommission = $totalCommission + (number_format($commissions[$i]->rates,2) * $commissions[$i]->total_amount);  
+            
+        }
+
 
         $pdf::Ln(5);
         $pdf::SetFont('Arial','I',8);

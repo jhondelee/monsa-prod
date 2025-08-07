@@ -8,12 +8,28 @@ use DB;
 class Factory implements SetInterface
 {
 
+    public function getctrCommission($start, $end, $empID)
+    {
+        $results = DB::select("
+        SELECT 
+            DATE_FORMAT(so.so_date,'%m-%d-%Y')  AS so_date , 
+            a.name AS area
+        FROM sales_payment sp
+        INNER JOIN sales_order so ON so.id = sp.sales_order_id AND so.status='CLOSED'
+        INNER JOIN customers c ON c.id = so.customer_id
+        INNER JOIN areas a ON a.id = c.area_id
+        WHERE so.so_date BETWEEN ? AND ? AND so.employee_id = ?
+        GROUP BY so.so_date, a.name
+        ORDER BY  a.name,so.so_date",[$start, $end, $empID]);
+
+        return collect($results);
+    }
+
     public function getCommissions($start, $end, $empID)
     {
         $results = DB::select("
         SELECT 
             DATE_FORMAT(so.so_date,'%m-%d-%Y')  AS so_date , 
-            so.so_number , 
             a.name AS area, 
             ( sp.sales_total + ifnull(sum(ri.srp),0)) AS total_sales,
             sum(ri.srp) AS total_returns,
@@ -28,7 +44,8 @@ class Factory implements SetInterface
         LEFT  JOIN returns r ON r.so_number = sp.so_number
         LEFT JOIN return_items ri ON r.id = ri.returns_id
         WHERE so.so_date BETWEEN ? AND ? AND so.employee_id = ?
-        GROUP BY so.so_date, so.so_number, a.name, sp.sales_total,cr.rate",[$start, $end, $empID]);
+        GROUP BY a.name,so.so_date, sp.sales_total,cr.rate
+        ORDER BY  a.name,so.so_date",[$start, $end, $empID]);
 
         return collect($results);
     } 
