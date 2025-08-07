@@ -125,7 +125,7 @@ class CommissionReportController extends Controller
 
         for ($i=0; $i < count($ctrCom); $i++) { 
 
-            $sales = 0; $returns = 0; $amount = 0 ;
+            $sales = 0; $returns = 0; $amount = 0 ; $commission = 0;
 
             foreach ($commissions as $key => $cms) {
                 
@@ -134,6 +134,7 @@ class CommissionReportController extends Controller
                         $sales = $sales + $cms->total_sales;
                         $returns = $returns + $cms->total_returns;
                         $amount = $amount + $cms->total_amount;
+                        $commission = $commission + (number_format($cms->rates,2) * $cms->total_amount);
 
                     } 
             }
@@ -147,10 +148,10 @@ class CommissionReportController extends Controller
             $pdf::cell(35,6,number_format($amount,2),0,"","R");
                             
                             
-            $totalSales = $totalSales + $commissions[$i]->total_sales;
-            $totalReturn = $totalReturn + $commissions[$i]->total_returns;
-            $tatolAmount = $tatolAmount + $commissions[$i]->total_amount;
-            $totalCommission = $totalCommission + (number_format($commissions[$i]->rates,2) * $commissions[$i]->total_amount);  
+            $totalSales = $totalSales + $sales;
+            $totalReturn = $totalReturn + $returns;
+            $tatolAmount = $tatolAmount + $amount;
+            $totalCommission = $totalCommission + $commission;  
             
         }
 
@@ -166,13 +167,13 @@ class CommissionReportController extends Controller
 
             $pdf::Ln(5);
             $pdf::SetFont('Arial','B',10);
-            $pdf::cell(90,6,"Total:",0,"","L");
+            $pdf::cell(80,6,"Total:",0,"","L");
             $pdf::SetFont('Arial','B',10);
             $pdf::cell(30,6,number_format( $totalSales,2),0,"","R");
             $pdf::SetFont('Arial','B',10);
-            $pdf::cell(30,6,number_format( $totalReturn,2),0,"","R");
+            $pdf::cell(35,6,number_format( $totalReturn,2),0,"","R");
              $pdf::SetFont('Arial','B',10);
-            $pdf::cell(30,6,number_format( $tatolAmount,2),0,"","R");
+            $pdf::cell(35,6,number_format( $tatolAmount,2),0,"","R");
 
 
         $agents = $this->agentteam->agentsEarned($empID);
