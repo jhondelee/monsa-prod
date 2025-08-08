@@ -28,7 +28,7 @@ class RateController extends Controller
 
         $rates = New CommissionRate;
 
-        $percentage = ($request->rate / 100);
+        $percentage = ($request->rate / 1000);
 
         $rates->rate = $percentage;
 
@@ -49,7 +49,7 @@ class RateController extends Controller
 
         $rates = CommissionRate::find($request->id);
 
-        $percentage = ($request->rate / 100);
+        $percentage = ($request->rate / 1000);
 
         $rates->rate = $percentage;
 
