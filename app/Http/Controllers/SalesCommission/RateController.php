@@ -28,7 +28,9 @@ class RateController extends Controller
 
         $rates = New CommissionRate;
 
-        $rates->rate = $request->rate;
+        $percentage = ($request->rate / 100);
+
+        $rates->rate = $percentage;
 
         $rates->created_by = auth()->user()->id;
 
@@ -47,7 +49,9 @@ class RateController extends Controller
 
         $rates = CommissionRate::find($request->id);
 
-        $rates->rate = $request->rate;
+        $percentage = ($request->rate / 100);
+
+        $rates->rate = $percentage;
 
         $rates->save();
 
