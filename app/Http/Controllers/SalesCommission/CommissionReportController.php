@@ -134,7 +134,7 @@ class CommissionReportController extends Controller
                         $sales = $sales + $cms->total_sales;
                         $returns = $returns + $cms->total_returns;
                         $amount = $amount + $cms->total_amount;
-                        $commission = $commission + (number_format($cms->rates,2) * $cms->total_amount);
+                        $commission = $commission + (number_format($cms->rates,3) * $cms->total_amount);
 
                     } 
             }
@@ -201,8 +201,8 @@ class CommissionReportController extends Controller
 
             $pdf::SetFont('Arial','',9);
             $pdf::cell(10  ,6,' '.$agent->rates.'%',0,"","L");
-                $com = $totalCommission * ($agent->rates/100);
-
+                $com = $totalCommission * ($agent->rates / 100);
+ 
             $pdf::SetFont('Arial','B',9);
             $pdf::cell(25,6,number_format($com,2),0,"","R");
         }
