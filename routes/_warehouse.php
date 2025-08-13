@@ -126,6 +126,7 @@ Route::group(['prefix' => 'consumables'], function() {
 
     Route::get('print', 'ConsumablesController@print')->name("consumables.print");
 
+    Route::post('get-item-id', 'ConsumablesController@getitemID')->name("consumables.item_id");
 
     Route::post('add-request', 'ConsumablesController@add_request')->name("consumables.add_request");
 

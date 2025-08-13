@@ -68,22 +68,44 @@ class ConsumablesController extends Controller
             'created_by'   => 'required'
         ]);
 
+
+        $exist = $this->inventory->ifItemExist($request->item_id, $request->location)->first();
+
         $items = $this->items->getiteminfo($request->item_name)->first();
 
-        $item_unit_qty = $items->unit_quantity * $request->quantity;
+        if (!$exist){
 
-        $inventory = New Inventory;
-        $inventory->item_id           = $request->item_name;
-        $inventory->unit_quantity     = $request->quantity;
-        $inventory->onhand_quantity   = $item_unit_qty;
-        $inventory->unit_cost         = $request->unit_cost;
-        $inventory->location          = $request->location;
-        $inventory->received_date     = $request->received_date;
-        $inventory->expiration_date   = $request->expiry_date;
-        $inventory->status            = 'In Stock';
-        $inventory->consumable         = 1;
-        $inventory->created_by        = $request->created_by;
-        $inventory->save();
+                $inventory = New Inventory;
+                $inventory->item_id           = $request->item_id;
+                $inventory->unit_quantity     = $request->quantity;
+                $inventory->onhand_quantity   = $request->quantity;
+                $inventory->unit_cost         = $request->unit_cost;
+                $inventory->location          = $request->location;
+                $inventory->received_date     = $request->received_date;
+                $inventory->expiration_date   = $request->expiry_date;
+                $inventory->status            = 'In Stock';
+                $inventory->consumable         = 1;
+                $inventory->created_by        = $request->created_by;
+                $inventory->save();
+
+        } else {
+
+                $inventory = Inventory::findorfail($exist->id);
+                $inventory->item_id           = $request->item_id;
+                $inventory->unit_quantity     = $inventory->unit_quantity + $request->quantity;
+                $inventory->onhand_quantity   = $inventory->onhand_quantity + $request->quantity;
+                $inventory->save();
+
+        }
+
+        $deductinven = Inventory::findorfail($request->item_name);
+        
+        $deductinven->unit_quantity = $deductinven->unit_quantity - $request->quantity;
+
+        $deductinven->onhand_quantity = $deductinven->onhand_quantity - $request->quantity;
+
+        $deductinven->save();
+
 
         return redirect()->route('consumables.index')
 
@@ -99,6 +121,13 @@ class ConsumablesController extends Controller
         $showItemsLocations = $this->inventory->showlocations($id);
 
         return view('pages.warehouse.consumables.item_details',compact('showItems','showItemsLocations'));
+    }
+
+    public function getitemID(Request $request)
+    {
+        $results  = Inventory::findorfail($request->id);
+
+        return response()->json($results);
     }
 
     public function add_request(Request $request)
@@ -129,11 +158,9 @@ class ConsumablesController extends Controller
 
             $getitem = Item::findorfail($valitem->item_id);
 
-            $onHandQty = ($getitem->unit_quantity) * ($request->quantity);
-
             $valitem->unit_quantity = $valitem->unit_quantity - $request->quantity;
 
-            $valitem->onhand_quantity = $valitem->onhand_quantity - $onHandQty;
+            $valitem->onhand_quantity = $valitem->onhand_quantity - $request->quantity;
 
             $valitem->save();
 
@@ -183,11 +210,9 @@ class ConsumablesController extends Controller
         
                 $getitem = Item::findorfail($valitem->item_id);
 
-                $onHandQty = ($getitem->unit_quantity) * ($itemSaveOnly->request_qty);
-
             $valitem->unit_quantity = $valitem->unit_quantity - $itemSaveOnly->request_qty;
 
-            $valitem->onhand_quantity = $valitem->onhand_quantity - $onHandQty;
+            $valitem->onhand_quantity = $valitem->onhand_quantity - $itemSaveOnly->request_qty;
 
             $valitem->save();
 

@@ -154,7 +154,23 @@
                 document.location.href="/consumables/delete-request/"+data;
             });
         }
-   
+    
+    $('.inven_item').on('change', function (e) {
+            var _id = this.value;
+
+              $.ajax({
+                    url:  '{{ url("consumables/get-item-id") }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { _token: "{{ csrf_token() }}",
+                    id: _id}, 
+                    success:function(results){
+
+                        $('.item_id').val( results.item_id );
+
+                    }
+                });
+        });
 
 
 

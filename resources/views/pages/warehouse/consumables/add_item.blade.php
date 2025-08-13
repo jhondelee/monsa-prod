@@ -14,11 +14,12 @@
                 {!! csrf_field() ; !!} 
 
               
+                {!! Form::hidden('item_id',null, ['class'=>'form-control text-center item_id','id'=>'item_id']) !!}
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Consumable Item <span class="text-danger">*</span></label>
                         <div class="col-sm-8">
-                            {!! Form::select ('item_name',$inventoryItem, null,['placeholder' => 'Select Item...','class'=>'chosen-select','required'=>true, 'id'=>'inventory_item_id'])!!}
+                            {!! Form::select ('item_name',$inventoryItem, null,['placeholder' => 'Select Item...','class'=>'chosen-select inven_item','required'=>true, 'id'=>'inventory_item_id'])!!}
                         </div>
                 </div>
 

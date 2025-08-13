@@ -22,5 +22,7 @@ interface SetInterface {
 
       public function showstatus($status);
 
+      public function ifItemExist($itemID,$loc);
+
 
 }
