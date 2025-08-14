@@ -106,6 +106,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Location</th>
+                                                <th>Inventory</th>
                                                 <th>Code</th>
                                                 <th>Units</th>
                                                 <th>On Hand</th>
@@ -116,10 +117,21 @@
                                       
                                             @foreach($showItemsLocations as $showItemsLocation)
                                                 <tr>           
+                          <tr>           
                                                     <td>{{$showItemsLocation->location}}</td>
+                                                    <td>
+                                                        @if($showItemsLocation->consumable == 0)
+                                                            <label class="label label-success" >Stock</label>
+                                                        @elseif ($showItemsLocation->consumable == 1)
+                                                            <label class="label label-warning" >Consumable</label>
+                                                        @elseif ($showItemsLocation->consumable == 2)
+                                                            <label class="label label-danger" >Return</label>
+                                                        @endif
+                           
+                                                    </td>
                                                     <td>{{$showItemsLocation->code}}</td>
                                                     <td>{{$showItemsLocation->units}}</td>
-                                                    <td>{{$showItemsLocation->unit_quantity}}</td>
+                                                    <td>{{$showItemsLocation->onhand_quantity}}</td>
                                                     <td>{{$showItemsLocation->received_date}}</td>
                                                 </tr>
                                             @endforeach 
