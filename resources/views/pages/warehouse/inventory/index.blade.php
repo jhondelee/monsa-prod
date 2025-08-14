@@ -273,7 +273,7 @@
             var _item_name = $('#inventory_item_id option:selected').text();
                 
                 $.ajax({
-                    url:  '{{ url('inventory/iteminfo') }}',
+                    url:  '{{ url("inventory/iteminfo") }}',
                     type: 'POST',
                     dataType: 'json',
                     data: { _token: "{{ csrf_token() }}",
@@ -282,7 +282,7 @@
 
                         $('#unit_price').val(results.unit_cost);
 
-                            toastr.info(results.description ,'Unit Cost')
+                            toastr.info(results.description ,'Selected')
                     }
                 });
         })
