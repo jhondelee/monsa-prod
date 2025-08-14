@@ -42,7 +42,7 @@ class ConsumablesController extends Controller
 
         $consumables = $this->inventory->getconsumables();
 
-        $inventoryItem =  $this->inventory->addInventoryItem()->pluck('item_name','id');
+        $inventoryItem =  $this->inventory->addConsumableItem()->pluck('item_name','id');
 
         $location = WarehouseLocation::pluck('name','id');
 

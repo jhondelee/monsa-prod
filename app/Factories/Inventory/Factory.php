@@ -66,9 +66,18 @@ class Factory implements SetInterface
         return collect($results);
     } 
 
-
-
     public function addInventoryItem(){
+          $results = DB::SELECT ( '
+                   SELECT i.id, 
+                    concat(i.description," - ",u.code) as item_name 
+                    FROM items i
+                    LEFT JOIN unit_of_measure u
+                    ON i.unit_id = u.id
+                    WHERE  i.deleted_at is NULL AND i.activated=1;');
+          return collect($results);
+    }
+
+    public function addConsumableItem(){
           $results = DB::SELECT ( '
                    SELECT i.id,
                     concat(e.description) as item_name 
