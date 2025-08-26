@@ -112,6 +112,7 @@
                                                 <th>On Hand</th>
                                                 <th>Received Date</th> 
                                             </tr>
+                                            
                                         </thead>
                                         <tbody>
                                       
