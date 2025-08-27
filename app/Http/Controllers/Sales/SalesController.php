@@ -539,7 +539,7 @@ class SalesController extends Controller
         $pdf::Ln(4);
         $pdf::SetFont('Arial','B',9);
         $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(25,6,"Address/Area#",0,"","L");
+        $pdf::cell(25,6,"Address/Area ",0,"","L");
         $pdf::SetFont('Arial','',9);
         $pdf::cell(40,6,': '.$customer->address,0,"","L");
 
