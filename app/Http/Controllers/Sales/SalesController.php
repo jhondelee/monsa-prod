@@ -562,16 +562,16 @@ class SalesController extends Controller
             $pdf::Ln(10);
             $pdf::SetFont('Arial','B',9);
             if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
-                $pdf::cell(15,6,"Qty",0,"","C");
+                $pdf::cell(25,6,"Qty",0,"","C");
                 $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(60,6,"Item Name",0,"","L");
+                $pdf::cell(85,6,"Item Name",0,"","L");
                 $pdf::cell(30,6,"SRP",0,"","R");
                 $pdf::cell(30,6,"Amount",0,"","R");
             }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 
                 $pdf::cell(15,6,"Qty",0,"","C");
                 $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(60,6,"Item Name",0,"","L");
+                $pdf::cell(70,6,"Item Name",0,"","L");
                 $pdf::cell(20,6,"SRP",0,"","R");
                 $pdf::cell(20,6,"Disc.",0,"","C");
                 $pdf::cell(20,6,"Price",0,"","R");
@@ -581,7 +581,7 @@ class SalesController extends Controller
 
                 $pdf::cell(15,6,"Qty",0,"","C");
                 $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(60,6,"Item Name",0,"","L");
+                $pdf::cell(70,6,"Item Name",0,"","L");
                 $pdf::cell(20,6,"SRP",0,"","R");
                 $pdf::cell(20,6,"% Disc.",0,"","C");
                 $pdf::cell(20,6,"Price",0,"","R");
@@ -614,16 +614,16 @@ class SalesController extends Controller
             $pdf::Ln(5);
             $pdf::SetFont('Arial','',9);
             if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
-                $pdf::cell(15,6,$value->order_quantity,0,"","C");
+                $pdf::cell(25,6,$value->order_quantity,0,"","C");
                 $pdf::cell(15,6,$value->unti_code,0,"","L");
-                $pdf::cell(60,6,$value->description,0,"","L");
+                $pdf::cell(85,6,$value->description,0,"","L");
                 $pdf::cell(30,6,number_format($value->srp,2),0,"","R");
                 $pdf::cell(30,6,number_format($value->sub_amount,2),0,"","R");
 
             }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 $pdf::cell(15,6,$value->order_quantity,0,"","C");
                 $pdf::cell(15,6,$value->unti_code,0,"","L");
-                $pdf::cell(60,6,$value->description,0,"","L");
+                $pdf::cell(70,6,$value->description,0,"","L");
                 $pdf::cell(20,6,number_format($value->srp,2),0,"","R");
 
                     $amntDisc = $value->srp - $value->set_srp;
@@ -636,7 +636,7 @@ class SalesController extends Controller
             }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
                 $pdf::cell(15,6,$value->order_quantity,0,"","C");
                 $pdf::cell(15,6,$value->unti_code,0,"","L");
-                $pdf::cell(60,6,$value->description,0,"","L");
+                $pdf::cell(70,6,$value->description,0,"","L");
                 $pdf::cell(20,6,number_format($value->srp,2),0,"","R");
 
                    $PercDisc = $value->srp - $value->set_srp; 
