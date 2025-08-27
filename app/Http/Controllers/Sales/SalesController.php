@@ -18,6 +18,7 @@ use App\WarehouseLocation;
 use App\User as Users;
 use Carbon\Carbon;
 use App\Factories\SalesOrder\PDF_MC_Table;
+use App\Pdf as PDF;
 use Fpdf;
 use DB;
 
@@ -28,13 +29,15 @@ class SalesController extends Controller
     public function __construct(
             Users $user,
             ItemFactory $items,
-            SalesOrderFactory $salesorder
+            SalesOrderFactory $salesorder,
+            PDF $pdf
         )
     {
         $this->user = $user;
         $this->items = $items;
         $this->salesorders = $salesorder;
         $this->middleware('auth');
+        $this->pdf = $pdf;
     }
 
 
@@ -279,7 +282,7 @@ class SalesController extends Controller
             'approved_by'   => 'required'
         ]);
 
-        dd($request->total_amount_discount);
+
 
         $unitCostTotal=0;
 
@@ -483,6 +486,7 @@ class SalesController extends Controller
             ->with('success','Order has been deleted successfully.');
 
     }
+
 
      public function printSO($id)
     {
