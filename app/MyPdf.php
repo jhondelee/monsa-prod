@@ -18,12 +18,20 @@ class MyPdf extends Fpdf
              MyPdf::Cell(80);
 
             // Title
-             MyPdf::Cell(40, 10, '', 0, "", 'C');
+
+             MyPdf::Cell(40, 10, ' ', 0, "", 'C');
       
+            MyPdf::SetY(10);
+            MyPdf::Cell(80); 
+            MyPdf::Cell(40, 8, 'Delivery Receipt', 1, "", 'C');
+
             //logo
             MyPdf::Image('img/temporary-logo.jpg',3, 3, 25);
             MyPdf::SetFont('Arial','B',12);
             MyPdf::SetY(20); 
+
+       
+
 
             MyPdf::Ln(5);
             MyPdf::SetFont('Arial','B',9);
