@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Factories\Item\Factory as ItemFactory;
 use App\Factories\SalesOrder\Factory as SalesOrderFactory;
+use Illuminate\Support\Facades\Response;
 use Yajra\Datatables\Datatables;
 use App\Item;
 use App\Inventory;
@@ -18,7 +19,7 @@ use App\WarehouseLocation;
 use App\User as Users;
 use Carbon\Carbon;
 use App\Factories\SalesOrder\PDF_MC_Table;
-use App\Pdf as PDF;
+use App\MyPdf;
 use Fpdf;
 use DB;
 
@@ -29,15 +30,15 @@ class SalesController extends Controller
     public function __construct(
             Users $user,
             ItemFactory $items,
-            SalesOrderFactory $salesorder,
-            PDF $pdf
+            SalesOrderFactory $salesorder
+ 
         )
     {
         $this->user = $user;
         $this->items = $items;
         $this->salesorders = $salesorder;
         $this->middleware('auth');
-        $this->pdf = $pdf;
+
     }
 
 
@@ -487,142 +488,316 @@ class SalesController extends Controller
 
     }
 
-
-     public function printSO($id)
-    {
-        $salesorders = SalesOrder::find($id);       
-  
-        $pdf = new Fpdf('P');
+    public function printSOdz($id){
+        $pdf = new MyPdf();
+        $pdf::AliasNbPages();
         $pdf::AddPage('P','A4');
 
-        $pdf::SetFont('Arial','',7);
-        $pdf::cell(170,0,date("Y-m-d") ,0,"","R");
-        date_default_timezone_set("singapore");
-        $pdf::cell(0,0,date("h:i A"),0,"","L");
+        $sales_order_items = $this->salesorders->getForSOitems($id);
+        $salesorders = SalesOrder::find($id);
+        $nOitems = count($sales_order_items) - 1;
+        $pglist = 39;
+        $var = $nOitems / $pglist;
 
-        //$pdf::Image('/home/u648374046/domains/monsais.net/public_html/public/img/monsa-logo-header.jpg',10, 5, 30.00);
-        $pdf::Image('img/temporary-logo.jpg',3, 3, 40.00);
-        $pdf::SetFont('Arial','B',12);
-        $pdf::SetY(20);     
+        //Setup Page
+        $ctr = 0;
+        if (round($var) < $var)
+            {
+                $ctr = round($var) + 1;
+            } else {
+                $ctr =round($var);
+            }  
 
-
-        // Header
-        //$pdf::Image('img/monsa-logo-header.jpg',90, 5, 25.00);
-        //$pdf::Image('img/qplc_logo.jpg',5, 5, 40.00);
-        $pdf::SetFont('Arial','B',12);
-        $pdf::SetY(20);  
-
-        $pdf::Ln(2);
-        $pdf::SetFont('Arial','B',12);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(185,1,"Delivery Receipt",0,"","C");
-
-        $pdf::Ln(15);
-        $pdf::SetFont('Arial','B',9);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(25,6,"DR Number",0,"","L");
-        $pdf::SetFont('Arial','',9);
-        $pdf::cell(40,6,': '.$salesorders->so_number,0,"","L");
-        $pdf::SetFont('Arial','B',9);
-        $pdf::cell(100,6,"DR Date",0,"","R");
-        $pdf::SetFont('Arial','',9);
-        $so_date = Carbon::parse($salesorders->so_date);
-        $pdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
-
+        $sub = 0;
+        $n = 0;
         
+        for ($x = 1; $x <= $ctr; $x++){
+                   
+            $pdf->header($id);
+                      
+                for ($i = $n; $i <= $nOitems; $i++) {
+                    
+                    $pdf::Ln(5);
 
-        $pdf::Ln(4);
-        $pdf::SetFont('Arial','B',9);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(25,6,"Customer",0,"","L");
-        $pdf::SetFont('Arial','',9);
-        $customer = Customer::find($salesorders->customer_id);
-        $pdf::cell(40,6,': '.$customer->name,0,"","L");
+                    $pdf::cell(50,6,"Item Descriptio :".$i,0,"","R");
 
+                    $sub = $sub + $i;
 
-        $pdf::Ln(4);
-        $pdf::SetFont('Arial','B',9);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(25,6,"Address/Area ",0,"","L");
-        $pdf::SetFont('Arial','',9);
-        $pdf::cell(40,6,': '.$customer->address,0,"","L");
+               
 
+                    if ($i == $pglist){    
 
-        $pdf::SetFont('Arial','B',9);
-        $pdf::cell(100,6,"Terms",0,"","R");
-        $pdf::SetFont('Arial','',9);
-        $so_date = Carbon::parse($salesorders->so_date);
-        $pdf::cell(30,6,': '.'___________',0,"","L");
+                        $n = $i;   
+                        $pglist = $pglist + 39;
+                        $pdf::Ln(2);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"Subamount :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
 
-        $pdf::Ln(4);
-        $pdf::SetFont('Arial','B',9);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(25,6,"Contact#",0,"","L");
-        $pdf::SetFont('Arial','',9);
-        $pdf::cell(40,6,': '.$customer->contact_number1,0,"","L");
+                        goto targetLocation;
 
+                    }
+                                                    
+                    if($i == $nOitems){
+                        $n = $n + $i;
+                        $pdf::Ln(2);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"Subamount :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
 
-        //Column Name
-            $pdf::Ln(10);
-            $pdf::SetFont('Arial','B',9);
-            if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
-                $pdf::cell(25,6,"Qty",0,"","C");
-                $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(85,6,"Item Name",0,"","L");
-                $pdf::cell(30,6,"SRP",0,"","R");
-                $pdf::cell(30,6,"Amount",0,"","R");
-            }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
+                        goto targetLocation;
+                    }
                 
-                $pdf::cell(15,6,"Qty",0,"","C");
-                $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(70,6,"Item Name",0,"","L");
-                $pdf::cell(20,6,"SRP",0,"","R");
-                $pdf::cell(20,6,"Disc.",0,"","C");
-                $pdf::cell(20,6,"Price",0,"","R");
-                $pdf::cell(25,6,"Amount",0,"","R");
-
-            }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
-
-                $pdf::cell(15,6,"Qty",0,"","C");
-                $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(70,6,"Item Name",0,"","L");
-                $pdf::cell(20,6,"SRP",0,"","R");
-                $pdf::cell(20,6,"% Disc.",0,"","C");
-                $pdf::cell(20,6,"Price",0,"","R");
-                $pdf::cell(25,6,"Amount",0,"","R");
-
-            }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
-                $pdf::cell(15,6,"Qty",0,"","C");
-                $pdf::cell(15,6,"Unit",0,"","L");
-                $pdf::cell(60,6,"Item Name",0,"","L");                
-                $pdf::cell(20,6,"SRP",0,"","R");
-                $pdf::cell(15,6,"P Disc.",0,"","C");
-                $pdf::cell(15,6,"% Disc.",0,"","C");
-                $pdf::cell(20,6,"Price",0,"","R");
-                $pdf::cell(25,6,"Amount",0,"","R");
+               
             }
+            targetLocation:   
+            $pdf->footer();
 
 
-        $pdf::Ln(1);
-        $pdf::SetFont('Arial','',9);
-        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+        }
+    
+        $pdf::Output();
+        exit;
 
+    }
 
-        $sales_order_items = $this->salesorders->getForSOitems($id);;
+    public function printSO($id)
+    {
+
+      // Instantiate your custom PDF class
+        $pdf = new MyPdf();
+        $pdf::AliasNbPages();
+        // Define an alias for the total number of pages
+       
+
+        // Add the first page (this automatically calls Header() and Footer())
+        $pdf::AddPage('P','A4');
+       
+       
+        // Set the font for the body content
+        $sales_order_items = $this->salesorders->getForSOitems($id);
+        $salesorders = SalesOrder::find($id);
+        $nOitems = count($sales_order_items) - 1;
+        $pglist = 39;
+        $var = $nOitems / $pglist;
+
+        //Setup Page
+        $ctr = 0;
+        if (round($var) < $var)
+            {
+                $ctr = round($var) + 1;
+            } else {
+                $ctr =round($var);
+            }  
+        
+        // Add some body content
         $order_number = 0;
         $total_discount_amount = 0;
 
- 
+        $sub = 0;
+        $n = 0;
+        
+        for ($x = 1; $x <= $ctr; $x++){
+            $pdf->header($id);
+                for ($i = $n; $i <= $nOitems; $i++) {
+                        
+                        $pdf::Ln(5);
+          
+                        if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
+                            //$pdf::cell(2,6,$i,0,"","L");
+                            $pdf::cell(25,6,$sales_order_items[$i]->order_quantity,0,"","C");
+                            $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
+                            $pdf::cell(85,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(30,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
+                            $pdf::cell(30,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
+
+
+                        }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
+                            $pdf::cell(15,6,$sales_order_items[$i]->order_quantity,0,"","C");
+                            $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
+                            $pdf::cell(70,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
+
+                            $amntDisc = $sales_order_items[$i]->srp - $sales_order_items[$i]->set_srp;
+
+                            $pdf::cell(20,6,number_format($amntDisc,2),0,"","C");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->set_srp,2),0,"","R");
+                            $pdf::cell(25,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
+                         
+
+                        }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
+                            $pdf::cell(15,6,$sales_order_items[$i]->order_quantity,0,"","C");
+                            $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
+                            $pdf::cell(70,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
+
+                            $PercDisc = $sales_order_items[$i]->srp - $sales_order_items[$i]->set_srp; 
+
+                            $pdf::cell(20,6,number_format($PercDisc,2),0,"","C");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->set_srp,2),0,"","R");
+                            $pdf::cell(25,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
+
+                        }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
+                            $pdf::cell(15,6,$sales_order_items[$i]->order_quantity,0,"","C");
+                            $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
+                            $pdf::cell(60,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
+
+                            $amntDisc = $sales_order_items[$i]->srp * ($sales_order_items[$i]->discount_percentage / 100);
+
+                            $pdf::cell(15,6,number_format($sales_order_items[$i]->discount_amount,2),0,"","C");
+                            $pdf::cell(15,6,number_format($amntDisc,2),0,"","C");
+                            $pdf::cell(20,6,number_format($sales_order_items[$i]->set_srp,2),0,"","R");
+                            $pdf::cell(25,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
+
+                        }
+
+                        $sub = $sub + $sales_order_items[$i]->sub_amount;
+
+
+
+
+                    if ($i == $pglist){
+                        
+                         $n = $i + 1;   
+                        $pglist = $pglist + 39;
+
+                        $pdf::Ln(1);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"Subamount :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
+                        $sub = 0 ;
+                        $pdf::Ln(1);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+
+                        goto targetLocation;
+
+                    }
+
+
+
+                    if($i == $nOitems){
+                        $n = $n + $i;
+                        $pdf::Ln(1);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"Subamount :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
+                        $sub = 0 ;
+                        $pdf::Ln(1);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                               $pdf::Ln(5);
+                            $pdf::SetFont('Arial','I',8);
+
+                            $pdf::cell(185,6,"--Nothing Follows--",0,"","C");
+
+                        $pdf::Ln(3);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                       
+                        $subAmount = $this->salesorders->getActualAmount($salesorders->id)->sum('subAmount');
+
+                            $subAmount = number_format($subAmount,2,'.','');
+
+                            $total_discount_amount = $subAmount - $salesorders->total_sales; 
+
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"SubTotal :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($subAmount,2),0,"","R");
+
+                        $pdf::Ln(1);
+                        $pdf::SetFont('Arial','',9);
+                        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                        if(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
+                            $pdf::Ln(5);
+                            $pdf::SetFont('Arial','B',9);
+                            $pdf::cell(155,6,"Amount Discount :",0,"","R");
+                            $pdf::SetFont('Arial','',9);
+                            $pdf::cell(30,6,number_format($total_discount_amount,2),0,"","R");
+                        }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
+                            $pdf::Ln(5);
+                            $pdf::SetFont('Arial','B',9);
+                            $pdf::cell(155,6,"Amount Discount :",0,"","R");
+                            $pdf::SetFont('Arial','',9);
+                            $pdf::cell(30,6,number_format($total_discount_amount,2),0,"","R");
+                        }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
+                            $pdf::Ln(5);
+                            $pdf::SetFont('Arial','B',9);
+                            $pdf::cell(155,6,"Amount Discount :",0,"","R");
+                            $pdf::SetFont('Arial','',9);
+                            $pdf::cell(30,6,number_format($total_discount_amount,2),0,"","R");
+                        }
+
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(155,6,"Total Amount :",0,"","R");
+                        $pdf::SetFont('Arial','B',9);
+                        $pdf::cell(30,6,number_format($salesorders->total_sales,2),0,"","R");
+
+                        goto targetLocation;
+                    }
+
+                    
+                    
+                }
+
+            targetLocation:
+
+            $pdf->footer();
+        }
+    
+
+
+        $pdf::Output();
+        exit;
+
+
+    }
+
+     public function printSOd($id)
+    {
+        $salesorders = SalesOrder::find($id);       
+  
+        $pdf = new MyPdf('P');
+        $pdf::AliasNbPages();
+        $pdf::AddPage('P','A4');
+        $pdf->header($id);
+        
+
+        $sales_order_items = $this->salesorders->getForSOitems($id);
+        $order_number = 0;
+        $total_discount_amount = 0;
+
+        $ctr  = 0;
+        $bal = 3;
+        $sub = 0;
 
         foreach ($sales_order_items as $key => $value) {
             $pdf::Ln(5);
             $pdf::SetFont('Arial','',9);
+            $ctr =$ctr+1;   
+
+
             if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
                 $pdf::cell(25,6,$value->order_quantity,0,"","C");
                 $pdf::cell(15,6,$value->unti_code,0,"","L");
                 $pdf::cell(85,6,$value->description,0,"","L");
                 $pdf::cell(30,6,number_format($value->srp,2),0,"","R");
                 $pdf::cell(30,6,number_format($value->sub_amount,2),0,"","R");
+
 
             }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 $pdf::cell(15,6,$value->order_quantity,0,"","C");
@@ -663,8 +838,40 @@ class SalesController extends Controller
                 $pdf::cell(20,6,number_format($value->set_srp,2),0,"","R");
                 $pdf::cell(25,6,number_format($value->sub_amount,2),0,"","R");
 
-            } 
-              
+            }
+              $sub = $sub + $value->sub_amount;
+              if ($ctr == $bal){
+                $pdf::Ln(1);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                $bal = $bal + 3;
+                $pdf::Ln(5);
+                $pdf::SetFont('Arial','B',9);
+                $pdf::cell(155,6,"Subamount :",0,"","R");
+                $pdf::SetFont('Arial','B',9);
+                $pdf::cell(30,6,number_format($sub,2),0,"","R");
+                $sub = 0 ;
+                $pdf::Ln(1);
+                $pdf::SetFont('Arial','',9);
+                $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+              } else {
+                if (count($sales_order_items) < $bal){
+
+                    $pdf::Ln(1);
+                    $pdf::SetFont('Arial','',9);
+                    $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                    $bal = $bal + 3;
+                    $pdf::Ln(5);
+                    $pdf::SetFont('Arial','B',9);
+                    $pdf::cell(155,6,"Subamount :",0,"","R");
+                    $pdf::SetFont('Arial','B',9);
+                    $pdf::cell(30,6,number_format($sub,2),0,"","R");
+                    $sub = 0 ;
+                    $pdf::Ln(1);
+                    $pdf::SetFont('Arial','',9);
+                    $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
+                    }
+            }
         }
 
            
@@ -690,6 +897,9 @@ class SalesController extends Controller
         $pdf::SetFont('Arial','B',9);
         $pdf::cell(30,6,number_format($subAmount,2),0,"","R");
 
+        $pdf::Ln(1);
+        $pdf::SetFont('Arial','',9);
+        $pdf::cell(30,6,"_________________________________________________________________________________________________________",0,"","L");
             if(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 $pdf::Ln(5);
                 $pdf::SetFont('Arial','B',9);
@@ -716,24 +926,7 @@ class SalesController extends Controller
         $pdf::SetFont('Arial','B',9);
         $pdf::cell(30,6,number_format($salesorders->total_sales,2),0,"","R");
 
-       
-
-        $preparedby = $this->user->getCreatedbyAttribute($salesorders->created_by);
-       
-
-        $approveddby = $this->user->getCreatedbyAttribute($salesorders->approved_by);
-       
-
-        $pdf::Ln(15);
-        $pdf::SetFont('Arial','B',9);
-        $pdf::cell(120,6,"NOTE:",0,"","L");
-        $pdf::cell(60,6,"Received the above MDSE. in good order",0,"","C");
-        $pdf::Ln(4);
-        $pdf::SetFont('Arial','',9);
-        $pdf::cell(115,6,"* Price subject to change without prior notice",0,"","L");
-        $pdf::Ln(4);
-        $pdf::cell(285,6,"By : ______________________",0,"","C");
-
+        $pdf->footer();
 
         $pdf::Ln();
         $pdf::Output();
