@@ -22,7 +22,7 @@ class MyPdf extends Fpdf
              MyPdf::Cell(40, 10, ' ', 0, "", 'C');
       
             MyPdf::SetY(10);
-            MyPdf::Cell(80); 
+            MyPdf::Cell(70); 
             MyPdf::Cell(50, 10, 'Delivery Receipt', 1, "", 'C');
 
             //logo
