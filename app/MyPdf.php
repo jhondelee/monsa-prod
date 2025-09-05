@@ -12,7 +12,7 @@ class MyPdf extends Fpdf
          $salesorders = SalesOrder::find($id); 
         
             // Set font for header
-            MyPdf::SetFont('Arial', 'B', 16);
+            MyPdf::SetFont('Arial', 'B', 14);
 
             // Move to the right
              MyPdf::Cell(80);
@@ -33,45 +33,45 @@ class MyPdf extends Fpdf
        
 
 
-            MyPdf::Ln(5);
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::Ln(4);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::SetXY(MyPdf::getX(), MyPdf::getY());
             MyPdf::cell(30,6,"DR Number",0,"","L");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             MyPdf::cell(30,6,': '.$salesorders->so_number,0,"","L");
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::cell(100,6,"DR Date",0,"","R");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             $so_date = Carbon::parse($salesorders->so_date);
             MyPdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
 
-            MyPdf::Ln(5);
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::Ln(4);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::SetXY(MyPdf::getX(), MyPdf::getY());
             MyPdf::cell(30,6,"Customer",0,"","L");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             $customer = Customer::find($salesorders->customer_id);
             MyPdf::cell(40,6,': '.$customer->name,0,"","L");
 
-            MyPdf::Ln(5);
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::Ln(4);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::SetXY(MyPdf::getX(), MyPdf::getY());
             MyPdf::cell(30,6,"Address/Area ",0,"","L");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             MyPdf::cell(30,6,': '.$customer->address,0,"","L");
 
 
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::cell(100,6,"Terms",0,"","R");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             $so_date = Carbon::parse($salesorders->so_date);
             MyPdf::cell(30,6,': '.'___________',0,"","L");
 
-            MyPdf::Ln(5);
-            MyPdf::SetFont('Arial','B',13);
+            MyPdf::Ln(4);
+            MyPdf::SetFont('Arial','B',11);
             MyPdf::SetXY(MyPdf::getX(), MyPdf::getY());
             MyPdf::cell(30,6,"Contact#",0,"","L");
-            MyPdf::SetFont('Arial','',13);
+            MyPdf::SetFont('Arial','',11);
             MyPdf::cell(40,6,': '.$customer->contact_number1,0,"","L");
 
              //Column Name
