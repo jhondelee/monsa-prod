@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Response;
 use Yajra\Datatables\Datatables;
 use App\Item;
 use App\Inventory;
+use App\Area;
 use App\SalesOrder;
 use App\SalesOrderItem;
 use App\UnitOfMeasure; 
@@ -488,80 +489,7 @@ class SalesController extends Controller
 
     }
 
-    public function printSOdz($id){
-        $pdf = new MyPdf();
-        $pdf::AliasNbPages();
-        $pdf::AddPage('P','A4');
-
-        $sales_order_items = $this->salesorders->getForSOitems($id);
-        $salesorders = SalesOrder::find($id);
-        $nOitems = count($sales_order_items) - 1;
-        $pglist = 39;
-        $var = $nOitems / $pglist;
-
-        //Setup Page
-        $ctr = 0;
-        if (round($var) < $var)
-            {
-                $ctr = round($var) + 1;
-            } else {
-                $ctr =round($var);
-            }  
-
-        $sub = 0;
-        $n = 0;
-        
-        for ($x = 1; $x <= $ctr; $x++){
-                   
-            $pdf->header($id);
-                      
-                for ($i = $n; $i <= $nOitems; $i++) {
-                    
-                    $pdf::Ln(5);
-
-                    $pdf::cell(50,6,"Item Descriptio :".$i,0,"","R");
-
-                    $sub = $sub + $i;
-
-               
-
-                    if ($i == $pglist){    
-
-                        $n = $i;   
-                        $pglist = $pglist + 39;
-                        $pdf::Ln(2);
-                        $pdf::SetFont('Arial','B',9);
-                        $pdf::cell(155,6,"Subamount :",0,"","R");
-                        $pdf::SetFont('Arial','B',9);
-                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
-
-                        goto targetLocation;
-
-                    }
-                                                    
-                    if($i == $nOitems){
-                        $n = $n + $i;
-                        $pdf::Ln(2);
-                        $pdf::SetFont('Arial','B',9);
-                        $pdf::cell(155,6,"Subamount :",0,"","R");
-                        $pdf::SetFont('Arial','B',9);
-                        $pdf::cell(30,6,number_format($sub,2),0,"","R");
-
-                        goto targetLocation;
-                    }
-                
-               
-            }
-            targetLocation:   
-            $pdf->footer();
-
-
-        }
     
-        $pdf::Output();
-        exit;
-
-    }
 
     public function printSO($id)
     {
@@ -580,7 +508,7 @@ class SalesController extends Controller
         $sales_order_items = $this->salesorders->getForSOitems($id);
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
-        $pglist = 39;
+        $pglist = 37;
         $var = $nOitems / $pglist;
 
         //Setup Page
@@ -934,86 +862,16 @@ class SalesController extends Controller
 
 
 
-    public function printDraft($id)
-    {
-
-        $salesorders = SalesOrder::find($id);       
-        
-        $pdf = new Fpdf('P');
-        $pdf::AddPage('P','A4');
- 
-        $pdf::Ln(2);
-        $pdf::SetFont('Arial','B',8);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(10,1,"Sales Order",0,"","L");
-
-        $pdf::Ln(2);
-        $pdf::SetFont('Arial','B',8);
-        $pdf::SetXY($pdf::getX(), $pdf::getY());
-        $pdf::cell(17,6,"SO Number",0,"","L");
-        $pdf::SetFont('Arial','',8);
-        $pdf::cell(40,6,': '.$salesorders->so_number,0,"","L");
-        $pdf::Ln(3);
-        $pdf::SetFont('Arial','B',8);
-        $pdf::cell(17,6,"SO Date",0,"","L");
-        $pdf::SetFont('Arial','',8);
-        $so_date = Carbon::parse($salesorders->so_date);
-        $pdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
-
-        //Column Name
-            $pdf::Ln(3);
-            $pdf::SetFont('Arial','B',8);
-            $pdf::cell(5,6,"No.",0,"","L");
-            $pdf::cell(60,6,"Description",0,"","L");
-
-        $salesorder_items = $this->salesorders->getForSOitems($id);
-        
-        $order_number = 0;
-
-            foreach ($salesorder_items as $key => $value) {
-
-                $pdf::Ln(3);
-                $pdf::SetFont('Arial','',8);
-                $pdf::SetXY($pdf::getX(), $pdf::getY());
-                $order_number = $order_number+1;
-                if ($order_number <= 83){
-                    $pdf::SetX(5);
-                    $pdf::cell(5,6,$order_number ,0,"","L");
-                    $pdf::cell(60,6,$value->draftname,0,"L",false);
-                }
-                if ($order_number >= 84 AND $order_number  <= 166){ 
- 
-                    $pdf::SetX(75);
-                    $pdf::cell(5,6,$order_number ,0,"","L");
-                    $pdf::cell(60,6,$value->draftname,0,"L",false);
-                }
-                if ($order_number >= 167 AND $order_number  <= 249){
-
-                    $pdf::SetX(140);
-                    $pdf::cell(5,6,$order_number ,0,"","L");
-                    $pdf::cell (60,6,$value->draftname,0,"L",false);
-                }
-                
-            }
-
-        $pdf::Ln(3);
-        $pdf::SetFont('Arial','I',6);
-        $pdf::cell(20,6,"--Nothing Follows--",0,"","C");
-
-        $pdf::Ln();
-        $pdf::Output();
-        exit;
-
-    }
-
-    
 
     public function printDraft_test($id)
     {
 
         $salesorders = SalesOrder::find($id);         
+        $customer = Customer::findOrfail($salesorders->customer_id);
+        $area = Area::findOrfail($customer->area_id);
 
-        $pdf = new Fpdf('P');
+
+       $pdf = new Fpdf('P');
 
             $pdf->col = 0;
             $pdf::AcceptPageBreak(false);
@@ -1037,6 +895,10 @@ class SalesController extends Controller
             $pdf::AddPage(['L', 'A4']);
             $pdf::SetFontSize(9);
         
+            $pdf::SetXY($pdf::getX(), $pdf::getY());
+            $pdf::cell(10,1,$customer->name." | ".$area->name. " | ".$customer->address,0,"","L");
+            $pdf::Ln(4);
+
             $pdf::SetXY($pdf::getX(), $pdf::getY());
             $pdf::cell(10,1,"Sales Order",0,"","L");
             $pdf::Ln(3);
@@ -1118,6 +980,80 @@ class SalesController extends Controller
     }
 
     /*
+
+    public function printDraft($id)
+    {
+
+        $salesorders = SalesOrder::find($id);       
+        
+        $pdf = new Fpdf('P');
+        $pdf::AddPage('P','A4');
+ 
+        $pdf::Ln(2);
+        $pdf::SetFont('Arial','B',8);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(10,1,"Sales Order",0,"","L");
+
+        $pdf::Ln(2);
+        $pdf::SetFont('Arial','B',8);
+        $pdf::SetXY($pdf::getX(), $pdf::getY());
+        $pdf::cell(17,6,"SO Number",0,"","L");
+        $pdf::SetFont('Arial','',8);
+        $pdf::cell(40,6,': '.$salesorders->so_number,0,"","L");
+        $pdf::Ln(3);
+        $pdf::SetFont('Arial','B',8);
+        $pdf::cell(17,6,"SO Date",0,"","L");
+        $pdf::SetFont('Arial','',8);
+        $so_date = Carbon::parse($salesorders->so_date);
+        $pdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
+
+        //Column Name
+            $pdf::Ln(3);
+            $pdf::SetFont('Arial','B',8);
+            $pdf::cell(5,6,"No.",0,"","L");
+            $pdf::cell(60,6,"Description",0,"","L");
+
+        $salesorder_items = $this->salesorders->getForSOitems($id);
+        
+        $order_number = 0;
+
+            foreach ($salesorder_items as $key => $value) {
+
+                $pdf::Ln(3);
+                $pdf::SetFont('Arial','',8);
+                $pdf::SetXY($pdf::getX(), $pdf::getY());
+                $order_number = $order_number+1;
+                if ($order_number <= 83){
+                    $pdf::SetX(5);
+                    $pdf::cell(5,6,$order_number ,0,"","L");
+                    $pdf::cell(60,6,$value->draftname,0,"L",false);
+                }
+                if ($order_number >= 84 AND $order_number  <= 166){ 
+ 
+                    $pdf::SetX(75);
+                    $pdf::cell(5,6,$order_number ,0,"","L");
+                    $pdf::cell(60,6,$value->draftname,0,"L",false);
+                }
+                if ($order_number >= 167 AND $order_number  <= 249){
+
+                    $pdf::SetX(140);
+                    $pdf::cell(5,6,$order_number ,0,"","L");
+                    $pdf::cell (60,6,$value->draftname,0,"L",false);
+                }
+                
+            }
+
+        $pdf::Ln(3);
+        $pdf::SetFont('Arial','I',6);
+        $pdf::cell(20,6,"--Nothing Follows--",0,"","C");
+
+        $pdf::Ln();
+        $pdf::Output();
+        exit;
+
+    }
+
+    
     public function getCreatePDF($flascard_id) {
     $flashcard = Flashcard::where('user_id', auth()->id())->findOrFail($flascard_id);
 
