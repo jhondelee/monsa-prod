@@ -508,7 +508,7 @@ class SalesController extends Controller
         $sales_order_items = $this->salesorders->getForSOitems($id);
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
-        $pglist = 37;
+        $pglist = 36;
         $var = $nOitems / $pglist;
 
         //Setup Page
