@@ -509,8 +509,11 @@ class SalesController extends Controller
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
         $pglist = 36;
-        if ($pglist = $nOitems){
-            $pglist = $pglist - 1;
+        if ($pglist > $nOitems){
+ 
+            $pglist = $pglist - 2;
+
+
         }
         $var = $nOitems / $pglist;
 
@@ -521,7 +524,6 @@ class SalesController extends Controller
                 $ctr = round($var) + 1;
             } else {
                 $ctr =round($var);
-                // $pglist = $pglist - ;
             }  
 
         // Add some body content
@@ -592,12 +594,12 @@ class SalesController extends Controller
 
                     if ($i == $pglist){
                         
-                         $n = $i + 1;   
-                        $pglist = $pglist + 39;
+                        $n = $i + 1;   
+                        $pglist = $pglist + 36;
 
                         $pdf::Ln(1);
                         $pdf::SetFont('Arial','',11);
-                        $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L"); 
+                        $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
                         $pdf::Ln(5);
                         $pdf::SetFont('Arial','B',11);
                         $pdf::cell(155,6,"Subamount :",0,"","R");
