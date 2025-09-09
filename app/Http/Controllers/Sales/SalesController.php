@@ -509,6 +509,9 @@ class SalesController extends Controller
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
         $pglist = 36;
+        if ($pglist = $nOitems){
+            $pglist = $pglist - 1;
+        }
         $var = $nOitems / $pglist;
 
         //Setup Page
@@ -518,8 +521,9 @@ class SalesController extends Controller
                 $ctr = round($var) + 1;
             } else {
                 $ctr =round($var);
+                // $pglist = $pglist - ;
             }  
-        
+
         // Add some body content
         $order_number = 0;
         $total_discount_amount = 0;
