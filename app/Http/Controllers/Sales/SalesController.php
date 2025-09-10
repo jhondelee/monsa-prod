@@ -508,12 +508,12 @@ class SalesController extends Controller
         $sales_order_items = $this->salesorders->getForSOitems($id);
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
-        $pglist = 36;
+        $pglist = 38;
         if ($pglist > $nOitems){
- 
             $pglist = $pglist - 3;
-
-
+        }
+        if ($pglist == $nOitems){
+            $pglist = 38;
         }
         $var = $nOitems / $pglist;
 
@@ -595,7 +595,7 @@ class SalesController extends Controller
                     if ($i == $pglist){
                         
                         $n = $i + 1;   
-                        $pglist = $pglist + 36;
+                        $pglist = $pglist + 38;
 
                         $pdf::Ln(1);
                         $pdf::SetFont('Arial','',11);

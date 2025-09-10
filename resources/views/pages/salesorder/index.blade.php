@@ -135,7 +135,7 @@
 
     $(document).ready(function(){
               $('.dataTables-po').DataTable({
-                pageLength: 10,
+                pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: []
