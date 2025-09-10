@@ -511,7 +511,7 @@ class SalesController extends Controller
         $pglist = 36;
         if ($pglist > $nOitems){
  
-            $pglist = $pglist - 2;
+            $pglist = $pglist - 3;
 
 
         }
