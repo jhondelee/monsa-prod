@@ -274,11 +274,18 @@
                            _label = "<label class='label label-danger'>";
                         }
                              
-                                                
-                     $('#dTable-terms-item-table tbody').append("<tr><td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td><td>"+ results[i].date_payment +"</td><td>"+ results[i].transaction_no +"</td><td>"+ results[i].modes +"</td><td>"+ results[i].post_dated +"</td><td class='text-right'>"+ results[i].amount_collected.toFixed(2) +"</td><td>"+_label+"\
-                       "+ results[i].status +"</label></td><td>"+ results[i].collected_by +"</td>\
+                                                    
+                        $('#dTable-terms-item-table tbody').append("<tr>\
+                        <td><input type='text' name='id[]' class='form-control input-sm text-center id' required=true size='4'  value="+ results[i].id +" readonly></td>\
+                        <td>"+ results[i].date_payment +"</td><td>"+ results[i].transaction_no +"</td>\
+                        <td>"+ results[i].modes +"</td><td>"+ results[i].post_dated +"</td>\
+                        <td class='text-right'>"+ results[i].amount_collected +"</td><td>"+_label+"\
+                       "+ results[i].status +"</label></td>\
+                       <td>"+ results[i].collected_by +"</td>\
                         <td style='text-align:center;'><a class='btn-primary btn btn-xs details' onclick='showdetails("+ results[i].id +"); return false;'><i class='fa fa-pencil'></i></a>&nbsp;\
                         @IF($salespayments->payment_status == 'Existing Balance')<a class='btn-danger btn btn-xs' onclick='confirmDelete("+ results[i].id +"); return false;'><i class='fa fa-trash'></i></a>@ENDIF</td></tr>"); 
+
+
                 }
                     
             }

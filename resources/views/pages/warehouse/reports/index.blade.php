@@ -33,7 +33,7 @@
                     <div class="col-lg-12">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>Sales Reports</h5>
+                                <h5>Sales Collection</h5>
           
                                 <!--@if (!can('sales_payment.create'))
                                   @endif  -->

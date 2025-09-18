@@ -252,7 +252,7 @@ class ReturnsController extends Controller
             $so = SalesOrder::where('so_number',$returns->so_number)->first();
 
             $items = Item::findorfail($returnitem->item_id);
-
+           
             $inventory = New Inventory;
             $inventory->item_id           = $returnitem->item_id;
             $inventory->unit_quantity     = $returnitem->return_quantity;
@@ -264,8 +264,8 @@ class ReturnsController extends Controller
             $inventory->status            = 'Return';
             $inventory->consumable        = 2;
             $inventory->created_by        = auth()->user()->id;
-            $inventory->save();
-
+           $inventory->save();
+          
        }    
 
         $returns->status         =    1;
@@ -279,37 +279,43 @@ class ReturnsController extends Controller
 
                    $lessReturn =  $salesORder->total_sales - $returns->amount;
 
-                   $salesORder->total_sales     =  $lessReturn;
-
+                   $salesORder->total_sales   =  $lessReturn;
+                  
                    $salesORder->save();
 
             // Less amount of SRP and Quantity
 
             $getitemlists = ReturnItems::where('returns_id',$returns->id)->where('return_quantity','>',0)->get();
-
+              
              foreach ($getitemlists as $key => $getitemlist){
 
-                $soitems = SalesOrderItem::where('sales_order_id',$sorder->id)->where('item_id',$getitemlist->item_id)->first();
+            $soitems = SalesOrderItem::where('sales_order_id',$sorder->id)->where('item_id',$getitemlist->item_id)->first();
 
                     $updatesoitem = SalesOrderItem::findorfail($soitems->id);
 
-                    $updatesoitem->order_quantity = $updatesoitem->order_quantity - $getitemlist->return_quantity;
+                    $item_order_qty = $updatesoitem->order_quantity;
 
-                    $updatesoitem->sub_amount     = $updatesoitem->order_quantity * $updatesoitem->set_srp;
+                    $updatesoitem->order_quantity = $item_order_qty - $getitemlist->return_quantity;
+                    
+                    $updatesoitem->sub_amount   =  $updatesoitem->order_quantity * $updatesoitem->set_srp;
 
                     $updatesoitem->save();
 
            // Less amount on Sales Payment
-
+                    
             $getSalesPayment = SalesPayment::where('sales_order_id',$sorder->id)->first();
 
-            $SalesPayment =SalesPayment::findorfail($getSalesPayment->id);
+            if (!empty($getSalesPayment)){
+      
+                    $SalesPayment =SalesPayment::findorfail($getSalesPayment->id);
 
                     $sorderid = SalesOrder::findorfail($sorder->id);
 
-            $SalesPayment->sales_total =  $sorderid->total_sales;
-
-            $SalesPayment->save();
+                    $SalesPayment->sales_total =  $sorderid->total_sales;
+ 
+                    $SalesPayment->save();
+            }
+        
 
 
          }

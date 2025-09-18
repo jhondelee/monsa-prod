@@ -165,3 +165,31 @@ Route::group(['prefix' => 'condemn'], function() {
 
     Route::get('post/{id}', 'CondemnController@post')->name("condemn.post");
 });
+
+
+Route::group(['prefix' => 'inventory-report'], function() {  
+
+    Route::get('/', 'ReportController@index')->name("inventory.report");
+
+    Route::get('add', 'ReportController@create')->name("report.create");
+
+    Route::post('add', 'ReportController@store')->name("report.store");
+
+    Route::get('edit/{id}', 'CondemnController@edit')->name("report.edit"); 
+
+    Route::post('edit/{id}', 'CondemnController@update')->name("report.update");
+
+    Route::get('delete/{id}', 'CondemnController@destroy')->name("report.delete");    
+
+    Route::post('inventory-source', 'CondemnController@inventorysourcedataTable')->name("report.inventory_source");
+
+    Route::post('consumable-source', 'CondemnController@consumablesourcedataTable')->name("report.consumable_source");
+
+    Route::post('return-source', 'CondemnController@returnsourcedataTable')->name("report.return_source");
+
+    Route::post('items', 'CondemnController@condemitemdataTable')->name("report.items");
+
+    Route::get('print/{id}', 'CondemnController@print')->name("report.print");
+
+    Route::get('post/{id}', 'CondemnController@post')->name("report.post");
+});
