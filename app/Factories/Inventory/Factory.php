@@ -131,8 +131,8 @@ class Factory implements SetInterface
                     INNER JOIN unit_of_measure u
                     ON u.id = i.unit_id
                     INNER JOIN warehouse_location a
-                    ON a.id = e.location
-                    WHERE i.activated = 1 AND i.id = ?',[$id]);
+                    ON a.id = e.location 
+                    WHERE i.activated = 1 AND e.onhand_quantity > 0 AND i.id = ?',[$id]);
          return collect($results);
     }
 
