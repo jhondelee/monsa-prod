@@ -480,8 +480,8 @@ class InventoryController extends Controller
 
         $items = $this->items->getiteminfo($request->item_id)->first();
         
-         $ifexistItem = Inventory::where('item_id', $items->id)->where('location', $request->inv_loc)->first();
-
+        $ifexistItem = Inventory::where('item_id', $items->id)->where('location', $request->inv_loc)->first();
+        
         if(!$ifexistItem)
 
             {

@@ -167,7 +167,7 @@ class AreaPricesController extends Controller
         $areas = Area::find($id);
 
         $items = $this->items->getitemList();
-
+      
         $item_name = Item::pluck('name','name');
 
         return view('pages.customer_management.area_prices.edit',compact('areas','items','item_name'));
