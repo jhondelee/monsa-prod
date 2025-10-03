@@ -166,7 +166,7 @@ class AreaPricesController extends Controller
        
         $areas = Area::find($id);
 
-        $items = $this->items->getitemList();
+        $items = $this->items->getitemList()->sortBy('id');
       
         $item_name = Item::pluck('name','name');
 
