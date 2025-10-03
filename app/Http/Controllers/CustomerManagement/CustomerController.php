@@ -74,7 +74,7 @@ class CustomerController extends Controller
 
     public function getAddAllItems(Request $request)
     {
-        $results =  $this->items->getitemList()->orderBY('id');
+        $results =  $this->items->getitemList();
 
             return response()->json($results);
     }
