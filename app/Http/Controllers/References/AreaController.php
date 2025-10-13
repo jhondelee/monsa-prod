@@ -38,22 +38,33 @@ class AreaController extends Controller
 
         $employee = $this->user->getCreatedbyAttribute(auth()->user()->id);
 
-        $areas = New Area;
+        $areaname = strtolower($request->name);
 
-        $areas->name = $request->name;
+        $existname = Area::where('name',$areaname)->first();
 
-        $areas->add_cost = $request->add_cost;
+      
+        if (!$existname){
+            $areas = New Area;
+              
+            $areas->name = $request->name;
 
-        $areas->add_percentage = $request->add_percentage;
+            $areas->add_cost = $request->add_cost;
 
-        $areas->created_by = $employee;
+            $areas->add_percentage = $request->add_percentage;
 
-        $areas->save();
+            $areas->created_by = $employee;
+
+            $areas->save();
 
 
-        return redirect()->route('area.index')
+            return redirect()->route('area.index')
 
-            ->with('success','Area has been saved successfully.');
+                ->with('success','Area has been saved successfully.');
+        }
+
+             return redirect()->route('area.index')
+
+                ->with('warning','Area  is already Exist!');
 
     }
 
