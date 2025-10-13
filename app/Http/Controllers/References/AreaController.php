@@ -42,8 +42,8 @@ class AreaController extends Controller
 
         $existname = Area::where('name',$areaname)->first();
 
-      
         if (!$existname){
+
             $areas = New Area;
               
             $areas->name = $request->name;
