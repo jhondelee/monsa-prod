@@ -15,7 +15,7 @@
                     <div class="ibox-content">
                         <h1 class="no-margins">{{number_format($sales_total)}}</h1>
                         <div class="stat-percent font-bold text-success">{{number_format($sales_percent)}}% <i class="fa fa-bolt"></i></div>
-                        <small>Total Salesssssssss</small>
+                        <small>Total Sales</small>
                     </div>
                 </div>
             </div>
