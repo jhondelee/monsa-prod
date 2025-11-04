@@ -203,10 +203,10 @@
                 success:function(results){
                          var _PerAmount = 0;
                         if(results.noaddedPrice > 0){
-                                toastr.info('NOADDPRICE','Success!')
+                                
                                  _newSRP = parseFloat(results.newSRP);
                                 
-
+                                  toastr.info(_newSRP,'Success!');
                                 if (!results.csPrice.dis_amount == false && !results.csPrice.dis_percent == false){
       
                                     _setSRP = _newSRP;

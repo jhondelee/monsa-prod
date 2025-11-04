@@ -201,9 +201,9 @@ class SalesController extends Controller
        if ( !$csPrice  )  {
 
         $csPrice = $this->salesorders->getSetItems($invenId->item_id)->first();
-
+        dd($csPrice);
             if ( !$addPrice ) {
-                
+                    
                 $newSRP = $csPrice->set_srp;
 
             } else {
