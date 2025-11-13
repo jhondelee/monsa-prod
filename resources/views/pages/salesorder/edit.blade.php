@@ -217,7 +217,7 @@
                 
                 var _id = _itemID;
                 var _cs = $('#customer_id').val();
-            //
+            
                 $.ajax({
                 url:  '{{ url("sales/getcustomeritems") }}',
                 type: 'POST',
@@ -230,6 +230,7 @@
                                 
                                  _newSRP = parseFloat(results.newSRP);
                                 
+
                                       
                                 if (!results.csPrice.dis_amount == false && !results.csPrice.dis_percent == false){
       
