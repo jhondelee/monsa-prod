@@ -12,7 +12,7 @@ class MyPdf extends Fpdf
          $salesorders = SalesOrder::find($id); 
         
             // Set font for header
-            MyPdf::SetFont('Arial', 'B', 14);
+            MyPdf::SetFont('Arial', 'B', 12);
 
             // Move to the right
              MyPdf::Cell(80);
@@ -22,28 +22,30 @@ class MyPdf extends Fpdf
              MyPdf::Cell(40, 10, ' ', 0, "", 'C');
       
             MyPdf::SetY(10);
-            MyPdf::Cell(70); 
+            MyPdf::Cell(20); 
+            MyPdf::cell(50,6,"MONSA TRADING",0,"","L");
+            MyPdf::SetFont('Arial', 'B', 14);
             MyPdf::Cell(50, 10, 'Delivery Receipt', 1, "", 'C');
-
+            MyPdf::Ln(4);
+            MyPdf::Cell(20);
+            MyPdf::SetFont('Arial', 'B', 8);
+            MyPdf::cell(50,6,"09614747772 / 09621220955",0,"","L");
             //logo
             MyPdf::Image('img/temporary-logo.jpg',3, 3, 25);
             MyPdf::SetFont('Arial','B',13);
+
+            
             MyPdf::SetY(20); 
 
-       
 
 
             MyPdf::Ln(4);
             MyPdf::SetFont('Arial','B',11);
             MyPdf::SetXY(MyPdf::getX(), MyPdf::getY());
-            MyPdf::cell(30,6,"DR Number",0,"","L");
+            MyPdf::cell(160,6,"DR Number",0,"","R");
             MyPdf::SetFont('Arial','',11);
             MyPdf::cell(30,6,': '.$salesorders->so_number,0,"","L");
-            MyPdf::SetFont('Arial','B',11);
-            MyPdf::cell(100,6,"DR Date",0,"","R");
-            MyPdf::SetFont('Arial','',11);
-            $so_date = Carbon::parse($salesorders->so_date);
-            MyPdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
+
 
             MyPdf::Ln(4);
             MyPdf::SetFont('Arial','B',11);
@@ -52,6 +54,12 @@ class MyPdf extends Fpdf
             MyPdf::SetFont('Arial','',11);
             $customer = Customer::find($salesorders->customer_id);
             MyPdf::cell(40,6,': '.$customer->name,0,"","L");
+            MyPdf::SetFont('Arial','B',11);
+            MyPdf::cell(84,6,"DR Date",0,"","R");
+            MyPdf::SetFont('Arial','',11);
+            $so_date = Carbon::parse($salesorders->so_date);
+            MyPdf::cell(30,6,': '.$so_date->format('M d, Y'),0,"","L");
+
 
             MyPdf::Ln(4);
             MyPdf::SetFont('Arial','B',11);
@@ -62,7 +70,7 @@ class MyPdf extends Fpdf
 
 
             MyPdf::SetFont('Arial','B',11);
-            MyPdf::cell(100,6,"Terms",0,"","R");
+            MyPdf::cell(91,6,"Terms",0,"","R");
             MyPdf::SetFont('Arial','',11);
             $so_date = Carbon::parse($salesorders->so_date);
             MyPdf::cell(30,6,': '.'___________',0,"","L");
@@ -80,15 +88,15 @@ class MyPdf extends Fpdf
             if(($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount == 0)){
                 MyPdf::cell(25,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(85,6,"Item Name",0,"","L");
-                MyPdf::cell(30,6,"SRP",0,"","R");
+                MyPdf::cell(85,6,"Item Description",0,"","L");
+                MyPdf::cell(30,6,"Unit Price",0,"","R");
                 MyPdf::cell(30,6,"Amount",0,"","R");
             }elseif(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                 
                 MyPdf::cell(15,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(70,6,"Item Name",0,"","L");
-                MyPdf::cell(20,6,"SRP",0,"","R");
+                MyPdf::cell(70,6,"Item Description",0,"","L");
+                MyPdf::cell(20,6,"Unit Price",0,"","R");
                 MyPdf::cell(20,6,"Disc.",0,"","C");
                 MyPdf::cell(20,6,"Price",0,"","R");
                 MyPdf::cell(25,6,"Amount",0,"","R");
@@ -97,8 +105,8 @@ class MyPdf extends Fpdf
 
                 MyPdf::cell(15,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(70,6,"Item Name",0,"","L");
-                MyPdf::cell(20,6,"SRP",0,"","R");
+                MyPdf::cell(70,6,"Item Description",0,"","L");
+                MyPdf::cell(20,6,"Unit Price",0,"","R");
                 MyPdf::cell(20,6,"% Disc.",0,"","C");
                 MyPdf::cell(20,6,"Price",0,"","R");
                 MyPdf::cell(25,6,"Amount",0,"","R");
@@ -106,8 +114,8 @@ class MyPdf extends Fpdf
             }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
                 MyPdf::cell(15,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(60,6,"Item Name",0,"","L");                
-                MyPdf::cell(20,6,"SRP",0,"","R");
+                MyPdf::cell(60,6,"Item Description",0,"","L");                
+                MyPdf::cell(20,6,"Unit Price",0,"","R");
                 MyPdf::cell(15,6,"P Disc.",0,"","C");
                 MyPdf::cell(15,6,"% Disc.",0,"","C");
                 MyPdf::cell(20,6,"Price",0,"","R");
