@@ -898,7 +898,7 @@ class SalesController extends Controller
             //$pdf::Text($mid_x - ($pdf::GetStringWidth('TITLE') / 2), 10, 'Sales Order');
 
             $pdf::AddPage(['L', 'A4']);
-            $pdf::SetFontSize(9);
+            $pdf::SetFontSize(12);
         
             $pdf::SetXY($pdf::getX(), $pdf::getY());
             $pdf::cell(10,1,$customer->name." | ".$area->name. " | ".$customer->address,0,"","L");
@@ -975,7 +975,7 @@ class SalesController extends Controller
             }
         }
         $pdf::Ln(2);
-        $pdf::SetFont('Arial','I',6);
+        $pdf::SetFont('Arial','I',8);
         $pdf::cell(20,6,"--Nothing Follows--",0,"","C");
 
         $pdf::Ln(1);
