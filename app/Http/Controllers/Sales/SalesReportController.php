@@ -390,7 +390,7 @@ class SalesReportController extends Controller
         $pdf::cell(30,6,"___________________________________________________________________________________________________________",0,"","L");
 
         $preparedby = $this->user->getCreatedbyAttribute(auth()->user()->id);
-
+      
         // All Payment Grand Total
         if ($mode == 0){
 

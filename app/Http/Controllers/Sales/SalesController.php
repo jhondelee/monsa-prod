@@ -523,7 +523,10 @@ class SalesController extends Controller
             {
                 $ctr = round($var) + 1;
             } else {
-                $ctr =round($var);
+                $ctr = round($var);
+                if ($nOitems == 0){
+                    $ctr = round($var) + 1;
+                }
             }  
 
         // Add some body content
@@ -575,13 +578,13 @@ class SalesController extends Controller
                         }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
                             $pdf::cell(15,6,$sales_order_items[$i]->order_quantity,0,"","C");
                             $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
-                            $pdf::cell(60,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(65,6,$sales_order_items[$i]->description,0,"","L");
                             $pdf::cell(20,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
 
                             $amntDisc = $sales_order_items[$i]->srp * ($sales_order_items[$i]->discount_percentage / 100);
 
                             $pdf::cell(15,6,number_format($sales_order_items[$i]->discount_amount,2),0,"","C");
-                            $pdf::cell(15,6,number_format($amntDisc,2),0,"","C");
+                            $pdf::cell(15,6,number_format($sales_order_items[$i]->discount_percentage,2),0,"","C");
                             $pdf::cell(20,6,number_format($sales_order_items[$i]->set_srp,2),0,"","R");
                             $pdf::cell(25,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
 
@@ -884,7 +887,7 @@ class SalesController extends Controller
             $column = 0; //Control which column to add data
             $columnLenght = 0; //monitor if we need to change the column
             $maxLinesPerColumn = 85;
-            $wrapCharacters = 75; //do not exceed this char qty per line
+            $wrapCharacters = 100; //do not exceed this char qty per line
             $collectedDescription = ""; //stack Description here
 
         //$pdf::AddPage('P','A4');
@@ -898,7 +901,7 @@ class SalesController extends Controller
             //$pdf::Text($mid_x - ($pdf::GetStringWidth('TITLE') / 2), 10, 'Sales Order');
 
             $pdf::AddPage(['L', 'A4']);
-            $pdf::SetFontSize(12);
+            $pdf::SetFontSize(13);
         
             $pdf::SetXY($pdf::getX(), $pdf::getY());
             $pdf::cell(10,1,$customer->name." | ".$area->name. " | ".$customer->address,0,"","L");
@@ -931,7 +934,7 @@ class SalesController extends Controller
                     $pdf::AddPage(['L', 'A4']);
                     $pdf::Footer("d");
                     $pdf->col = $column;
-                    $x = 10 + $column * 95;
+                    $x = 10 + $column * 100;
                     $pdf::SetLeftMargin($x);
                     $pdf::SetX($x);
                     $pdf::SetY(8);
@@ -940,7 +943,7 @@ class SalesController extends Controller
                     $columnLenght = 1;
                     $column++;
                     $pdf->col = $column;
-                    $x = 10 + $column * 95;
+                    $x = 10 + $column * 100;
                     $pdf::SetLeftMargin($x);
                     $pdf::SetX($x);
                     $pdf::SetY(8);
@@ -963,12 +966,12 @@ class SalesController extends Controller
                 if (count($chunks) - 1 && $i == 0) {
 
                     $pdf::SetFont('Arial');
-                    $pdf::MultiCell(90, 3, $collectedDescription, 'R');
+                    $pdf::MultiCell(100, 3, $collectedDescription, 'R');
                     $actionCollect = 0;
                     $collectedDescription = "";
                 } else {
                     $pdf::SetFont('Arial');
-                    $pdf::MultiCell(90, 3, strip_tags($chunks[$i]), 'R');
+                    $pdf::MultiCell(100, 3, strip_tags($chunks[$i]), 'R');
                     $actionCollect = 0;
                     $collectedDescription = "";
                 }
