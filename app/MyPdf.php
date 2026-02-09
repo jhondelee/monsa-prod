@@ -95,10 +95,10 @@ class MyPdf extends Fpdf
                 
                 MyPdf::cell(15,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(70,6,"Item Description",0,"","L");
+                MyPdf::cell(90,6,"Item Description",0,"","L");
                 MyPdf::cell(20,6,"Unit Price",0,"","R");
-                MyPdf::cell(20,6,"Disc.",0,"","C");
-                MyPdf::cell(20,6,"Price",0,"","R");
+                MyPdf::cell(20,6,"Disc.",0,"","R");
+                //MyPdf::cell(20,6,"Price",0,"","R");
                 MyPdf::cell(25,6,"Amount",0,"","R");
 
             }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
@@ -114,11 +114,11 @@ class MyPdf extends Fpdf
             }elseif (($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount > 0)){
                 MyPdf::cell(15,6,"Qty",0,"","C");
                 MyPdf::cell(15,6,"Unit",0,"","L");
-                MyPdf::cell(65,6,"Item Description",0,"","L");                
+                MyPdf::cell(80,6,"Item Description",0,"","L");                
                 MyPdf::cell(20,6,"Unit Price",0,"","R");
                 MyPdf::cell(15,6,"P Disc.",0,"","C");
                 MyPdf::cell(15,6,"% Disc.",0,"","C");
-                MyPdf::cell(20,6,"Price",0,"","R");
+                //MyPdf::cell(20,6,"Price",0,"","R");
                 MyPdf::cell(25,6,"Amount",0,"","R");
             }
 
