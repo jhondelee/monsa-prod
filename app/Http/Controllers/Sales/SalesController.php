@@ -624,7 +624,7 @@ class SalesController extends Controller
                         $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
                         $pdf::Ln(5);
                         $pdf::SetFont('Arial','B',11);
-                        $pdf::cell(155,6,"Subamount :",0,"","R");
+                        $pdf::cell(155,6,"Total Amount :",0,"","R");
                         $pdf::SetFont('Arial','B',11);
                         $pdf::cell(30,6,number_format($sub,2),0,"","R");
                         $sub = 0 ;
