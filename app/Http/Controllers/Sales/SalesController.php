@@ -679,13 +679,13 @@ class SalesController extends Controller
 
                        
 
-                        //$pdf::Ln(5);
-                        //$pdf::SetFont('Arial','I',9);
-                        //$pdf::cell(185,6,"--Nothing Follows--",0,"","C");
-
-                        //$pdf::Ln(3);
-                        //$pdf::SetFont('Arial','',11);
-                        //$pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','I',9);
+                        $pdf::cell(185,6,"--Nothing Follows--",0,"","C");
+                   
+                        $pdf::Ln(3);
+                        $pdf::SetFont('Arial','',11);
+                        $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
                        
                         $subAmount = $this->salesorders->getActualAmount($salesorders->id)->sum('subAmount');
 
@@ -693,7 +693,7 @@ class SalesController extends Controller
 
                             $total_discount_amount = $subAmount - $salesorders->total_sales; 
 
-                        $pdf::Ln(5);
+                      /*   $pdf::Ln(5);
                         $pdf::SetFont('Arial','B',11);
                         $pdf::cell(155,6,"SubTotal :",0,"","R");
                         $pdf::SetFont('Arial','B',11);
@@ -702,9 +702,10 @@ class SalesController extends Controller
                         $pdf::Ln(1);
                         $pdf::SetFont('Arial','',11);
                         $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
+                    */
                         
                         }
-
+                    /*
                         if(($salesorders->total_amount_discount > 0) && ($salesorders->total_percent_discount == 0)){
                             $pdf::Ln(5);
                             $pdf::SetFont('Arial','B',11);
@@ -743,7 +744,7 @@ class SalesController extends Controller
                             $pdf::cell(30,6,number_format($salesorders->total_sales,2),0,"","R");
                         }
 
-                    
+                    */
 
                         goto targetLocation;
                     }
