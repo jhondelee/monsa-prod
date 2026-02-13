@@ -631,6 +631,13 @@ class SalesController extends Controller
                         $pdf::Ln(1);
                         $pdf::SetFont('Arial','',11);
                        $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
+                        $pdf::Ln(5);
+                        $pdf::SetFont('Arial','I',9);
+                        $pdf::cell(185,6,"--Nothing Follows--",0,"","C");
+                   
+                        $pdf::Ln(3);
+                        $pdf::SetFont('Arial','',11);
+                        $pdf::cell(30,6,"______________________________________________________________________________________",0,"","L");
 
                         goto targetLocation;
 
