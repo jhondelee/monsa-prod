@@ -120,7 +120,7 @@ class Factory implements SetInterface
                     s.discount_amount,
                     s.discount_percentage,
                     s.sub_amount,
-                    CONCAT(e.description,' - ',cast(s.order_quantity  AS INT),' ',u.code) as draftname
+                    CONCAT(e.description,' - ',s.order_quantity,' ',u.code) as draftname
                FROM inventory i
                INNER JOIN items e
                ON e.id = i.item_id

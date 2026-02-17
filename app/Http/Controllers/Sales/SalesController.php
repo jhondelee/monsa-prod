@@ -506,6 +506,7 @@ class SalesController extends Controller
        
         // Set the font for the body content
         $sales_order_items = $this->salesorders->getForSOitems($id);
+
         $salesorders = SalesOrder::find($id);
         $nOitems = count($sales_order_items) - 1;
         $pglist = 38;
@@ -784,6 +785,7 @@ class SalesController extends Controller
         
 
         $sales_order_items = $this->salesorders->getForSOitems($id);
+
         $order_number = 0;
         $total_discount_amount = 0;
 
