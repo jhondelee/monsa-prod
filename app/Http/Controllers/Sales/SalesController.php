@@ -572,7 +572,7 @@ class SalesController extends Controller
                         }elseif (($salesorders->total_amount_discount == 0) && ($salesorders->total_percent_discount > 0)){
                             $pdf::cell(15,6,$sales_order_items[$i]->order_quantity,0,"","C");
                             $pdf::cell(15,6,$sales_order_items[$i]->unti_code,0,"","L");
-                            $pdf::cell(70,6,$sales_order_items[$i]->description,0,"","L");
+                            $pdf::cell(90,6,$sales_order_items[$i]->description,0,"","L");
                             $pdf::cell(20,6,number_format($sales_order_items[$i]->srp,2),0,"","R");
 
                             $PercDisc = $sales_order_items[$i]->srp - $sales_order_items[$i]->set_srp; 
