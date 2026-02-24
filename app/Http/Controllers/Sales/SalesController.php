@@ -581,7 +581,7 @@ class SalesController extends Controller
                             }else{
                                 $dis = '-';
                             }
-                            $pdf::cell(20,6,number_format($dis,2),0,"","C");
+                            $pdf::cell(20,6,$dis,0,"","C");
                             //$pdf::cell(20,6,number_format($sales_order_items[$i]->set_srp,2),0,"","R");
                             $pdf::cell(25,6,number_format($sales_order_items[$i]->sub_amount,2),0,"","R");
 
